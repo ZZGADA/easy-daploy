@@ -1,0 +1,12 @@
+server:
+  port: "18081"
+mysql:
+  dsn: "root:zZ-szshyjbz16D@tcp(8.130.14.29:33170)/easy_deploy?charset=utf8mb4&parseTime=True&loc=Local"
+redis:
+  addr: "8.130.14.29:36689"
+  password: "zZ-szshyjbz16D"
+smtp:
+  host: "smtp.qq.com"           # 发送邮件服务器
+  user: "1293177585@qq.com"     # 自己的邮箱
+  password: "wlkgcoyhwrfcffjj"  # 邮箱第三方客户端授权码
+  from: "1293177585@qq.com"     # 发邮件人
