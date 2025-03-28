@@ -1,50 +1,46 @@
 package conf
 
 import (
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
+	"fmt"
+
+	"github.com/ZZGADA/easy-deploy/internal/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"time"
+	"gorm.io/gorm/schema"
 )
 
 var DB *gorm.DB
 
-// LogrusWriter 自定义一个实现了 GORM Writer 接口的日志写入器
-type LogrusWriter struct {
-	logger *logrus.Logger
-}
-
-// Printf 实现 GORM Writer 接口的 Printf 方法
-func (l *LogrusWriter) Printf(format string, args ...interface{}) {
-	l.logger.Infof(format, args...)
-}
-
+// InitMySQL 初始化 MySQL 连接
 func InitMySQL() {
-	dsn := viper.GetString("mysql.dsn")
-	var err error
+	mysqlConfig := config.GlobalConfig.MySQL
 
-	// 创建自定义的 LogrusWriter
-	logrusWriter := &LogrusWriter{
-		logger: logrus.StandardLogger(),
-	}
-
-	newLogger := logger.New(
-		logrusWriter,
-		logger.Config{
-			SlowThreshold: time.Second,
-			LogLevel:      logger.Info,
-			Colorful:      true,
-		},
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		mysqlConfig.Username,
+		mysqlConfig.Password,
+		mysqlConfig.Host,
+		mysqlConfig.Port,
+		mysqlConfig.Database,
 	)
 
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: newLogger,
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // 使用单数表名
+		},
 	})
+
 	if err != nil {
-		logrus.Fatalf("failed to connect database: %v", err)
+		panic(fmt.Sprintf("MySQL 连接失败: %v", err))
 	}
-	// 移除自动迁移代码
-	// DB.AutoMigrate(&user_manage.User{})
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic(fmt.Sprintf("获取 *sql.DB 失败: %v", err))
+	}
+
+	// 设置连接池参数
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
+
+	DB = db
 }

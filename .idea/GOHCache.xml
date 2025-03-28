@@ -3,6 +3,27 @@
   <component name="GoORMHelperCache">
     <option name="schemaMapping">
       <map>
+        <entry key="BindHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/bind.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="BindService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/user_manage/bind.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="GithubUser">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/user_manage/bind.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="LoginDTO">
           <value>
             <set>
@@ -53,19 +74,14 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/mysql.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743048241761" />
-              <option name="schema">
-                <list>
-                  <option value="LogrusWriter" />
-                </list>
-              </option>
+              <option name="lastModified" value="1743168954571" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/conf/redis.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743048023492" />
+              <option name="lastModified" value="1743169028098" />
             </ScannedPath>
           </value>
         </entry>
@@ -123,10 +139,22 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/bind.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743169042433" />
+              <option name="schema">
+                <list>
+                  <option value="BindHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743064098998" />
+              <option name="lastModified" value="1743169708782" />
             </ScannedPath>
           </value>
         </entry>
@@ -137,10 +165,26 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/bind.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743167801199" />
+              <option name="schema">
+                <list>
+                  <option value="BindService" />
+                  <option value="GithubUser" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="tableStructMapping">
       <map>
+        <entry key="bind_handler" value="BindHandler" />
+        <entry key="bind_service" value="BindService" />
+        <entry key="github_user" value="GithubUser" />
         <entry key="login_dto" value="LoginDTO" />
         <entry key="logrus_writer" value="LogrusWriter" />
         <entry key="register_dto" value="RegisterDTO" />

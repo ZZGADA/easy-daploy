@@ -1,6 +1,9 @@
 package http
 
 import (
+	"github.com/ZZGADA/easy-deploy/internal/model/conf"
+	"github.com/ZZGADA/easy-deploy/internal/model/dao"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -24,12 +27,13 @@ func SetupRouter(r *gin.Engine) {
 		auth.POST("/login", Login)
 	}
 
-	// 第三方绑定路由
-	github := r.Group("/bind")
-	{
-		github.POST("/github/callback", func(context *gin.Context) {
+	// 创建 BindHandler 实例
+	bindHandler := NewBindHandler(user_manage.NewBindService(dao.NewUserGithubDao(conf.DB)))
 
-		})
+	// GitHub 绑定相关路由
+	bindGroup := r.Group("/bind")
+	{
+		bindGroup.GET("/github/callback", bindHandler.GithubCallback)
 	}
 
 	// check health

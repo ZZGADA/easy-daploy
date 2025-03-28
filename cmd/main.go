@@ -2,24 +2,23 @@ package main
 
 import (
 	"flag"
+
+	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/server/http"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
+var configEnv string
+
 func init() {
-	var config string
-	flag.StringVar(&config, "config", "test", "Specify the configuration environment: test or prod")
+	flag.StringVar(&configEnv, "config", "test", "Specify the configuration environment: test or prod")
 	flag.Parse()
 
-	configFileName := "application-" + config
-	viper.SetConfigName(configFileName)
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("conf")
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Failed to read config file: %v", err)
+	// 初始化配置
+	if err := config.InitConfig(configEnv); err != nil {
+		log.Fatalf("配置初始化失败: %v", err)
 	}
 
 	// 初始化MySQL和Redis
@@ -33,7 +32,7 @@ func main() {
 	// 注册路由
 	http.SetupRouter(r)
 
-	port := viper.GetString("server.port")
+	port := config.GlobalConfig.Server.Port
 	if port == "" {
 		port = "8080"
 	}

@@ -1,19 +1,24 @@
 package conf
 
 import (
+	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/config"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/spf13/viper"
 )
 
 var RedisClient *redis.Client
 
 func InitRedis() {
+	redisConfig := config.GlobalConfig.Redis
+
+	dsn := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
+
 	RedisClient = redis.NewClient(&redis.Options{
-		Addr:     viper.GetString("redis.addr"),
-		Password: viper.GetString("redis.password"),
-		DB:       0,
+		Addr:     dsn,
+		Password: redisConfig.Password,
+		DB:       redisConfig.DB,
 	})
 	_, err := RedisClient.Ping(RedisClient.Context()).Result()
 	if err != nil {
