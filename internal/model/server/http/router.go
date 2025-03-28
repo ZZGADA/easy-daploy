@@ -24,10 +24,16 @@ func SetupRouter(r *gin.Engine) {
 		auth.POST("/login", Login)
 	}
 
+	// 第三方绑定路由
 	github := r.Group("/bind")
 	{
 		github.POST("/github/callback", func(context *gin.Context) {
 
 		})
 	}
+
+	// check health
+	r.GET("/api/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "pong"})
+	})
 }
