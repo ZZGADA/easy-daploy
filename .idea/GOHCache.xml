@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GoORMHelperCache">
+    <option name="schemaMapping">
+      <map>
+        <entry key="LoginDTO">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dto/auth.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="LogrusWriter">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/conf/mysql.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="RegisterDTO">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dto/auth.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/user_manage/auth.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="VerifyCodeDTO">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dto/auth.go" />
+            </set>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="scannedPathMapping">
+      <map>
+        <entry key="file://$PROJECT_DIR$/cmd/main.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743047953369" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/conf/mysql.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743048241761" />
+              <option name="schema">
+                <list>
+                  <option value="LogrusWriter" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/conf/redis.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743048023492" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743064562611" />
+              <option name="schema">
+                <list>
+                  <option value="User" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/define/auth.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743065336896" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dto/auth.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743059825302" />
+              <option name="schema">
+                <list>
+                  <option value="RegisterDTO" />
+                  <option value="LoginDTO" />
+                  <option value="VerifyCodeDTO" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/init/mysql.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743045284781" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/init/redis.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743045283598" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/auth.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743064222973" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743064098998" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/auth.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743075290970" />
+            </ScannedPath>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="tableStructMapping">
+      <map>
+        <entry key="login_dto" value="LoginDTO" />
+        <entry key="logrus_writer" value="LogrusWriter" />
+        <entry key="register_dto" value="RegisterDTO" />
+        <entry key="user" value="User" />
+        <entry key="verify_code_dto" value="VerifyCodeDTO" />
+      </map>
+    </option>
+    <option name="lastTimeChecked" value="1743045915429" />
+  </component>
+</project>

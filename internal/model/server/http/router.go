@@ -23,4 +23,11 @@ func SetupRouter(r *gin.Engine) {
 		auth.POST("/sign_up/verify", VerifyCode)
 		auth.POST("/login", Login)
 	}
+
+	github := r.Group("/bind")
+	{
+		github.POST("/github/callback", func(context *gin.Context) {
+
+		})
+	}
 }
