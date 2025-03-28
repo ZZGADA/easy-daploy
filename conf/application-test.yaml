@@ -1,5 +1,5 @@
 server:
-  port: "18081"
+  port: "53801"
 mysql:
   dsn: "root:zZ-szshyjbz16D@tcp(8.130.14.29:33170)/easy_deploy?charset=utf8mb4&parseTime=True&loc=Local"
 redis:
