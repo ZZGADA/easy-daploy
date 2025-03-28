@@ -1,8 +1,13 @@
 package http
 
 import (
+	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/model/conf"
+	"github.com/ZZGADA/easy-deploy/internal/model/define"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
+	"github.com/go-redis/redis/v8"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,8 +34,8 @@ func (h *BindHandler) GithubCallback(c *gin.Context) {
 	}
 
 	// 从 token 中获取用户 ID
-	userID, exists := c.Get("user_id")
-	if !exists {
+	userToken := c.Query("token")
+	if userToken == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"code": 401,
 			"msg":  "Unauthorized",
@@ -38,7 +43,23 @@ func (h *BindHandler) GithubCallback(c *gin.Context) {
 		return
 	}
 
-	err := h.bindService.BindGithub(c, userID.(uint32), code)
+	userIdS, redisErr := conf.RedisClient.Get(c, fmt.Sprintf(define.UserToken, userToken)).Result()
+	if redisErr != nil && redisErr != redis.Nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": 400,
+			"msg":  "Redis error",
+		})
+		return
+	}
+	userId, terr := strconv.ParseUint(userIdS, 10, 32)
+	if terr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": 400,
+			"msg":  "Redis error",
+		})
+		return
+	}
+	err := h.bindService.BindGithub(c, uint32(userId), code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 500,
