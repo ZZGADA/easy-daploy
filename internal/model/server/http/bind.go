@@ -38,7 +38,7 @@ func (h *BindHandler) GithubCallback(c *gin.Context) {
 		return
 	}
 
-	err := h.bindService.BindGithub(c, userID.(uint), code)
+	err := h.bindService.BindGithub(c, userID.(uint32), code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 500,

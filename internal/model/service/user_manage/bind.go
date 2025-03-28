@@ -29,7 +29,7 @@ type GithubUser struct {
 }
 
 // BindGithub 处理 GitHub 账号绑定
-func (s *BindService) BindGithub(ctx context.Context, userID uint, code string) error {
+func (s *BindService) BindGithub(ctx context.Context, userID uint32, code string) error {
 	// 1. 使用 code 获取 access token
 	accessToken, err := s.getGithubAccessToken(code)
 	if err != nil {
@@ -44,12 +44,12 @@ func (s *BindService) BindGithub(ctx context.Context, userID uint, code string) 
 
 	// 3. 保存用户 GitHub 信息到数据库
 	userGithub := &dao.UserGithub{
-		UserID:      userID,
-		GithubID:    uint(githubUser.ID),
+		UserId:      userID,
+		GithubId:    uint32(githubUser.ID),
 		Login:       githubUser.Login,
 		Name:        githubUser.Name,
 		Email:       githubUser.Email,
-		AvatarURL:   githubUser.AvatarURL,
+		AvatarUrl:   githubUser.AvatarURL,
 		AccessToken: accessToken,
 	}
 

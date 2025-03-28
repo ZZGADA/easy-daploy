@@ -134,7 +134,7 @@ func VerifyCodeService(dto dto.VerifyCodeDTO) (interface{}, error) {
 	}
 
 	// 创建用户
-	user := &dao.User{
+	user := &dao.Users{
 		Email:    dto.Email,
 		Password: string(hashedPassword),
 	}

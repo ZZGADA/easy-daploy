@@ -53,6 +53,27 @@
             </set>
           </value>
         </entry>
+        <entry key="UserGithub">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_github.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserGithubDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_github.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="Users">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="VerifyCodeDTO">
           <value>
             <set>
@@ -88,10 +109,23 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743064562611" />
+              <option name="lastModified" value="1743172042383" />
               <option name="schema">
                 <list>
-                  <option value="User" />
+                  <option value="Users" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_github.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743171774284" />
+              <option name="schema">
+                <list>
+                  <option value="UserGithub" />
+                  <option value="UserGithubDao" />
                 </list>
               </option>
             </ScannedPath>
@@ -142,7 +176,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/bind.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743169042433" />
+              <option name="lastModified" value="1743171774105" />
               <option name="schema">
                 <list>
                   <option value="BindHandler" />
@@ -161,14 +195,14 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743075290970" />
+              <option name="lastModified" value="1743172061527" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/bind.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743167801199" />
+              <option name="lastModified" value="1743171774100" />
               <option name="schema">
                 <list>
                   <option value="BindService" />
@@ -189,6 +223,9 @@
         <entry key="logrus_writer" value="LogrusWriter" />
         <entry key="register_dto" value="RegisterDTO" />
         <entry key="user" value="User" />
+        <entry key="user_github" value="UserGithub" />
+        <entry key="user_github_dao" value="UserGithubDao" />
+        <entry key="users" value="Users" />
         <entry key="verify_code_dto" value="VerifyCodeDTO" />
       </map>
     </option>

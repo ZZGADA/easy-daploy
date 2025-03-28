@@ -9,17 +9,17 @@ import (
 
 // UserGithub GitHub 用户信息表
 type UserGithub struct {
-	ID          uint           `gorm:"primarykey"`
-	UserID      uint           `gorm:"not null;index"`       // 关联的用户 ID
-	GithubID    uint           `gorm:"not null;uniqueIndex"` // GitHub 用户 ID
-	Login       string         `gorm:"size:255;not null"`    // GitHub 登录名
-	Name        string         `gorm:"size:255"`             // GitHub 用户名
-	Email       string         `gorm:"size:255"`             // GitHub 邮箱
-	AvatarURL   string         `gorm:"size:255"`             // GitHub 头像 URL
-	AccessToken string         `gorm:"size:255;not null"`    // GitHub 访问令牌
-	CreatedAt   *time.Time     `gorm:"not null"`             // 创建时间
-	UpdatedAt   *time.Time     `gorm:"not null"`             // 更新时间
-	DeletedAt   gorm.DeletedAt // 软删除时间
+	Id          uint32    `gorm:"column:id;type:int UNSIGNED;primaryKey;not null;" json:"id"`
+	UserId      uint32    `gorm:"column:user_id;type:int UNSIGNED;not null;" json:"user_id"`
+	GithubId    uint32    `gorm:"column:github_id;type:int UNSIGNED;not null;" json:"github_id"`
+	Login       string    `gorm:"column:login;type:varchar(255);not null;" json:"login"`
+	Name        string    `gorm:"column:name;type:varchar(255);" json:"name"`
+	Email       string    `gorm:"column:email;type:varchar(255);" json:"email"`
+	AvatarUrl   string    `gorm:"column:avatar_url;type:varchar(255);" json:"avatar_url"`
+	AccessToken string    `gorm:"column:access_token;type:varchar(255);not null;" json:"access_token"`
+	CreatedAt   time.Time `gorm:"column:created_at;type:datetime;not null;" json:"created_at"`
+	UpdatedAt   time.Time `gorm:"column:updated_at;type:datetime;not null;" json:"updated_at"`
+	DeletedAt   time.Time `gorm:"column:deleted_at;type:datetime;default:NULL;" json:"deleted_at"`
 }
 
 // TableName 指定表名
