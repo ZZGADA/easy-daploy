@@ -44,10 +44,10 @@ func (d *UserGithubDao) Create(ctx context.Context, userGithub *UserGithub) erro
 
 // GetByUserID 根据用户 ID 获取 GitHub 用户信息
 func (d *UserGithubDao) GetByUserID(ctx context.Context, userID uint) (*UserGithub, error) {
-	var userGithub UserGithub
-	err := d.db.WithContext(ctx).Where("user_id = ?", userID).First(&userGithub).Error
-	if err != nil {
-		return nil, err
+	userGithub := UserGithub{}
+	err := d.db.WithContext(ctx).Where("user_id = ? and deleted_at IS NULL", userID).First(&userGithub).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return &userGithub, err
 	}
 	return &userGithub, nil
 }
@@ -55,7 +55,7 @@ func (d *UserGithubDao) GetByUserID(ctx context.Context, userID uint) (*UserGith
 // GetByGithubID 根据 GitHub ID 获取用户信息
 func (d *UserGithubDao) GetByGithubID(ctx context.Context, githubID uint) (*UserGithub, error) {
 	var userGithub UserGithub
-	err := d.db.WithContext(ctx).Where("github_id = ?", githubID).First(&userGithub).Error
+	err := d.db.WithContext(ctx).Where("github_id = ? and deleted_at IS NULL", githubID).First(&userGithub).Error
 	if err != nil {
 		return nil, err
 	}
@@ -69,5 +69,5 @@ func (d *UserGithubDao) Update(ctx context.Context, userGithub *UserGithub) erro
 
 // Delete 删除 GitHub 用户信息（软删除）
 func (d *UserGithubDao) Delete(ctx context.Context, userID uint) error {
-	return d.db.WithContext(ctx).Where("user_id = ?", userID).Delete(&UserGithub{}).Error
+	return d.db.WithContext(ctx).Where("user_id = ? and deleted_at IS NULL", userID).Update("deleted_at", time.Now()).Error
 }

@@ -27,7 +27,7 @@ func CreateUser(user *Users) error {
 // GetUserByEmail 根据邮箱获取用户
 func GetUserByEmail(email string) (*Users, error) {
 	var user Users
-	err := conf.DB.Where("email =?", email).First(&user).Error
+	err := conf.DB.Where("email =? and deleted_at IS NULL", email).First(&user).Error
 	if err != nil {
 		return nil, err
 	}

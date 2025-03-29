@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/ZZGADA/easy-deploy/internal/middleware"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
@@ -31,9 +32,11 @@ func SetupRouter(r *gin.Engine) {
 	bindHandler := NewBindHandler(user_manage.NewBindService(dao.NewUserGithubDao(conf.DB)))
 
 	// GitHub 绑定相关路由
-	bindGroup := r.Group("/bind")
+	bindGroup := r.Group("/api/user/github")
 	{
-		bindGroup.GET("/github/callback", bindHandler.GithubCallback)
+		bindGroup.GET("/bind/callback", bindHandler.GithubCallback)
+		bindGroup.GET("/status", middleware.CustomAuthMiddleware(), bindHandler.CheckGithubBinding)
+		bindGroup.POST("/unbind", middleware.CustomAuthMiddleware(), bindHandler.UnbindGithub)
 	}
 
 	// check health
