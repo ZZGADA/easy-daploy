@@ -206,7 +206,7 @@ type DeveloperTokenRequest struct {
 }
 
 // SaveDeveloperToken 保存开发者令牌
-func (s *BindService) SaveDeveloperToken(ctx context.Context, userID uint, token, comment string, expireTime time.Time) error {
+func (s *BindService) SaveDeveloperToken(ctx context.Context, userID uint, token, comment string, expireTime time.Time, repositoryName string) error {
 	// 检查用户是否已绑定 GitHub
 	userGithub, err := s.userGithubDao.GetByUserID(ctx, userID)
 	if err != nil {
@@ -220,13 +220,14 @@ func (s *BindService) SaveDeveloperToken(ctx context.Context, userID uint, token
 	userGithub.DeveloperToken = token
 	userGithub.DeveloperTokenComment = comment
 	userGithub.DeveloperTokenExpireTime = &expireTime
+	userGithub.DeveloperRepositoryName = repositoryName
 
 	// 保存到数据库
 	return s.userGithubDao.Update(ctx, userGithub)
 }
 
 // UpdateDeveloperToken 更新开发者令牌
-func (s *BindService) UpdateDeveloperToken(ctx context.Context, userID uint, token, comment string, expireTime time.Time) error {
+func (s *BindService) UpdateDeveloperToken(ctx context.Context, userID uint, token, comment string, expireTime time.Time, repositoryName string) error {
 	// 检查用户是否已绑定 GitHub
 	userGithub, err := s.userGithubDao.GetByUserID(ctx, userID)
 	if err != nil {
@@ -240,6 +241,7 @@ func (s *BindService) UpdateDeveloperToken(ctx context.Context, userID uint, tok
 	userGithub.DeveloperToken = token
 	userGithub.DeveloperTokenComment = comment
 	userGithub.DeveloperTokenExpireTime = &expireTime
+	userGithub.DeveloperRepositoryName = repositoryName
 
 	// 保存到数据库
 	return s.userGithubDao.Update(ctx, userGithub)

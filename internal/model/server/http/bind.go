@@ -151,6 +151,7 @@ type DeveloperTokenRequest struct {
 	DeveloperToken string `json:"developer_token" binding:"required"`
 	ExpireTime     string `json:"expire_time" binding:"required"`
 	Comment        string `json:"comment" binding:"required"`
+	RepositoryName string `json:"repository_name" binding:"required"`
 }
 
 // SaveDeveloperToken 保存开发者令牌
@@ -165,7 +166,6 @@ func (h *BindHandler) SaveDeveloperToken(c *gin.Context) {
 		return
 	}
 
-	// 解析请求体
 	var req DeveloperTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -186,7 +186,7 @@ func (h *BindHandler) SaveDeveloperToken(c *gin.Context) {
 	}
 
 	// 保存开发者令牌
-	err = h.bindService.SaveDeveloperToken(c.Request.Context(), userID.(uint), req.DeveloperToken, req.Comment, expireTime)
+	err = h.bindService.SaveDeveloperToken(c.Request.Context(), userID.(uint), req.DeveloperToken, req.Comment, expireTime, req.RepositoryName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -213,7 +213,6 @@ func (h *BindHandler) UpdateDeveloperToken(c *gin.Context) {
 		return
 	}
 
-	// 解析请求体
 	var req DeveloperTokenRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -234,7 +233,7 @@ func (h *BindHandler) UpdateDeveloperToken(c *gin.Context) {
 	}
 
 	// 更新开发者令牌
-	err = h.bindService.UpdateDeveloperToken(c.Request.Context(), userID.(uint), req.DeveloperToken, req.Comment, expireTime)
+	err = h.bindService.UpdateDeveloperToken(c.Request.Context(), userID.(uint), req.DeveloperToken, req.Comment, expireTime, req.RepositoryName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -292,6 +291,7 @@ func (h *BindHandler) QueryDeveloperToken(c *gin.Context) {
 			"developer_token":             tokenInfo.DeveloperToken,
 			"developer_token_comment":     tokenInfo.DeveloperTokenComment,
 			"developer_token_expire_time": expireTimeStr,
+			"developer_repository_name":   tokenInfo.DeveloperRepositoryName,
 		},
 	})
 }

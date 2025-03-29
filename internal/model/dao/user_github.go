@@ -20,6 +20,7 @@ type UserGithub struct {
 	DeveloperToken           string     `gorm:"column:developer_token;type:varchar(255);" json:"developer_token"`
 	DeveloperTokenComment    string     `gorm:"column:developer_token_comment;type:varchar(255);" json:"developer_token_comment"`
 	DeveloperTokenExpireTime *time.Time `gorm:"column:developer_token_expire_time;" json:"developer_token_expire_time"`
+	DeveloperRepositoryName  string     `gorm:"column:developer_repository_name;type:varchar(255);" json:"developer_repository_name"`
 	CreatedAt                *time.Time `gorm:"column:created_at;type:datetime;not null;" json:"created_at"`
 	UpdatedAt                *time.Time `gorm:"column:updated_at;type:datetime;not null;" json:"updated_at"`
 	DeletedAt                *time.Time `gorm:"column:deleted_at;type:datetime;default:NULL;" json:"deleted_at"`
