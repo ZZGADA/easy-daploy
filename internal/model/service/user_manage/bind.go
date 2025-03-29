@@ -3,11 +3,13 @@ package user_manage
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
@@ -194,4 +196,65 @@ func (s *BindService) revokeGithubAccess(accessToken string) error {
 	}
 
 	return nil
+}
+
+// DeveloperTokenRequest 开发者令牌请求
+type DeveloperTokenRequest struct {
+	Token      string    `json:"developer_token"`
+	ExpireTime time.Time `json:"expire_time"`
+	Comment    string    `json:"comment"`
+}
+
+// SaveDeveloperToken 保存开发者令牌
+func (s *BindService) SaveDeveloperToken(ctx context.Context, userID uint, token, comment string, expireTime time.Time) error {
+	// 检查用户是否已绑定 GitHub
+	userGithub, err := s.userGithubDao.GetByUserID(ctx, userID)
+	if err != nil {
+		return err
+	}
+	if userGithub == nil {
+		return errors.New("用户未绑定 GitHub 账号")
+	}
+
+	// 更新开发者令牌信息
+	userGithub.DeveloperToken = token
+	userGithub.DeveloperTokenComment = comment
+	userGithub.DeveloperTokenExpireTime = &expireTime
+
+	// 保存到数据库
+	return s.userGithubDao.Update(ctx, userGithub)
+}
+
+// UpdateDeveloperToken 更新开发者令牌
+func (s *BindService) UpdateDeveloperToken(ctx context.Context, userID uint, token, comment string, expireTime time.Time) error {
+	// 检查用户是否已绑定 GitHub
+	userGithub, err := s.userGithubDao.GetByUserID(ctx, userID)
+	if err != nil {
+		return err
+	}
+	if userGithub == nil {
+		return errors.New("用户未绑定 GitHub 账号")
+	}
+
+	// 更新开发者令牌信息
+	userGithub.DeveloperToken = token
+	userGithub.DeveloperTokenComment = comment
+	userGithub.DeveloperTokenExpireTime = &expireTime
+
+	// 保存到数据库
+	return s.userGithubDao.Update(ctx, userGithub)
+}
+
+// GetDeveloperToken 获取开发者令牌信息
+func (s *BindService) GetDeveloperToken(ctx context.Context, userID uint) (*dao.UserGithub, error) {
+	// 检查用户是否已绑定 GitHub
+	userGithub, err := s.userGithubDao.GetByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	if userGithub == nil {
+		return nil, nil
+	}
+
+	return userGithub, nil
 }

@@ -45,7 +45,7 @@ func CustomAuthMiddleware() gin.HandlerFunc {
 		}
 
 		// 将 user_id 写入 Gin 上下文
-		c.Set("user_id", userId)
+		c.Set("user_id", uint(userId))
 		c.Next()
 	}
 }

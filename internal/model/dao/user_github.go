@@ -9,17 +9,20 @@ import (
 
 // UserGithub GitHub 用户信息表
 type UserGithub struct {
-	Id          uint32    `gorm:"column:id;type:int UNSIGNED;primaryKey;not null;" json:"id"`
-	UserId      uint32    `gorm:"column:user_id;type:int UNSIGNED;not null;" json:"user_id"`
-	GithubId    uint32    `gorm:"column:github_id;type:int UNSIGNED;not null;" json:"github_id"`
-	Login       string    `gorm:"column:login;type:varchar(255);not null;" json:"login"`
-	Name        string    `gorm:"column:name;type:varchar(255);" json:"name"`
-	Email       string    `gorm:"column:email;type:varchar(255);" json:"email"`
-	AvatarUrl   string    `gorm:"column:avatar_url;type:varchar(255);" json:"avatar_url"`
-	AccessToken string    `gorm:"column:access_token;type:varchar(255);not null;" json:"access_token"`
-	CreatedAt   time.Time `gorm:"column:created_at;type:datetime;not null;" json:"created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at;type:datetime;not null;" json:"updated_at"`
-	DeletedAt   time.Time `gorm:"column:deleted_at;type:datetime;default:NULL;" json:"deleted_at"`
+	Id                       uint32     `gorm:"column:id;type:int UNSIGNED;primaryKey;not null;" json:"id"`
+	UserId                   uint32     `gorm:"column:user_id;type:int UNSIGNED;not null;" json:"user_id"`
+	GithubId                 uint32     `gorm:"column:github_id;type:int UNSIGNED;not null;" json:"github_id"`
+	Login                    string     `gorm:"column:login;type:varchar(255);not null;" json:"login"`
+	Name                     string     `gorm:"column:name;type:varchar(255);" json:"name"`
+	Email                    string     `gorm:"column:email;type:varchar(255);" json:"email"`
+	AvatarUrl                string     `gorm:"column:avatar_url;type:varchar(255);" json:"avatar_url"`
+	AccessToken              string     `gorm:"column:access_token;type:varchar(255);not null;" json:"access_token"`
+	DeveloperToken           string     `gorm:"column:developer_token;type:varchar(255);" json:"developer_token"`
+	DeveloperTokenComment    string     `gorm:"column:developer_token_comment;type:varchar(255);" json:"developer_token_comment"`
+	DeveloperTokenExpireTime *time.Time `gorm:"column:developer_token_expire_time;" json:"developer_token_expire_time"`
+	CreatedAt                *time.Time `gorm:"column:created_at;type:datetime;not null;" json:"created_at"`
+	UpdatedAt                *time.Time `gorm:"column:updated_at;type:datetime;not null;" json:"updated_at"`
+	DeletedAt                *time.Time `gorm:"column:deleted_at;type:datetime;default:NULL;" json:"deleted_at"`
 }
 
 // TableName 指定表名
@@ -70,4 +73,22 @@ func (d *UserGithubDao) Update(ctx context.Context, userGithub *UserGithub) erro
 // Delete 删除 GitHub 用户信息（软删除）
 func (d *UserGithubDao) Delete(ctx context.Context, userID uint) error {
 	return d.db.WithContext(ctx).Model(&UserGithub{}).Where("user_id = ? and deleted_at IS NULL", userID).Update("deleted_at", time.Now()).Error
+}
+
+// SaveDeveloperToken 保存开发者令牌信息
+func (d *UserGithubDao) SaveDeveloperToken(ctx context.Context, userID uint, token string, expireTime time.Time, comment string) error {
+	return d.db.WithContext(ctx).Model(&UserGithub{}).
+		Where("user_id = ?", userID).
+		Updates(map[string]interface{}{
+			"developer_token":             token,
+			"developer_token_comment":     comment,
+			"developer_token_expire_time": expireTime,
+		}).Error
+}
+
+// UpdateDeveloperToken 更新开发者令牌信息
+func (d *UserGithubDao) UpdateDeveloperToken(ctx context.Context, userID uint, updates map[string]interface{}) error {
+	return d.db.WithContext(ctx).Model(&UserGithub{}).
+		Where("user_id = ?", userID).
+		Updates(updates).Error
 }

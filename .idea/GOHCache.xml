@@ -17,6 +17,14 @@
             </set>
           </value>
         </entry>
+        <entry key="DeveloperTokenRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/bind.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/user_manage/bind.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="GithubUser">
           <value>
             <set>
@@ -96,7 +104,7 @@
         <entry key="file://$PROJECT_DIR$/internal/middleware/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743214956002" />
+              <option name="lastModified" value="1743231409072" />
             </ScannedPath>
           </value>
         </entry>
@@ -129,7 +137,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_github.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743219274002" />
+              <option name="lastModified" value="1743231668478" />
               <option name="schema">
                 <list>
                   <option value="UserGithub" />
@@ -196,10 +204,11 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/bind.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743218943326" />
+              <option name="lastModified" value="1743234665524" />
               <option name="schema">
                 <list>
                   <option value="BindHandler" />
+                  <option value="DeveloperTokenRequest" />
                 </list>
               </option>
             </ScannedPath>
@@ -222,11 +231,12 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/bind.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743218632793" />
+              <option name="lastModified" value="1743231702106" />
               <option name="schema">
                 <list>
                   <option value="BindService" />
                   <option value="GithubUser" />
+                  <option value="DeveloperTokenRequest" />
                 </list>
               </option>
             </ScannedPath>
@@ -238,6 +248,7 @@
       <map>
         <entry key="bind_handler" value="BindHandler" />
         <entry key="bind_service" value="BindService" />
+        <entry key="developer_token_request" value="DeveloperTokenRequest" />
         <entry key="github_user" value="GithubUser" />
         <entry key="login_dto" value="LoginDTO" />
         <entry key="logrus_writer" value="LogrusWriter" />

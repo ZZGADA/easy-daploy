@@ -37,6 +37,11 @@ func SetupRouter(r *gin.Engine) {
 		bindGroup.GET("/bind/callback", bindHandler.GithubCallback)
 		bindGroup.GET("/status", middleware.CustomAuthMiddleware(), bindHandler.CheckGithubBinding)
 		bindGroup.POST("/unbind", middleware.CustomAuthMiddleware(), bindHandler.UnbindGithub)
+
+		// 开发者令牌相关路由
+		bindGroup.POST("/developer/token/save", middleware.CustomAuthMiddleware(), bindHandler.SaveDeveloperToken)
+		bindGroup.POST("/developer/token/update", middleware.CustomAuthMiddleware(), bindHandler.UpdateDeveloperToken)
+		bindGroup.GET("/developer/token/query", middleware.CustomAuthMiddleware(), bindHandler.QueryDeveloperToken)
 	}
 
 	// check health
