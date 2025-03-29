@@ -129,7 +129,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_github.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743218508654" />
+              <option name="lastModified" value="1743219274002" />
               <option name="schema">
                 <list>
                   <option value="UserGithub" />
@@ -196,7 +196,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/bind.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743218111325" />
+              <option name="lastModified" value="1743218943326" />
               <option name="schema">
                 <list>
                   <option value="BindHandler" />

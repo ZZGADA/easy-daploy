@@ -24,6 +24,8 @@ func NewBindHandler(bindService *user_manage.BindService) *BindHandler {
 // GithubCallback 处理 GitHub OAuth 回调
 func (h *BindHandler) GithubCallback(c *gin.Context) {
 	code := c.Query("code")
+	redirectURL := c.Query("redirect_url") // 获取前端传来的重定向URL
+
 	if code == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code": 400,
@@ -58,7 +60,7 @@ func (h *BindHandler) GithubCallback(c *gin.Context) {
 		})
 		return
 	}
-	data, err := h.bindService.BindGithub(c, uint32(userId), code)
+	_, err := h.bindService.BindGithub(c, uint32(userId), code)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code": 500,
@@ -67,15 +69,16 @@ func (h *BindHandler) GithubCallback(c *gin.Context) {
 		return
 	}
 
+	// 绑定成功后重定向到前端页面
+	if redirectURL != "" {
+		c.Redirect(http.StatusTemporaryRedirect, redirectURL)
+		return
+	}
+
+	// 如果没有重定向URL，返回JSON响应
 	c.JSON(http.StatusOK, gin.H{
-		"code":       200,
-		"msg":        "GitHub account bound successfully",
-		"bound":      true,
-		"avatar_url": data.AvatarUrl,
-		"id":         data.UserId,
-		"email":      data.Email,
-		"name":       data.Name,
-		"github_id":  data.GithubId,
+		"code": 200,
+		"msg":  "GitHub account bound successfully",
 	})
 }
 

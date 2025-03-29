@@ -69,5 +69,5 @@ func (d *UserGithubDao) Update(ctx context.Context, userGithub *UserGithub) erro
 
 // Delete 删除 GitHub 用户信息（软删除）
 func (d *UserGithubDao) Delete(ctx context.Context, userID uint) error {
-	return d.db.WithContext(ctx).Where("user_id = ? and deleted_at IS NULL", userID).Update("deleted_at", time.Now()).Error
+	return d.db.WithContext(ctx).Model(&UserGithub{}).Where("user_id = ? and deleted_at IS NULL", userID).Update("deleted_at", time.Now()).Error
 }
