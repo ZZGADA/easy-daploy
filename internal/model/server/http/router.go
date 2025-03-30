@@ -4,6 +4,7 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/middleware"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,7 @@ func SetupRouter(r *gin.Engine) {
 	// GitHub 绑定相关路由
 	bindGroup := r.Group("/api/user/github")
 	{
+		// GitHub 绑定相关路由
 		bindGroup.GET("/bind/callback", bindHandler.GithubCallback)
 		bindGroup.GET("/status", middleware.CustomAuthMiddleware(), bindHandler.CheckGithubBinding)
 		bindGroup.POST("/unbind", middleware.CustomAuthMiddleware(), bindHandler.UnbindGithub)
@@ -42,6 +44,18 @@ func SetupRouter(r *gin.Engine) {
 		bindGroup.POST("/developer/token/save", middleware.CustomAuthMiddleware(), bindHandler.SaveDeveloperToken)
 		bindGroup.POST("/developer/token/update", middleware.CustomAuthMiddleware(), bindHandler.UpdateDeveloperToken)
 		bindGroup.GET("/developer/token/query", middleware.CustomAuthMiddleware(), bindHandler.QueryDeveloperToken)
+	}
+
+	// 创建 DockerfileHandler 实例
+	dockerfileHandler := NewDockerfileHandler(docker_manage.NewDockerfileService(dao.NewUserDockerfileDao(conf.DB)))
+
+	// 用户仓库 Dockerfile 制作
+	dockerfile := r.Group("api/user/dockerfile", middleware.CustomAuthMiddleware())
+	{
+		dockerfile.POST("/repository/upload", dockerfileHandler.UploadDockerfile) // Dockerfile 首次上传
+		dockerfile.GET("/repository/query", dockerfileHandler.QueryDockerfile)    // Dockerfile 查询
+		dockerfile.POST("/repository/update", dockerfileHandler.UpdateDockerfile) // Dockerfile 更新
+		dockerfile.POST("/repository/delete", dockerfileHandler.DeleteDockerfile) // Dockerfile 删除
 	}
 
 	// check health
