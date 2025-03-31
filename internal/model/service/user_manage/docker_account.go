@@ -32,17 +32,18 @@ func NewDockerAccountService(dockerDao dao.UserDockerDao) *DockerAccountService 
 }
 
 // SaveDockerAccount 保存Docker账号信息
-func (s *DockerAccountService) SaveDockerAccount(server, username, password, comment string, userId uint) (bool, error) {
+func (s *DockerAccountService) SaveDockerAccount(server, username, password, comment string, namespace string, userId uint) (bool, error) {
 	if server == "" || username == "" || password == "" {
 		return false, errors.New("必填参数不能为空")
 	}
 
 	docker := &dao.UserDocker{
-		UserID:   userId,
-		Server:   server,
-		Username: username,
-		Password: password,
-		Comment:  comment,
+		UserID:    userId,
+		Server:    server,
+		Username:  username,
+		Password:  password,
+		Comment:   comment,
+		Namespace: namespace,
 	}
 
 	// 如果是用户的第一个账号，设置为默认账号
@@ -62,7 +63,7 @@ func (s *DockerAccountService) SaveDockerAccount(server, username, password, com
 }
 
 // UpdateDockerAccount 更新Docker账号信息
-func (s *DockerAccountService) UpdateDockerAccount(id uint, server, username, password, comment string, userId uint) (bool, error) {
+func (s *DockerAccountService) UpdateDockerAccount(id uint, server, username, password, comment string, namespace string, userId uint) (bool, error) {
 	if id == 0 || server == "" || username == "" || password == "" {
 		return false, errors.New("必填参数不能为空")
 	}
@@ -80,6 +81,7 @@ func (s *DockerAccountService) UpdateDockerAccount(id uint, server, username, pa
 	docker.Username = username
 	docker.Password = password
 	docker.Comment = comment
+	docker.Namespace = namespace
 
 	if err := s.dockerDao.Update(docker); err != nil {
 		return false, err

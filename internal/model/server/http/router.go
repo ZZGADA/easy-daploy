@@ -29,7 +29,7 @@ func SetupRouter(r *gin.Engine) {
 		dao.NewUserDockerDao(conf.DB),
 		dao.NewUserGithubDao(conf.DB)))
 
-	r.GET(conf.WSServer.Path, middleware.CustomAuthMiddleware(), websocketHandler.HandleWebSocket)
+	r.GET(conf.WSServer.Path, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocket)
 
 	// 注册路由
 	// 登陆注册路由组

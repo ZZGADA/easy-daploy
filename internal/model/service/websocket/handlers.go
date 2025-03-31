@@ -91,7 +91,7 @@ func (s *SocketDockerService) HandleGenerateDockerfile(conn *websocket.Conn, dat
 		return
 	}
 
-	SendSuccess(conn, "Dockerfile 生成成功", map[string]string{
+	SendSuccess(conn, "Dockerfile build success", map[string]string{
 		"filename": filename,
 	})
 }
@@ -144,7 +144,7 @@ func (s *SocketDockerService) HandleCloneRepository(conn *websocket.Conn, data m
 		return
 	}
 
-	SendSuccess(conn, "仓库克隆成功", nil)
+	SendSuccess(conn, "git clone success", nil)
 }
 
 // HandleBuildImage 处理构建镜像的请求
@@ -183,7 +183,7 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	}
 
 	// 构建完整的镜像名称
-	fullImageName := fmt.Sprintf("%s/%s/%s", dockerAccount.Server, dockerAccount.Username, imageName)
+	fullImageName := fmt.Sprintf("%s/%s/%s", dockerAccount.Server, dockerAccount.Namespace, imageName)
 
 	// 构建镜像
 	repoDir := filepath.Join("docker", dockerfile.RepositoryName)

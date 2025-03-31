@@ -85,12 +85,15 @@ func (s *SocketDockerHandler) HandleWebSocket(c *gin.Context) {
 		}
 		// 处理不同的方法
 		switch dockerBuildStep {
+		case "init":
+			websocket2.SendSuccess(conn, "connect success", "connect success")
 		case "generate_dockerfile":
 			s.socketDockerService.HandleGenerateDockerfile(conn, wsMsg.Data, userID)
 		case "clone_repository":
 			s.socketDockerService.HandleCloneRepository(conn, wsMsg.Data, userID)
 		case "build_image":
 			s.socketDockerService.HandleBuildImage(conn, wsMsg.Data, userID)
+			break
 		default:
 			websocket2.SendError(conn, "未知的方法")
 		}

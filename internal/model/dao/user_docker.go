@@ -10,6 +10,7 @@ import (
 type UserDocker struct {
 	ID        uint       `gorm:"column:id;type:int UNSIGNED;primaryKey;not null;" json:"id"`
 	UserID    uint       `gorm:"column:user_id;type:int UNSIGNED;not null;index:idx_user_id" json:"user_id"` // 用户ID
+	Namespace string     `gorm:"column:namespace;type:varchar(255);not null;" json:"namespace"`              // 命名空间
 	Server    string     `gorm:"column:server;type:varchar(255);not null" json:"server"`                     // Docker仓库地址
 	Username  string     `gorm:"column:user_name;type:varchar(255);not null" json:"username"`                // Docker仓库用户名
 	Password  string     `gorm:"column:password;type:varchar(255);not null" json:"password"`                 // Docker仓库密码

@@ -10,11 +10,12 @@ import (
 
 // DockerAccountRequest Docker账号请求结构体
 type DockerAccountRequest struct {
-	ID       uint   `json:"id,omitempty"`
-	Server   string `json:"server" binding:"required"`
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Comment  string `json:"comment"`
+	ID        uint   `json:"id,omitempty"`
+	Server    string `json:"server" binding:"required"`
+	Namespace string `json:"namespace" binding:"required"`
+	Username  string `json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	Comment   string `json:"comment"`
 }
 
 // SetDefaultRequest 设置默认账号请求结构体
@@ -51,7 +52,7 @@ func (h *DockerHandler) SaveDockerAccount(c *gin.Context) {
 		return
 	}
 
-	_, err := h.dockerService.SaveDockerAccount(req.Server, req.Username, req.Password, req.Comment, userID)
+	_, err := h.dockerService.SaveDockerAccount(req.Server, req.Username, req.Password, req.Comment, req.Namespace, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -86,7 +87,7 @@ func (h *DockerHandler) UpdateDockerAccount(c *gin.Context) {
 		return
 	}
 
-	_, err := h.dockerService.UpdateDockerAccount(req.ID, req.Server, req.Username, req.Password, req.Comment, userID)
+	_, err := h.dockerService.UpdateDockerAccount(req.ID, req.Server, req.Username, req.Password, req.Comment, req.Namespace, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
