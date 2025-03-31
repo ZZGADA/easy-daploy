@@ -90,7 +90,6 @@ func (s *SocketDockerHandler) HandleWebSocket(c *gin.Context) {
 		case "clone_repository":
 			s.socketDockerService.HandleCloneRepository(conn, wsMsg.Data, userID)
 		case "build_image":
-
 			s.socketDockerService.HandleBuildImage(conn, wsMsg.Data, userID)
 		default:
 			websocket2.SendError(conn, "未知的方法")

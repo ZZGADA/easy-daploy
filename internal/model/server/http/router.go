@@ -26,7 +26,8 @@ func SetupRouter(r *gin.Engine) {
 
 	websocketHandler := websocket.NewSocketDockerHandler(websocket2.NewSocketDockerService(
 		dao.NewUserDockerfileDao(conf.DB),
-		dao.NewUserDockerDao(conf.DB)))
+		dao.NewUserDockerDao(conf.DB),
+		dao.NewUserGithubDao(conf.DB)))
 
 	r.GET(conf.WSServer.Path, middleware.CustomAuthMiddleware(), websocketHandler.HandleWebSocket)
 
