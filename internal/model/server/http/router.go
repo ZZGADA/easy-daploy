@@ -7,6 +7,7 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/model/server/websocket"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
+	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,12 @@ func SetupRouter(r *gin.Engine) {
 	r.Use(cors.New(config))
 
 	// 注册 WebSocket 路由
-	websocket.SetupWebSocketRoutes(r)
+
+	websocketHandler := websocket.NewSocketDockerHandler(websocket2.NewSocketDockerService(
+		dao.NewUserDockerfileDao(conf.DB),
+		dao.NewUserDockerDao(conf.DB)))
+
+	r.GET(conf.WSServer.Path, middleware.CustomAuthMiddleware(), websocketHandler.HandleWebSocket)
 
 	// 注册路由
 	// 登陆注册路由组
