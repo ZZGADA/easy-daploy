@@ -17,6 +17,13 @@
             </set>
           </value>
         </entry>
+        <entry key="Config">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/config/config.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="DeveloperTokenRequest">
           <value>
             <set>
@@ -40,6 +47,13 @@
           </value>
         </entry>
         <entry key="DockerHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="DockerLoginRequest">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go" />
@@ -177,6 +191,13 @@
             </set>
           </value>
         </entry>
+        <entry key="WebSocketServer">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/conf/websocket.go" />
+            </set>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="scannedPathMapping">
@@ -184,7 +205,19 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743047953369" />
+              <option name="lastModified" value="1743411047186" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/config/config.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743411047075" />
+              <option name="schema">
+                <list>
+                  <option value="Config" />
+                </list>
+              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -209,6 +242,18 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/conf/websocket.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743411047066" />
+              <option name="schema">
+                <list>
+                  <option value="WebSocketServer" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user.go">
           <value>
             <ScannedPath>
@@ -224,7 +269,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_docker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743391318065" />
+              <option name="lastModified" value="1743404664937" />
               <option name="schema">
                 <list>
                   <option value="UserDocker" />
@@ -288,7 +333,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/define/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743174096352" />
+              <option name="lastModified" value="1743405733682" />
             </ScannedPath>
           </value>
         </entry>
@@ -343,11 +388,12 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743389105812" />
+              <option name="lastModified" value="1743406572920" />
               <option name="schema">
                 <list>
                   <option value="DockerAccountRequest" />
                   <option value="SetDefaultRequest" />
+                  <option value="DockerLoginRequest" />
                   <option value="DockerHandler" />
                 </list>
               </option>
@@ -369,7 +415,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743388326696" />
+              <option name="lastModified" value="1743407518772" />
             </ScannedPath>
           </value>
         </entry>
@@ -410,7 +456,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/docker_account.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743389105526" />
+              <option name="lastModified" value="1743405733688" />
               <option name="schema">
                 <list>
                   <option value="DockerAccountService" />
@@ -432,16 +478,25 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/utils/common.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743405080210" />
+            </ScannedPath>
+          </value>
+        </entry>
       </map>
     </option>
     <option name="tableStructMapping">
       <map>
         <entry key="bind_handler" value="BindHandler" />
         <entry key="bind_service" value="BindService" />
+        <entry key="config" value="Config" />
         <entry key="developer_token_request" value="DeveloperTokenRequest" />
         <entry key="docker_account_request" value="DockerAccountRequest" />
         <entry key="docker_account_service" value="DockerAccountService" />
         <entry key="docker_handler" value="DockerHandler" />
+        <entry key="docker_login_request" value="DockerLoginRequest" />
         <entry key="dockerfile_handler" value="DockerfileHandler" />
         <entry key="dockerfile_item" value="DockerfileItem" />
         <entry key="dockerfile_request" value="DockerfileRequest" />
@@ -460,6 +515,7 @@
         <entry key="user_github_dao" value="UserGithubDao" />
         <entry key="users" value="Users" />
         <entry key="verify_code_dto" value="VerifyCodeDTO" />
+        <entry key="web_socket_server" value="WebSocketServer" />
       </map>
     </option>
     <option name="lastTimeChecked" value="1743045915429" />

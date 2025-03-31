@@ -6,7 +6,8 @@ const (
 )
 
 const (
-	UserToken      = "user_token:%s"       // token->user id
-	UserEmailToken = "user_email_token:%s" // email-> token
-	UserInfo       = "user_info:%s"
+	UserToken       = "user_token:%s"       // token->user id
+	UserEmailToken  = "user_email_token:%s" // email-> token
+	UserInfo        = "user_info:%s"
+	UserDockerLogin = "user_docker_login:%d" // user id
 )

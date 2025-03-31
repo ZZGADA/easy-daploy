@@ -34,6 +34,13 @@ type Config struct {
 		ClientID     string
 		ClientSecret string
 	}
+
+	WebSocket struct {
+		Port            int    `mapstructure:"port"`
+		Path            string `mapstructure:"path"`
+		ReadBufferSize  int    `mapstructure:"read_buffer_size"`
+		WriteBufferSize int    `mapstructure:"write_buffer_size"`
+	}
 }
 
 var GlobalConfig Config

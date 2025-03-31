@@ -4,6 +4,7 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/middleware"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
+	"github.com/ZZGADA/easy-deploy/internal/model/server/websocket"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	"github.com/gin-contrib/cors"
@@ -19,6 +20,9 @@ func SetupRouter(r *gin.Engine) {
 	config.AllowCredentials = true
 
 	r.Use(cors.New(config))
+
+	// 注册 WebSocket 路由
+	websocket.SetupWebSocketRoutes(r)
 
 	// 注册路由
 	// 登陆注册路由组
@@ -59,13 +63,15 @@ func SetupRouter(r *gin.Engine) {
 	}
 
 	dockerHandler := NewDockerHandler(user_manage.NewDockerAccountService(dao.NewUserDockerDao(conf.DB)))
-	docker := r.Group("api/user/docker", middleware.CustomAuthMiddleware())
+	docker := r.Group("/api/user/docker", middleware.CustomAuthMiddleware())
 	{
 		docker.POST("/info/save", dockerHandler.SaveDockerAccount)
 		docker.POST("/info/update", dockerHandler.UpdateDockerAccount)
 		docker.POST("/info/delete", dockerHandler.DeleteDockerAccount)
 		docker.GET("/info/query", dockerHandler.QueryDockerAccounts)
 		docker.POST("/info/setDefault", dockerHandler.SetDefaultDockerAccount)
+		docker.POST("/login", dockerHandler.LoginDockerAccount)
+		docker.GET("/info/login/query", dockerHandler.QueryLoginDockerAccount)
 	}
 
 	// check health

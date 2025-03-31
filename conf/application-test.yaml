@@ -21,3 +21,9 @@ smtp:
   user: "1293177585@qq.com"     # 自己的邮箱
   password: "wlkgcoyhwrfcffjj"  # 邮箱第三方客户端授权码
   from: "1293177585@qq.com"     # 发邮件人
+
+websocket:
+  port: 52881
+  path: "/ws/build"
+  read_buffer_size: 1024
+  write_buffer_size: 1024

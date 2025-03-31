@@ -22,6 +22,11 @@ type SetDefaultRequest struct {
 	DockerAccountID uint `json:"docker_account_id" binding:"required"`
 }
 
+// DockerLoginRequest Docker登录请求结构体
+type DockerLoginRequest struct {
+	ID uint `json:"id" binding:"required"`
+}
+
 // DockerHandler Docker账号管理处理器
 type DockerHandler struct {
 	dockerService *user_manage.DockerAccountService
@@ -46,8 +51,7 @@ func (h *DockerHandler) SaveDockerAccount(c *gin.Context) {
 		return
 	}
 
-	h.dockerService.UserID = userID
-	_, err := h.dockerService.SaveDockerAccount(req.Server, req.Username, req.Password, req.Comment)
+	_, err := h.dockerService.SaveDockerAccount(req.Server, req.Username, req.Password, req.Comment, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -82,8 +86,7 @@ func (h *DockerHandler) UpdateDockerAccount(c *gin.Context) {
 		return
 	}
 
-	h.dockerService.UserID = userID
-	_, err := h.dockerService.UpdateDockerAccount(req.ID, req.Server, req.Username, req.Password, req.Comment)
+	_, err := h.dockerService.UpdateDockerAccount(req.ID, req.Server, req.Username, req.Password, req.Comment, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -112,8 +115,7 @@ func (h *DockerHandler) DeleteDockerAccount(c *gin.Context) {
 		return
 	}
 
-	h.dockerService.UserID = userID
-	_, err := h.dockerService.DeleteDockerAccount(req.ID)
+	_, err := h.dockerService.DeleteDockerAccount(req.ID, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -132,8 +134,7 @@ func (h *DockerHandler) DeleteDockerAccount(c *gin.Context) {
 func (h *DockerHandler) QueryDockerAccounts(c *gin.Context) {
 	userID := c.GetUint("user_id")
 
-	h.dockerService.UserID = userID
-	response, err := h.dockerService.QueryDockerAccounts()
+	response, err := h.dockerService.QueryDockerAccounts(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -160,8 +161,7 @@ func (h *DockerHandler) SetDefaultDockerAccount(c *gin.Context) {
 		return
 	}
 
-	h.dockerService.UserID = userID
-	_, err := h.dockerService.SetDefaultAccount(req.DockerAccountID)
+	_, err := h.dockerService.SetDefaultAccount(req.DockerAccountID, userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -173,5 +173,65 @@ func (h *DockerHandler) SetDefaultDockerAccount(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
 		"message": "success",
+	})
+}
+
+// LoginDockerAccount 登录 Docker 账号
+func (h *DockerHandler) LoginDockerAccount(c *gin.Context) {
+	userID := c.GetUint("user_id")
+	var req DockerLoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "无效的请求参数",
+		})
+		return
+	}
+
+	success, err := h.dockerService.LoginDockerAccount(req.ID, userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if success {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
+			"message": "登录成功",
+			"data": gin.H{
+				"success": success,
+			},
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
+			"message": "登录失败，请稍后重试",
+			"data": gin.H{
+				"success": success,
+			},
+		})
+	}
+
+}
+
+// QueryLoginDockerAccount 查询当前登录的 Docker 账号
+func (h *DockerHandler) QueryLoginDockerAccount(c *gin.Context) {
+	userID := c.GetUint("user_id")
+
+	account, err := h.dockerService.GetLoginAccount(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": http.StatusOK,
+		"data": account,
 	})
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/server/http"
@@ -22,14 +21,16 @@ func init() {
 	}
 
 	// 初始化MySQL和Redis
+	// 初始化 WebSocket 服务
 	conf.InitMySQL()
 	conf.InitRedis()
+	conf.InitWebSocketServer()
 }
 
 func main() {
 	r := gin.Default()
 
-	// 注册路由
+	// 设置路由
 	http.SetupRouter(r)
 
 	port := config.GlobalConfig.Server.Port
