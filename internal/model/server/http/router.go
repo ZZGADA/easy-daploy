@@ -58,6 +58,16 @@ func SetupRouter(r *gin.Engine) {
 		dockerfile.POST("/repository/delete", dockerfileHandler.DeleteDockerfile) // Dockerfile 删除
 	}
 
+	dockerHandler := NewDockerHandler(user_manage.NewDockerAccountService(dao.NewUserDockerDao(conf.DB)))
+	docker := r.Group("api/user/docker", middleware.CustomAuthMiddleware())
+	{
+		docker.POST("/info/save", dockerHandler.SaveDockerAccount)
+		docker.POST("/info/update", dockerHandler.UpdateDockerAccount)
+		docker.POST("/info/delete", dockerHandler.DeleteDockerAccount)
+		docker.GET("/info/query", dockerHandler.QueryDockerAccounts)
+		docker.POST("/info/setDefault", dockerHandler.SetDefaultDockerAccount)
+	}
+
 	// check health
 	r.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})

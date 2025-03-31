@@ -291,7 +291,7 @@ func (h *BindHandler) QueryDeveloperToken(c *gin.Context) {
 			"developer_token":             tokenInfo.DeveloperToken,
 			"developer_token_comment":     tokenInfo.DeveloperTokenComment,
 			"developer_token_expire_time": expireTimeStr,
-			"developer_repository_name":   tokenInfo.DeveloperRepositoryName,
+			"developer_repository_name":   tokenInfo.Login,
 		},
 	})
 }

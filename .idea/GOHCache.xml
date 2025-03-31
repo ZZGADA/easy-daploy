@@ -25,6 +25,27 @@
             </set>
           </value>
         </entry>
+        <entry key="DockerAccountRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="DockerAccountService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/user_manage/docker_account.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="DockerHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="DockerfileHandler">
           <value>
             <set>
@@ -83,11 +104,33 @@
             </set>
           </value>
         </entry>
+        <entry key="SetDefaultRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="User">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/dao/user.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/user_manage/auth.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserDocker">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_docker.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserDockerDaoImpl">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_docker.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_docker_dao.go" />
             </set>
           </value>
         </entry>
@@ -178,6 +221,31 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_docker.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743391318065" />
+              <option name="schema">
+                <list>
+                  <option value="UserDocker" />
+                  <option value="UserDockerDaoImpl" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_docker_dao.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743389105530" />
+              <option name="schema">
+                <list>
+                  <option value="UserDockerDaoImpl" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_dockerfile.go">
           <value>
             <ScannedPath>
@@ -262,11 +330,25 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/bind.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743250444527" />
+              <option name="lastModified" value="1743385951350" />
               <option name="schema">
                 <list>
                   <option value="BindHandler" />
                   <option value="DeveloperTokenRequest" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743389105812" />
+              <option name="schema">
+                <list>
+                  <option value="DockerAccountRequest" />
+                  <option value="SetDefaultRequest" />
+                  <option value="DockerHandler" />
                 </list>
               </option>
             </ScannedPath>
@@ -287,7 +369,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743325691186" />
+              <option name="lastModified" value="1743388326696" />
             </ScannedPath>
           </value>
         </entry>
@@ -325,6 +407,18 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/docker_account.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743389105526" />
+              <option name="schema">
+                <list>
+                  <option value="DockerAccountService" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/dockerfile.go">
           <value>
             <ScannedPath>
@@ -345,6 +439,9 @@
         <entry key="bind_handler" value="BindHandler" />
         <entry key="bind_service" value="BindService" />
         <entry key="developer_token_request" value="DeveloperTokenRequest" />
+        <entry key="docker_account_request" value="DockerAccountRequest" />
+        <entry key="docker_account_service" value="DockerAccountService" />
+        <entry key="docker_handler" value="DockerHandler" />
         <entry key="dockerfile_handler" value="DockerfileHandler" />
         <entry key="dockerfile_item" value="DockerfileItem" />
         <entry key="dockerfile_request" value="DockerfileRequest" />
@@ -353,7 +450,10 @@
         <entry key="login_dto" value="LoginDTO" />
         <entry key="logrus_writer" value="LogrusWriter" />
         <entry key="register_dto" value="RegisterDTO" />
+        <entry key="set_default_request" value="SetDefaultRequest" />
         <entry key="user" value="User" />
+        <entry key="user_docker" value="UserDocker" />
+        <entry key="user_docker_dao_impl" value="UserDockerDaoImpl" />
         <entry key="user_dockerfile" value="UserDockerfile" />
         <entry key="user_dockerfile_dao" value="UserDockerfileDao" />
         <entry key="user_github" value="UserGithub" />
