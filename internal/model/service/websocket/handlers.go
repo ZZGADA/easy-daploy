@@ -245,11 +245,11 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 		return
 	}
 
-	//stderr, err := cmd.StderrPipe()
-	//if err != nil {
-	//	SendError(conn, fmt.Sprintf("创建错误管道失败: %v", err))
-	//	return
-	//}
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		SendError(conn, fmt.Sprintf("创建错误管道失败: %v", err))
+		return
+	}
 
 	// 启动命令
 	if err := cmd.Start(); err != nil {
@@ -257,32 +257,38 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 		return
 	}
 
-	// 读取并发送输出
+	// 读取并发送 stdout 输出
 	go func() {
 		buffer := make([]byte, 1024)
 		for {
 			n, err := stdout.Read(buffer)
 			if n > 0 {
+				log.Infof("stdout: %s", string(buffer[:n]))
 				SendSuccess(conn, "build_output", string(buffer[:n]))
 			}
 			if err != nil {
+				log.Info("stdout 读取结束")
 				break
 			}
 		}
 	}()
 
-	//go func() {
-	//	buffer := make([]byte, 1024)
-	//	for {
-	//		n, err := stderr.Read(buffer)
-	//		if n > 0 {
-	//			SendSuccess(conn, "build_error", string(buffer[:n]))
-	//		}
-	//		if err != nil {
-	//			break
-	//		}
-	//	}
-	//}()
+	// 读取并发送 stderr 输出
+	// Docker 构建过程中的输出默认是写入到 stderr 而不是 stdout。
+	go func() {
+		buffer := make([]byte, 1024)
+		for {
+			n, err := stderr.Read(buffer)
+			if n > 0 {
+				log.Infof("stderr: %s", string(buffer[:n]))
+				SendSuccess(conn, "build_output", string(buffer[:n]))
+			}
+			if err != nil {
+				log.Info("stderr 读取结束")
+				break
+			}
+		}
+	}()
 
 	// 等待命令完成
 	if err := cmd.Wait(); err != nil {
@@ -298,7 +304,7 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 		return
 	}
 
-	SendSuccess(conn, "build & push success", map[string]string{
+	SendSuccess(conn, "docker build & push success", map[string]string{
 		"image_name": fullImageName,
 	})
 

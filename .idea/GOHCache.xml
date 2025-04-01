@@ -1863,7 +1863,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743493349585" />
+              <option name="lastModified" value="1743494006546" />
               <option name="schema">
                 <list>
                   <option value="SocketDockerService" />
