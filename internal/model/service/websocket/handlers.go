@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 
@@ -45,13 +46,19 @@ type WSResponse struct {
 
 // HandleGenerateDockerfile 处理生成 Dockerfile 的请求
 func (s *SocketDockerService) HandleGenerateDockerfile(conn *websocket.Conn, data map[string]interface{}, userID uint) {
+	log.Info("=== HandleGenerateDockerfile 开始 ===")
+	log.Infof("接收到的数据: %+v", data)
+
 	ctx := context.Background()
 	// 验证必要参数
 	dockerfileID, ok := data["id"].(float64)
 	if !ok {
+		log.Error("缺少 Dockerfile ID")
 		SendError(conn, "缺少 Dockerfile ID")
 		return
 	}
+
+	log.Infof("处理参数 - DockerfileID: %v", dockerfileID)
 
 	// 从数据库获取 Dockerfile 信息
 	dockerfile, err := s.userDockerfileDao.GetByID(ctx, uint32(dockerfileID))
@@ -94,17 +101,25 @@ func (s *SocketDockerService) HandleGenerateDockerfile(conn *websocket.Conn, dat
 	SendSuccess(conn, "Dockerfile build success", map[string]string{
 		"filename": filename,
 	})
+
+	log.Info("=== HandleGenerateDockerfile 结束 ===")
 }
 
 // HandleCloneRepository 处理克隆仓库的请求
 func (s *SocketDockerService) HandleCloneRepository(conn *websocket.Conn, data map[string]interface{}, userID uint) {
+	log.Info("=== HandleCloneRepository 开始 ===")
+	log.Infof("接收到的数据: %+v", data)
+
 	ctx := context.Background()
 	// 验证必要参数
 	dockerfileID, ok := data["id"].(float64)
 	if !ok {
+		log.Error("缺少 Dockerfile ID")
 		SendError(conn, "缺少 Dockerfile ID")
 		return
 	}
+
+	log.Infof("处理参数 - DockerfileID: %v", dockerfileID)
 
 	// 从数据库获取 Dockerfile 信息
 	dockerfile, err := s.userDockerfileDao.GetByID(ctx, uint32(dockerfileID))
@@ -145,27 +160,36 @@ func (s *SocketDockerService) HandleCloneRepository(conn *websocket.Conn, data m
 	}
 
 	SendSuccess(conn, "git clone success", nil)
+
+	log.Info("=== HandleCloneRepository 结束 ===")
 }
 
 // HandleBuildImage 处理构建镜像的请求
 func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[string]interface{}, userID uint) {
+	log.Info("=== HandleBuildImage 开始 ===")
+	log.Infof("接收到的数据: %+v", data)
+
 	ctx := context.Background()
 	// 验证必要参数
 	dockerfileID, ok := data["id"].(float64)
 	if !ok {
+		log.Error("缺少 Dockerfile ID")
 		SendError(conn, "缺少 Dockerfile ID")
 		return
 	}
 
 	imageName, ok := data["docker_image_name"].(string)
 	if !ok {
+		log.Error("缺少镜像名称")
 		SendError(conn, "缺少镜像名称")
 		return
 	}
+	log.Infof("处理参数 - DockerfileID: %v, ImageName: %s", dockerfileID, imageName)
 
 	// 获取 Dockerfile 信息
 	dockerfile, err := s.userDockerfileDao.GetByID(ctx, uint32(dockerfileID))
 	if err != nil {
+		log.Errorf("获取 Dockerfile 失败: %v", err)
 		SendError(conn, fmt.Sprintf("获取 Dockerfile 失败: %v", err))
 		return
 	}
@@ -173,17 +197,20 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	// 获取 Docker 账号信息
 	dockerAccount, err := s.userDockerDao.GetLoginAccount(userID)
 	if err != nil {
+		log.Errorf("获取 Docker 账号失败: %v", err)
 		SendError(conn, fmt.Sprintf("获取 Docker 账号失败: %v", err))
 		return
 	}
 
 	if dockerAccount == nil {
+		log.Error("未找到已登录的 Docker 账号")
 		SendError(conn, "未找到已登录的 Docker 账号")
 		return
 	}
 
 	// 构建完整的镜像名称
 	fullImageName := fmt.Sprintf("%s/%s/%s", dockerAccount.Server, dockerAccount.Namespace, imageName)
+	log.Infof("构建完整镜像名称: %s", fullImageName)
 
 	// 构建镜像
 	repoDir := filepath.Join("docker", dockerfile.RepositoryName)
@@ -274,6 +301,8 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	SendSuccess(conn, "build & push success", map[string]string{
 		"image_name": fullImageName,
 	})
+
+	log.Info("=== HandleBuildImage 结束 ===")
 }
 
 // SendError 发送错误消息
