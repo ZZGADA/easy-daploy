@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/server/http"

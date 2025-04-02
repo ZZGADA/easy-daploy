@@ -209,6 +209,13 @@
             </set>
           </value>
         </entry>
+        <entry key="DeleteResourceRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="DeveloperTokenRequest">
           <value>
             <set>
@@ -354,6 +361,20 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/IntelCPU.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="K8sResourceHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="K8sResourceService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_manage.go" />
             </set>
           </value>
         </entry>
@@ -583,6 +604,13 @@
             </set>
           </value>
         </entry>
+        <entry key="SaveResourceRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="SequentialIORefined">
           <value>
             <set>
@@ -734,6 +762,20 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/dao/user_github.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserK8sResource">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserK8sResourceDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go" />
             </set>
           </value>
         </entry>
@@ -1747,6 +1789,19 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743587714446" />
+              <option name="schema">
+                <list>
+                  <option value="UserK8sResource" />
+                  <option value="UserK8sResourceDao" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/dao/users.go">
           <value>
             <ScannedPath>
@@ -1827,10 +1882,24 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743587542650" />
+              <option name="schema">
+                <list>
+                  <option value="K8sResourceHandler" />
+                  <option value="SaveResourceRequest" />
+                  <option value="DeleteResourceRequest" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743563126938" />
+              <option name="lastModified" value="1743584839107" />
             </ScannedPath>
           </value>
         </entry>
@@ -1868,6 +1937,18 @@
                 <list>
                   <option value="DockerfileService" />
                   <option value="DockerfileRequest" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_manage.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743587334081" />
+              <option name="schema">
+                <list>
+                  <option value="K8sResourceService" />
                 </list>
               </option>
             </ScannedPath>
@@ -1960,6 +2041,7 @@
         <entry key="context" value="Context" />
         <entry key="credit_pay_strategy" value="CreditPayStrategy" />
         <entry key="delay_double_delete_strategy" value="DelayDoubleDeleteStrategy" />
+        <entry key="delete_resource_request" value="DeleteResourceRequest" />
         <entry key="developer_token_request" value="DeveloperTokenRequest" />
         <entry key="dft" value="dft" />
         <entry key="director" value="Director" />
@@ -1982,6 +2064,8 @@
         <entry key="handler_context" value="HandlerContext" />
         <entry key="intel_cpu" value="IntelCPU" />
         <entry key="io_abstraction_base" value="IOAbstractionBase" />
+        <entry key="k8s_resource_handler" value="K8sResourceHandler" />
+        <entry key="k8s_resource_service" value="K8sResourceService" />
         <entry key="label_tree" value="LabelTree" />
         <entry key="label_tree_mapper" value="LabelTreeMapper" />
         <entry key="label_tree_service" value="LabelTreeService" />
@@ -2014,6 +2098,7 @@
         <entry key="remote_invoker" value="RemoteInvoker" />
         <entry key="result" value="Result" />
         <entry key="routine_pool" value="RoutinePool" />
+        <entry key="save_resource_request" value="SaveResourceRequest" />
         <entry key="sequential_io_refined" value="SequentialIORefined" />
         <entry key="set_default_request" value="SetDefaultRequest" />
         <entry key="simple_factory" value="SimpleFactory" />
@@ -2036,6 +2121,8 @@
         <entry key="user_dockerfile_dao" value="UserDockerfileDao" />
         <entry key="user_github" value="UserGithub" />
         <entry key="user_github_dao" value="UserGithubDao" />
+        <entry key="user_k8s_resource" value="UserK8sResource" />
+        <entry key="user_k8s_resource_dao" value="UserK8sResourceDao" />
         <entry key="users" value="Users" />
         <entry key="verify_code_dto" value="VerifyCodeDTO" />
         <entry key="web_socket_server" value="WebSocketServer" />

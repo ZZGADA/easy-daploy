@@ -6,6 +6,7 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 	"github.com/ZZGADA/easy-deploy/internal/model/server/websocket"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/k8s_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 	"github.com/gin-contrib/cors"
@@ -77,7 +78,6 @@ func SetupRouter(r *gin.Engine) {
 	dockerImageHandler := NewDockerImageHandler(docker_manage.NewDockerImageService(dao.NewUserDockerImageDao(conf.DB)))
 
 	// 查询 docker 镜像列表
-	r.GET("/api/docker/images", dockerImageHandler.QueryDockerImages)
 	docker := r.Group("/api/user/docker", middleware.CustomAuthMiddleware())
 	{
 		docker.POST("/info/save", dockerHandler.SaveDockerAccount)
@@ -90,6 +90,15 @@ func SetupRouter(r *gin.Engine) {
 
 		// 镜像管理接口
 		docker.GET("/images/query", dockerImageHandler.QueryDockerImages)
+	}
+
+	// k8s 资源管理
+	k8sResourceHandler := NewK8sResourceHandler(k8s_manage.NewK8sResourceService(dao.NewUserK8sResourceDao(conf.DB)))
+	k8s := r.Group("/api/user/k8s", middleware.CustomAuthMiddleware())
+	{
+		k8s.POST("/resource/save", k8sResourceHandler.SaveResource)
+		k8s.GET("/resource/query", k8sResourceHandler.QueryResources)
+		k8s.POST("/resource/delete", k8sResourceHandler.DeleteResource)
 	}
 
 	// check health
