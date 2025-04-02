@@ -165,7 +165,7 @@ func (s *SocketDockerService) HandleCloneRepository(conn *websocket.Conn, data m
 }
 
 // HandleBuildImage 处理构建镜像的请求
-func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[string]interface{}, userID uint) {
+func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[string]interface{}, userID uint) string {
 	log.Info("=== HandleBuildImage 开始 ===")
 	log.Infof("接收到的数据: %+v", data)
 
@@ -175,14 +175,14 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	if !ok {
 		log.Error("缺少 Dockerfile ID")
 		SendError(conn, "缺少 Dockerfile ID")
-		return
+		return ""
 	}
 
 	imageName, ok := data["docker_image_name"].(string)
 	if !ok {
 		log.Error("缺少镜像名称")
 		SendError(conn, "缺少镜像名称")
-		return
+		return ""
 	}
 	log.Infof("处理参数 - DockerfileID: %v, ImageName: %s", dockerfileID, imageName)
 
@@ -191,7 +191,7 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	if err != nil {
 		log.Errorf("获取 Dockerfile 失败: %v", err)
 		SendError(conn, fmt.Sprintf("获取 Dockerfile 失败: %v", err))
-		return
+		return ""
 	}
 
 	// 获取 Docker 账号信息
@@ -199,13 +199,13 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	if err != nil {
 		log.Errorf("获取 Docker 账号失败: %v", err)
 		SendError(conn, fmt.Sprintf("获取 Docker 账号失败: %v", err))
-		return
+		return ""
 	}
 
 	if dockerAccount == nil {
 		log.Error("未找到已登录的 Docker 账号")
 		SendError(conn, "未找到已登录的 Docker 账号")
-		return
+		return ""
 	}
 
 	// 构建完整的镜像名称
@@ -220,14 +220,14 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	matches, err := filepath.Glob(dockerfilePath)
 	if err != nil || len(matches) == 0 {
 		SendError(conn, "未找到 Dockerfile")
-		return
+		return ""
 	}
 	latestDockerfile := matches[len(matches)-1]
 
 	exePath, err := os.Executable()
 	if err != nil {
 		SendError(conn, "系统 错误")
-		return
+		return ""
 	}
 	// 获取执行文件所在的目录，即项目目录（如果执行文件在项目根目录下）
 	cur := filepath.Dir(exePath)
@@ -242,19 +242,19 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		SendError(conn, fmt.Sprintf("创建输出管道失败: %v", err))
-		return
+		return ""
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		SendError(conn, fmt.Sprintf("创建错误管道失败: %v", err))
-		return
+		return ""
 	}
 
 	// 启动命令
 	if err := cmd.Start(); err != nil {
 		SendError(conn, fmt.Sprintf("启动构建失败: %v", err))
-		return
+		return ""
 	}
 
 	// 读取并发送 stdout 输出
@@ -293,7 +293,7 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	// 等待命令完成
 	if err := cmd.Wait(); err != nil {
 		SendError(conn, "镜像构建失败")
-		return
+		return ""
 	}
 
 	// 推送镜像到仓库
@@ -301,7 +301,7 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	output, err := pushCmd.CombinedOutput()
 	if err != nil {
 		SendError(conn, fmt.Sprintf("推送镜像失败: %s", string(output)))
-		return
+		return ""
 	}
 
 	SendSuccess(conn, "docker build & push success", map[string]string{
@@ -309,6 +309,8 @@ func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[st
 	})
 
 	log.Info("=== HandleBuildImage 结束 ===")
+
+	return fullImageName
 }
 
 // SendError 发送错误消息

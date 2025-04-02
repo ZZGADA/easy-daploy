@@ -24,10 +24,13 @@ func SetupRouter(r *gin.Engine) {
 
 	// 注册 WebSocket 路由
 
-	websocketHandler := websocket.NewSocketDockerHandler(websocket2.NewSocketDockerService(
-		dao.NewUserDockerfileDao(conf.DB),
-		dao.NewUserDockerDao(conf.DB),
-		dao.NewUserGithubDao(conf.DB)))
+	websocketHandler := websocket.NewSocketDockerHandler(
+		websocket2.NewSocketDockerService(
+			dao.NewUserDockerfileDao(conf.DB),
+			dao.NewUserDockerDao(conf.DB),
+			dao.NewUserGithubDao(conf.DB)),
+		docker_manage.NewDockerImageService(
+			dao.NewUserDockerImageDao(conf.DB)))
 
 	r.GET(conf.WSServer.Path, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocket)
 
@@ -69,7 +72,12 @@ func SetupRouter(r *gin.Engine) {
 		dockerfile.POST("/repository/delete", dockerfileHandler.DeleteDockerfile) // Dockerfile 删除
 	}
 
+	// docker 账号管理  & docker 镜像管理
 	dockerHandler := NewDockerHandler(user_manage.NewDockerAccountService(dao.NewUserDockerDao(conf.DB)))
+	dockerImageHandler := NewDockerImageHandler(docker_manage.NewDockerImageService(dao.NewUserDockerImageDao(conf.DB)))
+
+	// 查询 docker 镜像列表
+	r.GET("/api/docker/images", dockerImageHandler.QueryDockerImages)
 	docker := r.Group("/api/user/docker", middleware.CustomAuthMiddleware())
 	{
 		docker.POST("/info/save", dockerHandler.SaveDockerAccount)
@@ -79,6 +87,9 @@ func SetupRouter(r *gin.Engine) {
 		docker.POST("/info/setDefault", dockerHandler.SetDefaultDockerAccount)
 		docker.POST("/login", dockerHandler.LoginDockerAccount)
 		docker.GET("/info/login/query", dockerHandler.QueryLoginDockerAccount)
+
+		// 镜像管理接口
+		docker.GET("/images/query", dockerImageHandler.QueryDockerImages)
 	}
 
 	// check health

@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"encoding/json"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -27,13 +28,15 @@ type WSResponse struct {
 
 // SocketDockerHandler docker镜像构建
 type SocketDockerHandler struct {
-	socketDockerService *websocket2.SocketDockerService
+	socketDockerService       *websocket2.SocketDockerService
+	socketDockerImagesService *docker_manage.DockerImageService
 }
 
 // NewSocketDockerHandler 创建 SocketDockerHandler 实例
-func NewSocketDockerHandler(socketDockerService *websocket2.SocketDockerService) *SocketDockerHandler {
+func NewSocketDockerHandler(socketDockerService *websocket2.SocketDockerService, socketDockerImagesService *docker_manage.DockerImageService) *SocketDockerHandler {
 	return &SocketDockerHandler{
-		socketDockerService: socketDockerService,
+		socketDockerService:       socketDockerService,
+		socketDockerImagesService: socketDockerImagesService,
 	}
 }
 
@@ -92,7 +95,13 @@ func (s *SocketDockerHandler) HandleWebSocket(c *gin.Context) {
 		case "clone_repository":
 			s.socketDockerService.HandleCloneRepository(conn, wsMsg.Data, userID)
 		case "build_image":
-			s.socketDockerService.HandleBuildImage(conn, wsMsg.Data, userID)
+			fullImageName := s.socketDockerService.HandleBuildImage(conn, wsMsg.Data, userID)
+			if fullImageName != "" {
+				err := s.socketDockerImagesService.SaveDockerImageWS(wsMsg.Data, userID, fullImageName)
+				if err != nil {
+					logrus.Warn("save docker image err: ", err)
+				}
+			}
 			break
 		default:
 			websocket2.SendError(conn, "未知的方法")

@@ -245,6 +245,13 @@
             </set>
           </value>
         </entry>
+        <entry key="DockerImageService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_image.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="DockerLoginRequest">
           <value>
             <set>
@@ -685,6 +692,20 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/dao/user_docker.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserDockerImage">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_docker_image.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserDockerImageDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_docker_image.go" />
             </set>
           </value>
         </entry>
@@ -1686,6 +1707,19 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_docker_image.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743563380226" />
+              <option name="schema">
+                <list>
+                  <option value="UserDockerImage" />
+                  <option value="UserDockerImageDao" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_dockerfile.go">
           <value>
             <ScannedPath>
@@ -1796,19 +1830,31 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743431666699" />
+              <option name="lastModified" value="1743563126938" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/websocket/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743435881709" />
+              <option name="lastModified" value="1743562793550" />
               <option name="schema">
                 <list>
                   <option value="WSMessage" />
                   <option value="WSResponse" />
                   <option value="SocketDockerHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_image.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743563270506" />
+              <option name="schema">
+                <list>
+                  <option value="DockerImageService" />
                 </list>
               </option>
             </ScannedPath>
@@ -1863,7 +1909,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743494006546" />
+              <option name="lastModified" value="1743562793741" />
               <option name="schema">
                 <list>
                   <option value="SocketDockerService" />
@@ -1920,6 +1966,7 @@
         <entry key="docker_account_request" value="DockerAccountRequest" />
         <entry key="docker_account_service" value="DockerAccountService" />
         <entry key="docker_handler" value="DockerHandler" />
+        <entry key="docker_image_service" value="DockerImageService" />
         <entry key="docker_login_request" value="DockerLoginRequest" />
         <entry key="dockerfile_handler" value="DockerfileHandler" />
         <entry key="dockerfile_item" value="DockerfileItem" />
@@ -1983,6 +2030,8 @@
         <entry key="task" value="Task" />
         <entry key="user_docker" value="UserDocker" />
         <entry key="user_docker_dao_impl" value="UserDockerDaoImpl" />
+        <entry key="user_docker_image" value="UserDockerImage" />
+        <entry key="user_docker_image_dao" value="UserDockerImageDao" />
         <entry key="user_dockerfile" value="UserDockerfile" />
         <entry key="user_dockerfile_dao" value="UserDockerfileDao" />
         <entry key="user_github" value="UserGithub" />
