@@ -3,6 +3,7 @@ package docker_manage
 import (
 	"context"
 	"errors"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
@@ -61,4 +62,20 @@ func (s *DockerImageService) SaveDockerImageWS(data map[string]interface{}, user
 // GetDockerImagesByDockerfileID 根据 DockerfileID 查询 Docker 镜像列表
 func (s *DockerImageService) GetDockerImagesByDockerfileID(ctx context.Context, dockerfileID uint32) ([]*dao.UserDockerImage, error) {
 	return s.userDockerImageDao.GetByDockerfileID(ctx, dockerfileID)
+}
+
+// GetDockerImagesByRepositoryID 根据仓库ID获取镜像列表
+func (s *DockerImageService) GetDockerImagesByRepositoryID(ctx context.Context, repositoryID string) ([]*dao.UserDockerImage, error) {
+	return s.userDockerImageDao.GetByRepositoryID(ctx, repositoryID)
+}
+
+// GetDockerImages 根据条件获取镜像列表
+func (s *DockerImageService) GetDockerImages(ctx context.Context, dockerfileID uint32, repositoryID string) ([]*dao.UserDockerImage, error) {
+	if dockerfileID > 0 {
+		return s.GetDockerImagesByDockerfileID(ctx, dockerfileID)
+	}
+	if repositoryID != "" {
+		return s.GetDockerImagesByRepositoryID(ctx, repositoryID)
+	}
+	return nil, nil
 }

@@ -41,3 +41,14 @@ func (d *UserDockerImageDao) GetByDockerfileID(ctx context.Context, dockerfileID
 	err := d.db.WithContext(ctx).Where("dockerfile_id = ? and deleted_at IS NULL", dockerfileID).Order("id DESC").Find(&images).Error
 	return images, err
 }
+
+// GetByRepositoryID 根据仓库ID查询记录
+func (d *UserDockerImageDao) GetByRepositoryID(ctx context.Context, repositoryID string) ([]*UserDockerImage, error) {
+	var images []*UserDockerImage
+	err := d.db.WithContext(ctx).
+		Joins("JOIN user_dockerfile ON user_dockerfile.id = user_docker_image.dockerfile_id").
+		Where("user_dockerfile.repository_id = ? AND user_docker_image.deleted_at IS NULL and user_dockerfile.deleted_at IS NULL", repositoryID).
+		Order("user_docker_image.id DESC").
+		Find(&images).Error
+	return images, err
+}
