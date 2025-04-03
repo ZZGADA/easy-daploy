@@ -99,7 +99,7 @@ func SetupRouter(r *gin.Engine) {
 	k8s := r.Group("/api/user/k8s", middleware.CustomAuthMiddleware())
 	{
 		k8s.POST("/resource/save", k8sResourceHandler.SaveResource)
-		k8s.POST("/resource/update", k8sResourceHandler.SaveResource)
+		k8s.POST("/resource/update", k8sResourceHandler.UpdateResource)
 		k8s.GET("/resource/query", k8sResourceHandler.QueryResources)
 		k8s.POST("/resource/delete", k8sResourceHandler.DeleteResource)
 	}

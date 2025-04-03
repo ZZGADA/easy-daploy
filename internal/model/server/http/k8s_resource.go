@@ -21,6 +21,14 @@ type SaveResourceRequest struct {
 	RepositoryID string `json:"repository_id" binding:"required"`
 	ResourceType string `json:"resource_type" binding:"required"`
 	OssURL       string `json:"oss_url" binding:"required"`
+	FileName     string `json:"file_name" binding:"required"`
+}
+type UpdateResourceRequest struct {
+	Id           int    `json:"id" binding:"required"`
+	RepositoryID string `json:"repository_id" binding:"required"`
+	ResourceType string `json:"resource_type" binding:"required"`
+	OssURL       string `json:"oss_url" binding:"required"`
+	FileName     string `json:"file_name" binding:"required"`
 }
 
 type DeleteResourceRequest struct {
@@ -42,7 +50,7 @@ func (h *K8sResourceHandler) SaveResource(c *gin.Context) {
 	}
 
 	userID := c.GetUint("user_id")
-	if err := h.k8sResourceService.SaveResource(userID, req.RepositoryID, req.ResourceType, req.OssURL); err != nil {
+	if err := h.k8sResourceService.SaveResource(userID, req.RepositoryID, req.ResourceType, req.OssURL, req.FileName); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -64,6 +72,29 @@ func (h *K8sResourceHandler) DeleteResource(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+}
+
+func (h *K8sResourceHandler) UpdateResource(c *gin.Context) {
+	var req UpdateResourceRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 验证资源类型
+	if !h.k8sResourceService.ValidateResourceType(req.ResourceType) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid resource type"})
+		return
+	}
+
+	userID := c.GetUint("user_id")
+	if err := h.k8sResourceService.UpdateResource(userID, uint32(req.Id), req.RepositoryID, req.ResourceType, req.OssURL, req.FileName); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "success"})
+
 }
 
 // QueryResources 查询 K8s 资源配置列表

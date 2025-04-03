@@ -731,6 +731,13 @@
             </set>
           </value>
         </entry>
+        <entry key="UpdateResourceRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="UserDocker">
           <value>
             <set>
@@ -1844,7 +1851,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743587714446" />
+              <option name="lastModified" value="1743691327329" />
               <option name="schema">
                 <list>
                   <option value="UserK8sResource" />
@@ -1950,11 +1957,12 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743687895477" />
+              <option name="lastModified" value="1743690647275" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceHandler" />
                   <option value="SaveResourceRequest" />
+                  <option value="UpdateResourceRequest" />
                   <option value="DeleteResourceRequest" />
                 </list>
               </option>
@@ -1964,7 +1972,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743687801533" />
+              <option name="lastModified" value="1743691816520" />
             </ScannedPath>
           </value>
         </entry>
@@ -2011,7 +2019,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_manage.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743587334081" />
+              <option name="lastModified" value="1743690566717" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceService" />
@@ -2220,6 +2228,7 @@
         <entry key="structure_c" value="StructureC" />
         <entry key="table" value="Table" />
         <entry key="task" value="Task" />
+        <entry key="update_resource_request" value="UpdateResourceRequest" />
         <entry key="user_docker" value="UserDocker" />
         <entry key="user_docker_dao_impl" value="UserDockerDaoImpl" />
         <entry key="user_docker_image" value="UserDockerImage" />

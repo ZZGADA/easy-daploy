@@ -15,14 +15,54 @@ func NewK8sResourceService(userK8sResourceDao *dao.UserK8sResourceDao) *K8sResou
 }
 
 // SaveResource 保存 K8s 资源配置
-func (s *K8sResourceService) SaveResource(userID uint, repositoryID string, resourceType string, ossURL string) error {
+func (s *K8sResourceService) SaveResource(userID uint, repositoryID string, resourceType string, ossURL string, fileName string) error {
 	resource := &dao.UserK8sResource{
-		UserID:       userID,
+		UserID:       uint32(userID),
 		RepositoryID: repositoryID,
 		ResourceType: resourceType,
 		OssURL:       ossURL,
+		FileName:     fileName,
 	}
 	return s.userK8sResourceDao.Create(resource)
+}
+
+// UpdateResource 保存 K8s 资源配置
+func (s *K8sResourceService) UpdateResource(userID uint, id uint32, repositoryID string, resourceType string, ossURL string, fileName string) error {
+	resourceById, err := s.userK8sResourceDao.QueryById(id)
+	if err != nil {
+		return err
+	}
+	tx := s.userK8sResourceDao.BeginTx()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	resourceById.IsUpdate = true
+	err = s.userK8sResourceDao.UpdateIsUpdate(&resourceById)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	resource := &dao.UserK8sResource{
+		UserID:           uint32(userID),
+		RepositoryID:     repositoryID,
+		ResourceType:     resourceType,
+		OssURL:           ossURL,
+		FileName:         fileName,
+		FatherResourceId: resourceById.Id,
+	}
+
+	err = s.userK8sResourceDao.Create(resource)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+
+	return nil
 }
 
 // DeleteResource 删除 K8s 资源配置
