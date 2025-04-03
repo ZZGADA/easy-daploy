@@ -27,14 +27,15 @@ func SetupRouter(r *gin.Engine) {
 	// 注册 WebSocket 路由
 
 	websocketHandler := websocket.NewSocketDockerHandler(
-		websocket2.NewSocketDockerService(
+		websocket2.NewSocketService(
 			dao.NewUserDockerfileDao(conf.DB),
 			dao.NewUserDockerDao(conf.DB),
 			dao.NewUserGithubDao(conf.DB)),
 		docker_manage.NewDockerImageService(
 			dao.NewUserDockerImageDao(conf.DB)))
 
-	r.GET(conf.WSServer.Path, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocket)
+	r.GET(conf.WSServer.Path, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocketDockerBuild)
+	r.GET(conf.WSServer.PathK8s, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocketK8s)
 
 	// 注册路由
 	// 登陆注册路由组
@@ -98,6 +99,7 @@ func SetupRouter(r *gin.Engine) {
 	k8s := r.Group("/api/user/k8s", middleware.CustomAuthMiddleware())
 	{
 		k8s.POST("/resource/save", k8sResourceHandler.SaveResource)
+		k8s.POST("/resource/update", k8sResourceHandler.SaveResource)
 		k8s.GET("/resource/query", k8sResourceHandler.QueryResources)
 		k8s.POST("/resource/delete", k8sResourceHandler.DeleteResource)
 	}

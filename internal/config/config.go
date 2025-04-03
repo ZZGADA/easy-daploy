@@ -38,6 +38,7 @@ type Config struct {
 	WebSocket struct {
 		Port            int    `mapstructure:"port"`
 		Path            string `mapstructure:"path"`
+		PathK8s         string `mapstructure:"path_k8s"`
 		ReadBufferSize  int    `mapstructure:"read_buffer_size"`
 		WriteBufferSize int    `mapstructure:"write_buffer_size"`
 	}

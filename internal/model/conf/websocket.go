@@ -17,6 +17,7 @@ var (
 type WebSocketServer struct {
 	Port            int
 	Path            string
+	PathK8s         string
 	ReadBufferSize  int
 	WriteBufferSize int
 	Upgrader        *websocket.Upgrader
@@ -28,6 +29,7 @@ func InitWebSocketServer() {
 	WSServer = &WebSocketServer{
 		Port:            config.GlobalConfig.WebSocket.Port,
 		Path:            config.GlobalConfig.WebSocket.Path,
+		PathK8s:         config.GlobalConfig.WebSocket.PathK8s,
 		ReadBufferSize:  config.GlobalConfig.WebSocket.ReadBufferSize,
 		WriteBufferSize: config.GlobalConfig.WebSocket.WriteBufferSize,
 		Connections:     make(map[uint]*websocket.Conn),

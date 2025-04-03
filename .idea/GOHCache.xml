@@ -364,6 +364,14 @@
             </set>
           </value>
         </entry>
+        <entry key="K8sCommandResponse">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/websocket/main.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="K8sResourceHandler">
           <value>
             <set>
@@ -660,6 +668,13 @@
             </set>
           </value>
         </entry>
+        <entry key="SocketService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="StateBase">
           <value>
             <set>
@@ -821,9 +836,17 @@
             </set>
           </value>
         </entry>
+        <entry key="WSMessageK8s">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/websocket/main.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="WSRequest">
           <value>
             <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
             </set>
           </value>
@@ -832,6 +855,7 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/server/websocket/main.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
             </set>
           </value>
@@ -857,7 +881,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743417418416" />
+              <option name="lastModified" value="1743667410876" />
             </ScannedPath>
           </value>
         </entry>
@@ -1715,7 +1739,7 @@
         <entry key="file://$PROJECT_DIR$/internal/config/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743411387888" />
+              <option name="lastModified" value="1743661180813" />
               <option name="schema">
                 <list>
                   <option value="Config" />
@@ -1728,6 +1752,13 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1743431717267" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/conf/k8s.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743670498138" />
             </ScannedPath>
           </value>
         </entry>
@@ -1748,7 +1779,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/websocket.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743416437133" />
+              <option name="lastModified" value="1743661199668" />
               <option name="schema">
                 <list>
                   <option value="WebSocketServer" />
@@ -1919,7 +1950,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743587542650" />
+              <option name="lastModified" value="1743687895477" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceHandler" />
@@ -1933,17 +1964,18 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743645671408" />
+              <option name="lastModified" value="1743687801533" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/websocket/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743562793550" />
+              <option name="lastModified" value="1743668513622" />
               <option name="schema">
                 <list>
                   <option value="WSMessage" />
+                  <option value="WSMessageK8s" />
                   <option value="WSResponse" />
                   <option value="SocketDockerHandler" />
                 </list>
@@ -2033,6 +2065,20 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743667869306" />
+              <option name="schema">
+                <list>
+                  <option value="SocketService" />
+                  <option value="WSRequest" />
+                  <option value="WSResponse" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go">
           <value>
             <ScannedPath>
@@ -2042,6 +2088,18 @@
                   <option value="SocketDockerService" />
                   <option value="WSRequest" />
                   <option value="WSResponse" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743687656631" />
+              <option name="schema">
+                <list>
+                  <option value="K8sCommandResponse" />
                 </list>
               </option>
             </ScannedPath>
@@ -2110,6 +2168,7 @@
         <entry key="handler_context" value="HandlerContext" />
         <entry key="intel_cpu" value="IntelCPU" />
         <entry key="io_abstraction_base" value="IOAbstractionBase" />
+        <entry key="k8s_command_response" value="K8sCommandResponse" />
         <entry key="k8s_resource_handler" value="K8sResourceHandler" />
         <entry key="k8s_resource_service" value="K8sResourceService" />
         <entry key="label_tree" value="LabelTree" />
@@ -2152,6 +2211,7 @@
         <entry key="singleton" value="Singleton" />
         <entry key="socket_docker_handler" value="SocketDockerHandler" />
         <entry key="socket_docker_service" value="SocketDockerService" />
+        <entry key="socket_service" value="SocketService" />
         <entry key="state_base" value="StateBase" />
         <entry key="stop_state" value="StopState" />
         <entry key="strategy_service" value="StrategyService" />
@@ -2176,6 +2236,7 @@
         <entry key="verify_code_dto" value="VerifyCodeDTO" />
         <entry key="web_socket_server" value="WebSocketServer" />
         <entry key="ws_message" value="WSMessage" />
+        <entry key="ws_message_k8s" value="WSMessageK8s" />
         <entry key="ws_request" value="WSRequest" />
         <entry key="ws_response" value="WSResponse" />
       </map>

@@ -17,14 +17,14 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type SocketDockerService struct {
+type SocketService struct {
 	userDockerfileDao *dao.UserDockerfileDao
 	userDockerDao     dao.UserDockerDao
 	userGithubDao     *dao.UserGithubDao
 }
 
-func NewSocketDockerService(dockerfileDao *dao.UserDockerfileDao, dockerDao dao.UserDockerDao, GithubDao *dao.UserGithubDao) *SocketDockerService {
-	return &SocketDockerService{
+func NewSocketService(dockerfileDao *dao.UserDockerfileDao, dockerDao dao.UserDockerDao, GithubDao *dao.UserGithubDao) *SocketService {
+	return &SocketService{
 		userDockerfileDao: dockerfileDao,
 		userDockerDao:     dockerDao,
 		userGithubDao:     GithubDao,
@@ -45,7 +45,7 @@ type WSResponse struct {
 }
 
 // HandleGenerateDockerfile 处理生成 Dockerfile 的请求
-func (s *SocketDockerService) HandleGenerateDockerfile(conn *websocket.Conn, data map[string]interface{}, userID uint) {
+func (s *SocketService) HandleGenerateDockerfile(conn *websocket.Conn, data map[string]interface{}, userID uint) {
 	log.Info("=== HandleGenerateDockerfile 开始 ===")
 	log.Infof("接收到的数据: %+v", data)
 
@@ -106,7 +106,7 @@ func (s *SocketDockerService) HandleGenerateDockerfile(conn *websocket.Conn, dat
 }
 
 // HandleCloneRepository 处理克隆仓库的请求
-func (s *SocketDockerService) HandleCloneRepository(conn *websocket.Conn, data map[string]interface{}, userID uint) {
+func (s *SocketService) HandleCloneRepository(conn *websocket.Conn, data map[string]interface{}, userID uint) {
 	log.Info("=== HandleCloneRepository 开始 ===")
 	log.Infof("接收到的数据: %+v", data)
 
@@ -165,7 +165,7 @@ func (s *SocketDockerService) HandleCloneRepository(conn *websocket.Conn, data m
 }
 
 // HandleBuildImage 处理构建镜像的请求
-func (s *SocketDockerService) HandleBuildImage(conn *websocket.Conn, data map[string]interface{}, userID uint) string {
+func (s *SocketService) HandleBuildImage(conn *websocket.Conn, data map[string]interface{}, userID uint) string {
 	log.Info("=== HandleBuildImage 开始 ===")
 	log.Infof("接收到的数据: %+v", data)
 

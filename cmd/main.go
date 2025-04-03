@@ -26,6 +26,7 @@ func init() {
 	conf.InitMySQL()
 	conf.InitRedis()
 	conf.InitWebSocketServer()
+	conf.InitK8s()
 }
 
 func main() {
