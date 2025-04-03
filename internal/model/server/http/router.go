@@ -7,6 +7,7 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/model/server/websocket"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/k8s_manage"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/oss_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 	"github.com/gin-contrib/cors"
@@ -99,6 +100,16 @@ func SetupRouter(r *gin.Engine) {
 		k8s.POST("/resource/save", k8sResourceHandler.SaveResource)
 		k8s.GET("/resource/query", k8sResourceHandler.QueryResources)
 		k8s.POST("/resource/delete", k8sResourceHandler.DeleteResource)
+	}
+
+	// OSS 访问信息管理
+	ossHandler := NewOssHandler(oss_manage.NewOssService(dao.NewUserOssDao(conf.DB)))
+	oss := r.Group("/api/user/oss", middleware.CustomAuthMiddleware())
+	{
+		oss.POST("/access/save", ossHandler.SaveOssAccess)
+		oss.POST("/access/update", ossHandler.UpdateOssAccess)
+		oss.GET("/access/query", ossHandler.QueryOssAccess)
+		oss.POST("/access/delete", ossHandler.DeleteOssAccess)
 	}
 
 	// check health

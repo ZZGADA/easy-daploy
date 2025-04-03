@@ -462,6 +462,13 @@
             </set>
           </value>
         </entry>
+        <entry key="OssService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/oss_manage/oss_manage.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="Oven">
           <value>
             <set>
@@ -776,6 +783,20 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserOss">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_oss.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserOssDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_oss.go" />
             </set>
           </value>
         </entry>
@@ -1802,6 +1823,19 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_oss.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743645671384" />
+              <option name="schema">
+                <list>
+                  <option value="UserOss" />
+                  <option value="UserOssDao" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/dao/users.go">
           <value>
             <ScannedPath>
@@ -1899,7 +1933,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743584839107" />
+              <option name="lastModified" value="1743645671408" />
             </ScannedPath>
           </value>
         </entry>
@@ -1949,6 +1983,18 @@
               <option name="schema">
                 <list>
                   <option value="K8sResourceService" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/oss_manage/oss_manage.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743648806350" />
+              <option name="schema">
+                <list>
+                  <option value="OssService" />
                 </list>
               </option>
             </ScannedPath>
@@ -2078,6 +2124,7 @@
         <entry key="mq_asy_update_strategy" value="MqAsyUpdateStrategy" />
         <entry key="mysql" value="Mysql" />
         <entry key="mysql_config" value="MysqlConfig" />
+        <entry key="oss_service" value="OssService" />
         <entry key="oven" value="Oven" />
         <entry key="pause_state" value="PauseState" />
         <entry key="play_state" value="PlayState" />
@@ -2123,6 +2170,8 @@
         <entry key="user_github_dao" value="UserGithubDao" />
         <entry key="user_k8s_resource" value="UserK8sResource" />
         <entry key="user_k8s_resource_dao" value="UserK8sResourceDao" />
+        <entry key="user_oss" value="UserOss" />
+        <entry key="user_oss_dao" value="UserOssDao" />
         <entry key="users" value="Users" />
         <entry key="verify_code_dto" value="VerifyCodeDTO" />
         <entry key="web_socket_server" value="WebSocketServer" />
