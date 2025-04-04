@@ -352,7 +352,7 @@ func (s *SocketService) resourceDelete(conn *websocket.Conn, command string, dat
 		MetadataName:   metadataName,
 		MetadataLabels: latestLog.MetadataLabels,
 		OperationType:  "delete",
-		Command:        deleteCommand,q
+		Command:        deleteCommand,
 	}
 
 	// 保存操作日志
