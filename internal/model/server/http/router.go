@@ -30,7 +30,9 @@ func SetupRouter(r *gin.Engine) {
 		websocket2.NewSocketService(
 			dao.NewUserDockerfileDao(conf.DB),
 			dao.NewUserDockerDao(conf.DB),
-			dao.NewUserGithubDao(conf.DB)),
+			dao.NewUserGithubDao(conf.DB),
+			dao.NewUserK8sResourceDao(conf.DB),
+			dao.NewUserOssDao(conf.DB)),
 		docker_manage.NewDockerImageService(
 			dao.NewUserDockerImageDao(conf.DB)))
 

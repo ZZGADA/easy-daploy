@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"net/http"
 
 	"github.com/ZZGADA/easy-deploy/internal/config"
@@ -22,6 +23,7 @@ type WebSocketServer struct {
 	WriteBufferSize int
 	Upgrader        *websocket.Upgrader
 	Connections     map[uint]*websocket.Conn // key: userID
+	OssClient       map[uint]*oss.Bucket
 }
 
 // InitWebSocketServer 初始化 WebSocket 服务器
@@ -33,6 +35,7 @@ func InitWebSocketServer() {
 		ReadBufferSize:  config.GlobalConfig.WebSocket.ReadBufferSize,
 		WriteBufferSize: config.GlobalConfig.WebSocket.WriteBufferSize,
 		Connections:     make(map[uint]*websocket.Conn),
+		OssClient:       make(map[uint]*oss.Bucket),
 	}
 
 	WSUpgrader = &websocket.Upgrader{

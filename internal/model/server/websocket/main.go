@@ -2,11 +2,12 @@ package websocket
 
 import (
 	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 	"github.com/sirupsen/logrus"
-	"log"
-	"net/http"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/gin-gonic/gin"
@@ -131,14 +132,22 @@ func (s *SocketDockerHandler) HandleWebSocketK8s(c *gin.Context) {
 		return
 	}
 
+	ossClient, err := s.socketService.GetOssClient(userID)
+	if err != nil {
+		logrus.Warnf("get ossClient error: %v\n", err)
+		websocket2.SendError(conn, err.Error())
+	}
+
 	// 存储连接
 	conf.WSServer.Connections[userID] = conn
+	conf.WSServer.OssClient[userID] = ossClient
 
 	// 清理连接
 	defer func() {
 		websocket2.SendSuccess(conn, "ws close", "ws close success")
 		conn.Close()
 		delete(conf.WSServer.Connections, userID)
+		delete(conf.WSServer.OssClient, userID)
 	}()
 
 	// 处理消息

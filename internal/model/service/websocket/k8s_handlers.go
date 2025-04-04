@@ -3,14 +3,26 @@ package websocket
 import (
 	"context"
 	"fmt"
-	"golang.org/x/crypto/ssh"
-	"k8s.io/apimachinery/pkg/version"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 	"time"
 
+	"github.com/sirupsen/logrus"
+	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"k8s.io/apimachinery/pkg/version"
+	"k8s.io/client-go/kubernetes"
+
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/gorilla/websocket"
+	"gopkg.in/yaml.v3"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	_ "k8s.io/client-go/kubernetes"
 )
@@ -22,6 +34,7 @@ const (
 	GetAllDeployment = "kubectl get deployment -A"
 	GetClusterInfo   = "kubectl cluster-info"
 	GetNodes         = "kubectl get nodes"
+	ResourceApply    = "kubectl apply -f"
 )
 
 // 远程服务器配置
@@ -118,26 +131,224 @@ func (s *SocketService) HandleKubeCommand(conn *websocket.Conn, command string, 
 			return
 		}
 	default:
-		baseProcess(conn, command, data, userID)
+		s.baseProcess(conn, command, data, userID)
+	}
+}
+
+func (s *SocketService) baseProcess(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {
+	switch command {
+	case ResourceApply:
+		s.resourceApply(conn, command, data, userID)
+		return
+	default:
+		SendSuccess(conn, "command execute success", K8sCommandResponse{
+			Command: command,
+			Result:  command,
+		})
+	}
+}
+
+func (s *SocketService) resourceApply(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {
+	logrus.Info("resource apply ", "data: ", data)
+	k8sResourceID, exist := data["k8s_resource_id"].(float64)
+	if !exist {
+		SendError(conn, "缺少k8s_resource_id 参数")
+		return
 	}
 
+	// 从数据库查询资源信息
+	resource, err := s.userK8sResourceDao.QueryById(uint32(k8sResourceID))
+	if err != nil {
+		SendError(conn, fmt.Sprintf("查询资源失败: %v", err))
+		return
+	}
+
+	// 创建本地 k8s 目录（如果不存在）
+	k8sDir := "k8s"
+	if err := os.MkdirAll(k8sDir, 0755); err != nil {
+		SendError(conn, fmt.Sprintf("创建 k8s 目录失败: %v", err))
+		return
+	}
+
+	// 生成本地文件路径
+	localFilePath := filepath.Join(k8sDir, fmt.Sprintf("%d_%s", resource.Id, resource.FileName))
+
+	// 从 OSS 下载文件
+	ossClient, exist := conf.WSServer.OssClient[userID]
+	if !exist {
+		SendError(conn, fmt.Sprintf("获取 OSS 客户端失败: %v", err))
+		return
+	}
+
+	// 从 URL 中提取 object-name
+	objectNameUrl := strings.TrimPrefix(resource.OssURL, "https://")
+	objectNameS := strings.Split(objectNameUrl, "/")[1:] // 去掉域名部分
+	objectName := strings.Join(objectNameS, "/")
+
+	// 下载文件
+	err = ossClient.GetObjectToFile(objectName, localFilePath)
+	if err != nil {
+		SendError(conn, fmt.Sprintf("从 OSS 下载文件失败: %v", err))
+		return
+	}
+
+	// 确保函数结束时删除本地文件
+	defer func() {
+		if err := os.Remove(localFilePath); err != nil {
+			logrus.Errorf("删除本地文件失败: %v", err)
+		}
+	}()
+
+	// 读取 YAML 文件内容
+	yamlContent, err := ioutil.ReadFile(localFilePath)
+	if err != nil {
+		SendError(conn, fmt.Sprintf("读取 YAML 文件失败: %v", err))
+		return
+	}
+
+	// 解析 YAML 文件，获取 namespace
+	namespace, err := s.extractNamespaceFromYAML(yamlContent)
+	if err != nil {
+		SendError(conn, fmt.Sprintf("解析 YAML 文件失败: %v", err))
+		return
+	}
+
+	// 如果 namespace 为空，使用默认的 "default"
+	if namespace == "" {
+		namespace = "default"
+	}
+
+	// 检查 namespace 是否存在，如果不存在则创建
+	if err := s.ensureNamespaceExists(namespace); err != nil {
+		SendError(conn, fmt.Sprintf("创建 namespace 失败: %v", err))
+		return
+	}
+
+	// 创建资源
+	if err := s.createResourceFromYAML(conf.KubeClient, localFilePath, namespace); err != nil {
+		SendError(conn, fmt.Sprintf("创建资源失败: %v", err))
+		return
+	}
+
+	// 发送成功响应
 	SendSuccess(conn, "command execute success", K8sCommandResponse{
 		Command: command,
-		Result:  "success",
+		Result:  fmt.Sprintf("资源 %s 已成功部署到 namespace %s", resource.FileName, namespace),
 	})
 }
 
-func baseProcess(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {
-	//result, err := executeSSHCommand(command)
-	//if err != nil {
-	//	SendError(conn, err.Error())
-	//} else {
-	SendSuccess(conn, "command execute success", K8sCommandResponse{
-		Command: command,
-		Result:  command,
-	})
-	//}
+// 从 YAML 内容中提取 namespace
+func (s *SocketService) extractNamespaceFromYAML(yamlContent []byte) (string, error) {
+	// 创建一个通用的 map 来解析 YAML
+	var resource map[string]interface{}
+	if err := yaml.Unmarshal(yamlContent, &resource); err != nil {
+		return "", fmt.Errorf("解析 YAML 失败: %v", err)
+	}
 
+	// 检查 metadata.namespace 字段
+	if metadata, ok := resource["metadata"].(map[string]interface{}); ok {
+		if namespace, ok := metadata["namespace"].(string); ok {
+			return namespace, nil
+		}
+	}
+
+	// 如果没有找到 namespace，返回空字符串
+	return "", nil
+}
+
+// 确保 namespace 存在，如果不存在则创建
+func (s *SocketService) ensureNamespaceExists(namespace string) error {
+	// 检查 namespace 是否存在
+	_, err := conf.KubeClient.CoreV1().Namespaces().Get(context.TODO(), namespace, metav1.GetOptions{})
+	if err == nil {
+		// namespace 已存在
+		return nil
+	}
+
+	// 检查错误是否为 "not found"
+	if k8sErr, ok := err.(*k8serrors.StatusError); ok && k8sErr.Status().Code == 404 {
+		// namespace 不存在，创建它
+		ns := &v1.Namespace{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: namespace,
+			},
+		}
+		_, err = conf.KubeClient.CoreV1().Namespaces().Create(context.TODO(), ns, metav1.CreateOptions{})
+		if err != nil {
+			return fmt.Errorf("创建 namespace 失败: %v", err)
+		}
+		return nil
+	}
+
+	// 其他错误
+	return fmt.Errorf("检查 namespace 失败: %v", err)
+}
+
+// GetOssClient 获取 OSS 客户端
+func (s *SocketService) GetOssClient(userId uint) (*oss.Bucket, error) {
+	// 从配置或数据库获取 OSS 配置
+	// 这里假设您有一个方法来获取 OSS 配置
+
+	userOss, err := s.userOssDao.QueryByUserID(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建 OSS 客户端
+	client, err := oss.New(fmt.Sprintf("https://%s.aliyuncs.com", userOss.Region), userOss.AccessKeyID, userOss.AccessKeySecret)
+	if err != nil {
+		return nil, fmt.Errorf("创建 OSS 客户端失败: %v", err)
+	}
+
+	// 获取 bucket
+	bucket, err := client.Bucket(userOss.Bucket)
+	if err != nil {
+		return nil, fmt.Errorf("获取 bucket 失败: %v", err)
+	}
+
+	return bucket, nil
+}
+
+func (s *SocketService) createResourceFromYAML(client *kubernetes.Clientset, yamlPath string, namespace string) error {
+	yamlFile, err := ioutil.ReadFile(yamlPath)
+	if err != nil {
+		return fmt.Errorf("failed to read YAML file: %v", err)
+	}
+
+	scheme := runtime.NewScheme()
+	if err := appsv1.AddToScheme(scheme); err != nil {
+		return fmt.Errorf("failed to add apps/v1 to scheme: %v", err)
+	}
+	if err := v1.AddToScheme(scheme); err != nil {
+		return fmt.Errorf("failed to add core/v1 to scheme: %v", err)
+	}
+
+	codecFactory := serializer.NewCodecFactory(scheme)
+	decoder := codecFactory.UniversalDeserializer()
+
+	obj, _, err := decoder.Decode(yamlFile, nil, nil)
+	if err != nil {
+		return fmt.Errorf("failed to decode YAML: %v", err)
+	}
+
+	switch resource := obj.(type) {
+	case *appsv1.Deployment:
+		_, err = client.AppsV1().Deployments(namespace).Create(context.TODO(), resource, metav1.CreateOptions{})
+		if err != nil {
+			return fmt.Errorf("failed to create Deployment: %v", err)
+		}
+		fmt.Printf("Deployment %s created successfully.\n", resource.Name)
+	case *v1.Service:
+		_, err = client.CoreV1().Services(namespace).Create(context.TODO(), resource, metav1.CreateOptions{})
+		if err != nil {
+			return fmt.Errorf("failed to create Service: %v", err)
+		}
+		fmt.Printf("Service %s created successfully.\n", resource.Name)
+	default:
+		return fmt.Errorf("unsupported resource type: %T", resource)
+	}
+
+	return nil
 }
 
 // 执行 SSH 命令

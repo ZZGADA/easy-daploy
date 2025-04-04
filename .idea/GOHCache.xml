@@ -672,6 +672,7 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/main.go" />
             </set>
           </value>
         </entry>
@@ -855,6 +856,7 @@
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/main.go" />
             </set>
           </value>
         </entry>
@@ -864,6 +866,7 @@
               <option value="file://$PROJECT_DIR$/internal/model/server/websocket/main.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/main.go" />
             </set>
           </value>
         </entry>
@@ -1972,7 +1975,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743691816520" />
+              <option name="lastModified" value="1743734624918" />
             </ScannedPath>
           </value>
         </entry>
@@ -2076,14 +2079,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743667869306" />
-              <option name="schema">
-                <list>
-                  <option value="SocketService" />
-                  <option value="WSRequest" />
-                  <option value="WSResponse" />
-                </list>
-              </option>
+              <option name="lastModified" value="1743734877312" />
             </ScannedPath>
           </value>
         </entry>
@@ -2104,10 +2100,24 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743687656631" />
+              <option name="lastModified" value="1743735572141" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/main.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743734877176" />
+              <option name="schema">
+                <list>
+                  <option value="SocketService" />
+                  <option value="WSRequest" />
+                  <option value="WSResponse" />
                 </list>
               </option>
             </ScannedPath>
