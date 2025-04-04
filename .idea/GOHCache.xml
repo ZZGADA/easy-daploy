@@ -379,6 +379,13 @@
             </set>
           </value>
         </entry>
+        <entry key="K8sResourceOperationLogHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource_operation_log_handler.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="K8sResourceService">
           <value>
             <set>
@@ -470,6 +477,13 @@
             </set>
           </value>
         </entry>
+        <entry key="OssConfig">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="OssService">
           <value>
             <set>
@@ -495,6 +509,13 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/state/state.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="Pod">
+          <value>
+            <set>
+              <option value="file://$USER_HOME$/GolandProjects/Multiplexing /kubernetes/module/pod.go" />
             </set>
           </value>
         </entry>
@@ -809,6 +830,20 @@
             </set>
           </value>
         </entry>
+        <entry key="UserK8sResourceOperationLog">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource_operation_log.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserK8sResourceOperationLogDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource_operation_log.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="UserOss">
           <value>
             <set>
@@ -888,6 +923,18 @@
     </option>
     <option name="scannedPathMapping">
       <map>
+        <entry key="file://$USER_HOME$/GolandProjects/Multiplexing /kubernetes/module/pod.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743737602501" />
+              <option name="schema">
+                <list>
+                  <option value="Pod" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
@@ -1789,7 +1836,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/websocket.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743661199668" />
+              <option name="lastModified" value="1743737768150" />
               <option name="schema">
                 <list>
                   <option value="WebSocketServer" />
@@ -1859,6 +1906,19 @@
                 <list>
                   <option value="UserK8sResource" />
                   <option value="UserK8sResourceDao" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource_operation_log.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743753929516" />
+              <option name="schema">
+                <list>
+                  <option value="UserK8sResourceOperationLog" />
+                  <option value="UserK8sResourceOperationLogDao" />
                 </list>
               </option>
             </ScannedPath>
@@ -1972,17 +2032,29 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource_operation_log_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743753751237" />
+              <option name="schema">
+                <list>
+                  <option value="K8sResourceOperationLogHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743734624918" />
+              <option name="lastModified" value="1743752263608" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/websocket/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743668513622" />
+              <option name="lastModified" value="1743737184931" />
               <option name="schema">
                 <list>
                   <option value="WSMessage" />
@@ -2100,7 +2172,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743735572141" />
+              <option name="lastModified" value="1743752285964" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
@@ -2112,7 +2184,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743734877176" />
+              <option name="lastModified" value="1743752244997" />
               <option name="schema">
                 <list>
                   <option value="SocketService" />
@@ -2188,6 +2260,7 @@
         <entry key="io_abstraction_base" value="IOAbstractionBase" />
         <entry key="k8s_command_response" value="K8sCommandResponse" />
         <entry key="k8s_resource_handler" value="K8sResourceHandler" />
+        <entry key="k8s_resource_operation_log_handler" value="K8sResourceOperationLogHandler" />
         <entry key="k8s_resource_service" value="K8sResourceService" />
         <entry key="label_tree" value="LabelTree" />
         <entry key="label_tree_mapper" value="LabelTreeMapper" />
@@ -2201,10 +2274,12 @@
         <entry key="mq_asy_update_strategy" value="MqAsyUpdateStrategy" />
         <entry key="mysql" value="Mysql" />
         <entry key="mysql_config" value="MysqlConfig" />
+        <entry key="oss_config" value="OssConfig" />
         <entry key="oss_service" value="OssService" />
         <entry key="oven" value="Oven" />
         <entry key="pause_state" value="PauseState" />
         <entry key="play_state" value="PlayState" />
+        <entry key="pod" value="Pod" />
         <entry key="product_a" value="ProductA" />
         <entry key="product_b" value="ProductB" />
         <entry key="product_c" value="ProductC" />
@@ -2249,6 +2324,8 @@
         <entry key="user_github_dao" value="UserGithubDao" />
         <entry key="user_k8s_resource" value="UserK8sResource" />
         <entry key="user_k8s_resource_dao" value="UserK8sResourceDao" />
+        <entry key="user_k8s_resource_operation_log" value="UserK8sResourceOperationLog" />
+        <entry key="user_k8s_resource_operation_log_dao" value="UserK8sResourceOperationLogDao" />
         <entry key="user_oss" value="UserOss" />
         <entry key="user_oss_dao" value="UserOssDao" />
         <entry key="users" value="Users" />

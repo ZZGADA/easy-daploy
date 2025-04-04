@@ -6,20 +6,22 @@ import (
 )
 
 type SocketService struct {
-	userDockerfileDao  *dao.UserDockerfileDao
-	userDockerDao      dao.UserDockerDao
-	userGithubDao      *dao.UserGithubDao
-	userK8sResourceDao *dao.UserK8sResourceDao
-	userOssDao         *dao.UserOssDao
+	userDockerfileDao              *dao.UserDockerfileDao
+	userDockerDao                  dao.UserDockerDao
+	userGithubDao                  *dao.UserGithubDao
+	userK8sResourceDao             *dao.UserK8sResourceDao
+	userOssDao                     *dao.UserOssDao
+	userK8sResourceOperationLogDao *dao.UserK8sResourceOperationLogDao
 }
 
-func NewSocketService(dockerfileDao *dao.UserDockerfileDao, dockerDao dao.UserDockerDao, githubDao *dao.UserGithubDao, userK8sResourceDao *dao.UserK8sResourceDao, userOssDao *dao.UserOssDao) *SocketService {
+func NewSocketService(dockerfileDao *dao.UserDockerfileDao, dockerDao dao.UserDockerDao, githubDao *dao.UserGithubDao, userK8sResourceDao *dao.UserK8sResourceDao, userOssDao *dao.UserOssDao, userK8sResourceOperationLogDao *dao.UserK8sResourceOperationLogDao) *SocketService {
 	return &SocketService{
-		userDockerfileDao:  dockerfileDao,
-		userDockerDao:      dockerDao,
-		userGithubDao:      githubDao,
-		userK8sResourceDao: userK8sResourceDao,
-		userOssDao:         userOssDao,
+		userDockerfileDao:              dockerfileDao,
+		userDockerDao:                  dockerDao,
+		userGithubDao:                  githubDao,
+		userK8sResourceDao:             userK8sResourceDao,
+		userOssDao:                     userOssDao,
+		userK8sResourceOperationLogDao: userK8sResourceOperationLogDao,
 	}
 }
 

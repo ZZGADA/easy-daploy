@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -9,8 +10,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ZZGADA/easy-deploy/internal/model/dao"
+
 	"github.com/sirupsen/logrus"
-	"golang.org/x/crypto/ssh"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/apimachinery/pkg/version"
@@ -35,6 +37,7 @@ const (
 	GetClusterInfo   = "kubectl cluster-info"
 	GetNodes         = "kubectl get nodes"
 	ResourceApply    = "kubectl apply -f"
+	ResourceDelete   = "kubectl delete"
 )
 
 // 远程服务器配置
@@ -140,6 +143,9 @@ func (s *SocketService) baseProcess(conn *websocket.Conn, command string, data m
 	case ResourceApply:
 		s.resourceApply(conn, command, data, userID)
 		return
+	case ResourceDelete:
+		s.resourceDelete(conn, command, data, userID)
+		return
 	default:
 		SendSuccess(conn, "command execute success", K8sCommandResponse{
 			Command: command,
@@ -224,16 +230,141 @@ func (s *SocketService) resourceApply(conn *websocket.Conn, command string, data
 		return
 	}
 
+	// 解析 YAML 文件，获取资源名称和标签
+	resourceName, labels, err := s.extractResourceInfo(yamlContent)
+	if err != nil {
+		SendError(conn, fmt.Sprintf("解析资源信息失败: %v", err))
+		return
+	}
+
 	// 创建资源
 	if err := s.createResourceFromYAML(conf.KubeClient, localFilePath, namespace); err != nil {
 		SendError(conn, fmt.Sprintf("创建资源失败: %v", err))
 		return
 	}
 
+	// 记录操作日志
+	labelsJSON, err := json.Marshal(labels)
+	if err != nil {
+		logrus.Errorf("序列化标签失败: %v", err)
+		// 继续执行，不中断流程
+	}
+
+	// 构建完整的 kubectl 命令
+	fullCommand := fmt.Sprintf("kubectl apply -f %s -n %s", localFilePath, namespace)
+
+	// 创建操作日志
+	operationLog := &dao.UserK8sResourceOperationLog{
+		K8sResourceID:  uint(k8sResourceID),
+		UserID:         userID,
+		Namespace:      namespace,
+		MetadataName:   resourceName,
+		MetadataLabels: string(labelsJSON),
+		OperationType:  "create",
+		Command:        fullCommand,
+	}
+
+	// 保存操作日志
+	if err := s.userK8sResourceOperationLogDao.Create(operationLog); err != nil {
+		logrus.Errorf("保存操作日志失败: %v", err)
+		// 继续执行，不中断流程
+	}
+
 	// 发送成功响应
 	SendSuccess(conn, "command execute success", K8sCommandResponse{
 		Command: command,
 		Result:  fmt.Sprintf("资源 %s 已成功部署到 namespace %s", resource.FileName, namespace),
+	})
+}
+
+func (s *SocketService) resourceDelete(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {
+	logrus.Info("resource delete ", "data: ", data)
+	k8sResourceID, exist := data["k8s_resource_id"].(float64)
+	if !exist {
+		SendError(conn, "缺少k8s_resource_id 参数")
+		return
+	}
+
+	// 从数据库查询资源信息
+	resource, err := s.userK8sResourceDao.QueryById(uint32(k8sResourceID))
+	if err != nil {
+		SendError(conn, fmt.Sprintf("查询资源失败: %v", err))
+		return
+	}
+
+	// 查询最新的操作日志，获取资源信息
+	logs, err := s.userK8sResourceOperationLogDao.QueryByK8sResourceID(uint(k8sResourceID))
+	if err != nil || len(logs) == 0 {
+		SendError(conn, fmt.Sprintf("查询资源操作日志失败: %v", err))
+		return
+	}
+
+	// 获取最新的操作日志
+	latestLog := logs[0]
+	namespace := latestLog.Namespace
+	metadataName := latestLog.MetadataName
+
+	// 检查资源是否正在运行
+	resourceType := resource.ResourceType
+
+	if resourceType == "deployment" {
+		_, err = conf.KubeClient.AppsV1().Deployments(namespace).Get(context.TODO(), metadataName, metav1.GetOptions{})
+	} else if resourceType == "service" {
+		_, err = conf.KubeClient.CoreV1().Services(namespace).Get(context.TODO(), metadataName, metav1.GetOptions{})
+	} else {
+		SendError(conn, fmt.Sprintf("不支持的资源类型: %s", resourceType))
+		return
+	}
+
+	// 如果资源不存在，说明已经停止运行
+	if err != nil {
+		if k8sErr, ok := err.(*k8serrors.StatusError); ok && k8sErr.Status().Code == 404 {
+			SendError(conn, fmt.Sprintf("%s 已经关闭", metadataName))
+			return
+		}
+		SendError(conn, fmt.Sprintf("检查资源状态失败: %v", err))
+		return
+	}
+
+	// 资源正在运行，执行删除操作
+	var deleteCommand string
+	var deleteErr error
+
+	if resourceType == "deployment" {
+		deleteCommand = fmt.Sprintf("kubectl delete deployment %s -n %s", metadataName, namespace)
+		deleteErr = conf.KubeClient.AppsV1().Deployments(namespace).Delete(context.TODO(), metadataName, metav1.DeleteOptions{})
+	} else if resourceType == "service" {
+		deleteCommand = fmt.Sprintf("kubectl delete service %s -n %s", metadataName, namespace)
+		deleteErr = conf.KubeClient.CoreV1().Services(namespace).Delete(context.TODO(), metadataName, metav1.DeleteOptions{})
+	}
+
+	// 检查删除操作是否成功
+	if deleteErr != nil {
+		SendError(conn, fmt.Sprintf("删除资源失败: %v", deleteErr))
+		return
+	}
+
+	// 记录操作日志
+	operationLog := &dao.UserK8sResourceOperationLog{
+		K8sResourceID:  uint(k8sResourceID),
+		UserID:         userID,
+		Namespace:      namespace,
+		MetadataName:   metadataName,
+		MetadataLabels: latestLog.MetadataLabels,
+		OperationType:  "delete",
+		Command:        deleteCommand,q
+	}
+
+	// 保存操作日志
+	if err := s.userK8sResourceOperationLogDao.Create(operationLog); err != nil {
+		logrus.Errorf("保存操作日志失败: %v", err)
+		// 继续执行，不中断流程
+	}
+
+	// 发送成功响应
+	SendSuccess(conn, "command execute success", K8sCommandResponse{
+		Command: command,
+		Result:  fmt.Sprintf("资源 %s 已成功停止运行", metadataName),
 	})
 }
 
@@ -352,34 +483,34 @@ func (s *SocketService) createResourceFromYAML(client *kubernetes.Clientset, yam
 }
 
 // 执行 SSH 命令
-func executeSSHCommand(command string) (string, error) {
-	config := &ssh.ClientConfig{
-		User: remoteUsername,
-		Auth: []ssh.AuthMethod{
-			ssh.Password(remotePassword),
-		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // 注意：在生产环境中不要使用此选项，应验证主机密钥
-	}
-
-	client, err := ssh.Dial("tcp", remoteHost+":"+remotePort, config)
-	if err != nil {
-		return "", err
-	}
-	defer client.Close()
-
-	session, err := client.NewSession()
-	if err != nil {
-		return "", err
-	}
-	defer session.Close()
-
-	output, err := session.CombinedOutput(command)
-	if err != nil {
-		return "", err
-	}
-
-	return string(output), nil
-}
+//func executeSSHCommand(command string) (string, error) {
+//	config := &ssh.ClientConfig{
+//		User: remoteUsername,
+//		Auth: []ssh.AuthMethod{
+//			ssh.Password(remotePassword),
+//		},
+//		HostKeyCallback: ssh.InsecureIgnoreHostKey(), // 注意：在生产环境中不要使用此选项，应验证主机密钥
+//	}
+//
+//	client, err := ssh.Dial("tcp", remoteHost+":"+remotePort, config)
+//	if err != nil {
+//		return "", err
+//	}
+//	defer client.Close()
+//
+//	session, err := client.NewSession()
+//	if err != nil {
+//		return "", err
+//	}
+//	defer session.Close()
+//
+//	output, err := session.CombinedOutput(command)
+//	if err != nil {
+//		return "", err
+//	}
+//
+//	return string(output), nil
+//}
 
 func formatNamespace(namespaces *v1.NamespaceList) string {
 	var result string
@@ -506,4 +637,35 @@ func formatDuration(d time.Duration) string {
 	} else {
 		return fmt.Sprintf("%.0fs", d.Seconds())
 	}
+}
+
+// 从 YAML 内容中提取资源名称和标签
+func (s *SocketService) extractResourceInfo(yamlContent []byte) (string, map[string]string, error) {
+	// 创建一个通用的 map 来解析 YAML
+	var resource map[string]interface{}
+	if err := yaml.Unmarshal(yamlContent, &resource); err != nil {
+		return "", nil, fmt.Errorf("解析 YAML 失败: %v", err)
+	}
+
+	// 获取资源名称
+	var resourceName string
+	if metadata, ok := resource["metadata"].(map[string]interface{}); ok {
+		if name, ok := metadata["name"].(string); ok {
+			resourceName = name
+		}
+	}
+
+	// 获取资源标签
+	labels := make(map[string]string)
+	if metadata, ok := resource["metadata"].(map[string]interface{}); ok {
+		if labelsMap, ok := metadata["labels"].(map[string]interface{}); ok {
+			for key, value := range labelsMap {
+				if strValue, ok := value.(string); ok {
+					labels[key] = strValue
+				}
+			}
+		}
+	}
+
+	return resourceName, labels, nil
 }

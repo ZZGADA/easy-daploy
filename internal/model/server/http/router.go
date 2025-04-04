@@ -32,7 +32,8 @@ func SetupRouter(r *gin.Engine) {
 			dao.NewUserDockerDao(conf.DB),
 			dao.NewUserGithubDao(conf.DB),
 			dao.NewUserK8sResourceDao(conf.DB),
-			dao.NewUserOssDao(conf.DB)),
+			dao.NewUserOssDao(conf.DB),
+			dao.NewUserK8sResourceOperationLogDao(conf.DB)),
 		docker_manage.NewDockerImageService(
 			dao.NewUserDockerImageDao(conf.DB)))
 
@@ -98,12 +99,14 @@ func SetupRouter(r *gin.Engine) {
 
 	// k8s 资源管理
 	k8sResourceHandler := NewK8sResourceHandler(k8s_manage.NewK8sResourceService(dao.NewUserK8sResourceDao(conf.DB)))
+	k8sResourceOperationLogHandler := NewK8sResourceOperationLogHandler(k8s_manage.NewK8sResourceOperationLogService(dao.NewUserK8sResourceOperationLogDao(conf.DB)))
 	k8s := r.Group("/api/user/k8s", middleware.CustomAuthMiddleware())
 	{
 		k8s.POST("/resource/save", k8sResourceHandler.SaveResource)
 		k8s.POST("/resource/update", k8sResourceHandler.UpdateResource)
 		k8s.GET("/resource/query", k8sResourceHandler.QueryResources)
 		k8s.POST("/resource/delete", k8sResourceHandler.DeleteResource)
+		k8s.GET("/resource/operation/log/query", k8sResourceOperationLogHandler.QueryOperationLogs)
 	}
 
 	// OSS 访问信息管理
