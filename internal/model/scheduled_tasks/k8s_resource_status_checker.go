@@ -55,7 +55,7 @@ func (c *K8sResourceStatusChecker) checkResources() {
 
 	for _, resource := range resources {
 		// 查询最新的操作日志，获取资源信息
-		logs, err := c.userK8sResourceOperationLogDao.QueryByK8sResourceID(uint(resource.Id))
+		logs, err := c.userK8sResourceOperationLogDao.QueryByK8sResourceIDFirst(uint(resource.Id))
 		if err != nil {
 			logrus.Infof("查询资源 %d erros : %v", resource.Id, err)
 			return

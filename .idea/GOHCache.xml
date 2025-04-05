@@ -1994,7 +1994,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743823311643" />
+              <option name="lastModified" value="1743836178812" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceStatusChecker" />
