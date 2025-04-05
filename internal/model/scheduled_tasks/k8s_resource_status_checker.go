@@ -2,19 +2,30 @@ package scheduled_tasks
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/ZZGADA/easy-deploy/internal/define"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 	"github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"time"
 )
 
 // K8sResourceStatusChecker K8s 资源状态检查器
 type K8sResourceStatusChecker struct {
 	userK8sResourceDao             *dao.UserK8sResourceDao
 	userK8sResourceOperationLogDao *dao.UserK8sResourceOperationLogDao
+}
+
+// K8sResourceInfo K8s资源信息结构
+type K8sResourceInfo struct {
+	ResourceID   uint   `json:"resource_id"`
+	ResourceName string `json:"resource_name"`
+	ResourceType string `json:"resource_type"`
+	Namespace    string `json:"namespace"`
+	UserID       uint   `json:"user_id"`
 }
 
 // NewK8sResourceStatusChecker 创建 K8s 资源状态检查器
@@ -52,6 +63,9 @@ func (c *K8sResourceStatusChecker) checkResources() {
 		logrus.Errorf("查询 K8s 资源失败: %v", err)
 		return
 	}
+
+	// 用于存储运行中的资源信息，按用户ID分组
+	userResourcesMap := make(map[uint][]K8sResourceInfo)
 
 	for _, resource := range resources {
 		// 查询最新的操作日志，获取资源信息
@@ -92,6 +106,16 @@ func (c *K8sResourceStatusChecker) checkResources() {
 				// 检查部署状态
 				if deployment.Status.AvailableReplicas == *deployment.Spec.Replicas {
 					status = define.K8sResourceStatusRun // 运行正常
+					// 如果资源正在运行，添加到用户资源列表
+					userID := uint(resource.UserID)
+					resourceInfo := K8sResourceInfo{
+						ResourceID:   uint(resource.Id),
+						ResourceName: metadataName,
+						ResourceType: resource.ResourceType,
+						Namespace:    namespace,
+						UserID:       userID,
+					}
+					userResourcesMap[userID] = append(userResourcesMap[userID], resourceInfo)
 				} else if deployment.Status.UpdatedReplicas < *deployment.Spec.Replicas {
 					status = define.K8sResourceStatusRestart // 容器重启
 				} else {
@@ -110,6 +134,16 @@ func (c *K8sResourceStatusChecker) checkResources() {
 				// 服务存在，状态为正常
 				status = define.K8sResourceStatusRun
 				command = fmt.Sprintf("kubectl get service %s -n %s", metadataName, namespace)
+				// 如果资源正在运行，添加到用户资源列表
+				userID := uint(resource.UserID)
+				resourceInfo := K8sResourceInfo{
+					ResourceID:   uint(resource.Id),
+					ResourceName: metadataName,
+					ResourceType: resource.ResourceType,
+					Namespace:    namespace,
+					UserID:       userID,
+				}
+				userResourcesMap[userID] = append(userResourcesMap[userID], resourceInfo)
 			}
 		} else {
 			// 不支持的资源类型
@@ -133,4 +167,65 @@ func (c *K8sResourceStatusChecker) checkResources() {
 			logrus.Errorf("保存资源 %d 的操作日志失败: %v", resource.Id, err)
 		}
 	}
+
+	// 将每个用户的资源信息存入Redis并推送给对应的WebSocket客户端
+	for userID, userResources := range userResourcesMap {
+		if len(userResources) > 0 {
+			// 将用户的资源信息序列化为JSON
+			userResourcesJSON, err := json.Marshal(userResources)
+			if err != nil {
+				logrus.Errorf("序列化用户 %d 的运行中资源信息失败: %v", userID, err)
+				continue
+			}
+
+			// 使用Redis存储用户的资源信息，键名格式为 k8s:running_resources:{user_id}
+			redisKey := fmt.Sprintf(define.K8sRunningResources, userID)
+			err = conf.RedisClient.Set(context.Background(), redisKey, userResourcesJSON, time.Hour).Err()
+			if err != nil {
+				logrus.Errorf("将用户 %d 的运行中资源信息存入Redis失败: %v", userID, err)
+				continue
+			}
+
+			// 推送给该用户的WebSocket客户端
+			c.pushResourceInfoToUser(userID, userResources, redisKey)
+		}
+	}
+}
+
+// pushResourceInfoToUser 将资源信息推送给指定用户的WebSocket客户端
+func (c *K8sResourceStatusChecker) pushResourceInfoToUser(userID uint, resources []K8sResourceInfo, redisKey string) {
+	// 获取用户的WebSocket连接
+	conn, exists := conf.WSServer.Connections[userID]
+	if !exists {
+		logrus.Infof("用户 %d 没有活动的WebSocket连接", userID)
+		return
+	}
+
+	// 构建推送消息
+	message := map[string]interface{}{
+		"type":      "resource_status",
+		"redis_key": redisKey,
+		"resources": resources,
+		"timestamp": time.Now().Unix(),
+	}
+
+	response := map[string]interface{}{
+		"success": true,
+		"message": "resource_status_running",
+		"data":    message,
+	}
+
+	// 发送消息
+	err := conn.WriteJSON(response)
+	if err != nil {
+		logrus.Errorf("向用户 %d 推送资源状态消息失败: %v", userID, err)
+	} else {
+		logrus.Infof("成功向用户 %d 推送资源状态消息", userID)
+	}
+}
+
+// PushRunningResource quick start one method
+func PushRunningResource() {
+	k8sResourceStatusChecker = NewK8sResourceStatusChecker(dao.NewUserK8sResourceDao(conf.DB), dao.NewUserK8sResourceOperationLogDao(conf.DB))
+	k8sResourceStatusChecker.checkResources()
 }

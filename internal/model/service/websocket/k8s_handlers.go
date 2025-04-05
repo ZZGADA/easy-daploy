@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/ZZGADA/easy-deploy/internal/define"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/ZZGADA/easy-deploy/internal/define"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 
@@ -31,14 +32,16 @@ import (
 )
 
 const (
-	GetAllNameSpace  = "kubectl get namespace"
-	GetAllPods       = "kubectl get pod -A"
-	GetAllService    = "kubectl get svc -A"
-	GetAllDeployment = "kubectl get deployment -A"
-	GetClusterInfo   = "kubectl cluster-info"
-	GetNodes         = "kubectl get nodes"
-	ResourceApply    = "kubectl apply -f"
-	ResourceDelete   = "kubectl delete"
+	GetAllNameSpace          = "kubectl get namespace"
+	GetAllPods               = "kubectl get pod -A"
+	GetAllService            = "kubectl get svc -A"
+	GetAllDeployment         = "kubectl get deployment -A"
+	GetClusterInfo           = "kubectl cluster-info"
+	GetNodes                 = "kubectl get nodes"
+	ResourceApply            = "kubectl apply -f"
+	ResourceDelete           = "kubectl delete"
+	GetSpecificResource      = "kubectl get"
+	DescribeSpecificResource = "kubectl describe"
 )
 
 // 远程服务器配置
@@ -146,6 +149,12 @@ func (s *SocketService) baseProcess(conn *websocket.Conn, command string, data m
 		return
 	case ResourceDelete:
 		s.resourceDelete(conn, command, data, userID)
+		return
+	case GetSpecificResource:
+		s.handleResourceGet(conn, command, data, userID)
+		return
+	case DescribeSpecificResource:
+		s.handleResourceDescribe(conn, command, data, userID)
 		return
 	default:
 		SendSuccess(conn, "command execute success", K8sCommandResponse{
@@ -697,4 +706,636 @@ func (s *SocketService) extractResourceInfo(yamlContent []byte) (string, map[str
 	}
 
 	return resourceName, labels, nil
+}
+
+// 处理kubectl get命令
+func (s *SocketService) handleResourceGet(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {
+	// 从data中获取redis_key
+	redisKey, exist := data["redis_key"].(string)
+	if !exist {
+		SendError(conn, "缺少redis_key参数")
+		return
+	}
+
+	resourceName, exist := data["resource_name"].(string)
+	if !exist {
+		SendError(conn, "缺少redis_key参数")
+		return
+	}
+
+	// 从Redis中获取资源信息
+	ctx := context.Background()
+	resourceInfoJSON, err := conf.RedisClient.Get(ctx, redisKey).Result()
+	if err != nil {
+		SendError(conn, fmt.Sprintf("从Redis获取资源信息失败: %v", err))
+		return
+	}
+
+	// 解析资源信息
+	var resources []struct {
+		ResourceID   int    `json:"resource_id"`
+		ResourceName string `json:"resource_name"`
+		ResourceType string `json:"resource_type"`
+		Namespace    string `json:"namespace"`
+		UserID       int    `json:"user_id"`
+	}
+	if err := json.Unmarshal([]byte(resourceInfoJSON), &resources); err != nil {
+		SendError(conn, fmt.Sprintf("解析资源信息失败: %v", err))
+		return
+	}
+
+	// 如果没有资源，返回空结果
+	if len(resources) == 0 {
+		SendSuccess(conn, "command execute success", K8sCommandResponse{
+			Command: command,
+			Result:  "没有找到运行中的资源",
+		})
+		return
+	}
+
+	// 执行kubectl get命令并格式化结果
+	var result string
+	var fullCommand string
+
+	// 根据资源类型构建表头
+
+	for _, resource := range resources {
+		if resource.ResourceName != resourceName {
+			continue
+		}
+
+		switch resource.ResourceType {
+		case "deployment":
+			result = fmt.Sprintf("%-20s %-10s %-10s %-10s %-10s %-15s %-20s %-30s %-20s\n",
+				"NAME", "READY", "UP-TO-DATE", "AVAILABLE", "AGE", "CONTAINERS", "IMAGES", "SELECTOR", "NAMESPACE")
+			fullCommand = fmt.Sprintf("kubectl get deployment %s -n %s -o wide", resource.ResourceName, resource.Namespace)
+		case "service":
+			result = fmt.Sprintf("%-20s %-10s %-20s %-10s %-15s %-20s %-20s\n",
+				"NAME", "TYPE", "CLUSTER-IP", "PORT(S)", "SELECTOR", "NAMESPACE", "AGE")
+			fullCommand = fmt.Sprintf("kubectl get service %s -n %s -o wide", resource.ResourceName, resource.Namespace)
+		case "pod":
+			result = fmt.Sprintf("%-20s %-10s %-10s %-10s %-10s %-15s %-20s %-20s %-20s\n",
+				"NAME", "READY", "STATUS", "RESTARTS", "AGE", "IP", "NODE", "NOMINATED NODE", "NAMESPACE")
+			fullCommand = fmt.Sprintf("kubectl get pod %s -n %s -o wide", resource.ResourceName, resource.Namespace)
+		default:
+			result = fmt.Sprintf("不支持的资源类型: %s\n", resources[0].ResourceType)
+			fullCommand = command
+		}
+
+		var resourceResult string
+
+		switch resource.ResourceType {
+		case "deployment":
+			deployments, err := conf.KubeClient.AppsV1().Deployments(resource.Namespace).Get(ctx, resource.ResourceName, metav1.GetOptions{})
+			if err != nil {
+				if k8serrors.IsNotFound(err) {
+					resourceResult = fmt.Sprintf("在命名空间 %s 中未找到 Deployment %s\n", resource.Namespace, resource.ResourceName)
+				} else {
+					resourceResult = fmt.Sprintf("获取 Deployment %s 失败: %v\n", resource.ResourceName, err)
+				}
+			} else {
+				// 格式化单个deployment
+				resourceResult = formatSingleDeployment(deployments)
+			}
+		case "service":
+			services, err := conf.KubeClient.CoreV1().Services(resource.Namespace).Get(ctx, resource.ResourceName, metav1.GetOptions{})
+			if err != nil {
+				if k8serrors.IsNotFound(err) {
+					resourceResult = fmt.Sprintf("在命名空间 %s 中未找到 Service %s\n", resource.Namespace, resource.ResourceName)
+				} else {
+					resourceResult = fmt.Sprintf("获取 Service %s 失败: %v\n", resource.ResourceName, err)
+				}
+			} else {
+				// 格式化单个service
+				resourceResult = formatSingleService(services)
+			}
+		case "pod":
+			pods, err := conf.KubeClient.CoreV1().Pods(resource.Namespace).Get(ctx, resource.ResourceName, metav1.GetOptions{})
+			if err != nil {
+				if k8serrors.IsNotFound(err) {
+					resourceResult = fmt.Sprintf("在命名空间 %s 中未找到 Pod %s\n", resource.Namespace, resource.ResourceName)
+				} else {
+					resourceResult = fmt.Sprintf("获取 Pod %s 失败: %v\n", resource.ResourceName, err)
+				}
+			} else {
+				// 格式化单个pod
+				resourceResult = formatSinglePod(pods)
+			}
+		default:
+			resourceResult = fmt.Sprintf("不支持的资源类型: %s\n", resource.ResourceType)
+		}
+
+		result += resourceResult
+	}
+
+	// 发送结果
+	SendSuccess(conn, "command execute success", K8sCommandResponse{
+		Command: fullCommand,
+		Result:  result,
+	})
+}
+
+// 处理kubectl describe命令
+func (s *SocketService) handleResourceDescribe(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {
+	// 从data中获取redis_key
+	redisKey, exist := data["redis_key"].(string)
+	if !exist {
+		SendError(conn, "缺少redis_key参数")
+		return
+	}
+
+	resourceName, exist := data["resource_name"].(string)
+	if !exist {
+		SendError(conn, "缺少redis_key参数")
+		return
+	}
+
+	// 从Redis中获取资源信息
+	ctx := context.Background()
+	resourceInfoJSON, err := conf.RedisClient.Get(ctx, redisKey).Result()
+	if err != nil {
+		SendError(conn, fmt.Sprintf("从Redis获取资源信息失败: %v", err))
+		return
+	}
+
+	// 解析资源信息
+	var resources []struct {
+		ResourceID   int    `json:"resource_id"`
+		ResourceName string `json:"resource_name"`
+		ResourceType string `json:"resource_type"`
+		Namespace    string `json:"namespace"`
+		UserID       int    `json:"user_id"`
+	}
+	if err := json.Unmarshal([]byte(resourceInfoJSON), &resources); err != nil {
+		SendError(conn, fmt.Sprintf("解析资源信息失败: %v", err))
+		return
+	}
+
+	// 如果没有资源，返回空结果
+	if len(resources) == 0 {
+		SendSuccess(conn, "command execute success", K8sCommandResponse{
+			Command: command,
+			Result:  "没有找到运行中的资源",
+		})
+		return
+	}
+
+	// 执行kubectl describe命令并格式化结果
+	var result string
+	var fullCommand string
+
+	for _, resource := range resources {
+		if resource.ResourceName != resourceName {
+			continue
+		}
+
+		// 根据资源类型构建完整命令
+		switch resource.ResourceType {
+		case "deployment":
+			fullCommand = fmt.Sprintf("kubectl describe deployment %s -n %s", resource.ResourceName, resource.Namespace)
+		case "service":
+			fullCommand = fmt.Sprintf("kubectl describe service %s -n %s", resource.ResourceName, resource.Namespace)
+		case "pod":
+			fullCommand = fmt.Sprintf("kubectl describe pod %s -n %s", resource.ResourceName, resource.Namespace)
+		default:
+			fullCommand = command
+		}
+
+		var resourceResult string
+
+		switch resource.ResourceType {
+		case "deployment":
+			deployments, err := conf.KubeClient.AppsV1().Deployments(resource.Namespace).Get(ctx, resource.ResourceName, metav1.GetOptions{})
+			if err != nil {
+				if k8serrors.IsNotFound(err) {
+					resourceResult = fmt.Sprintf("在命名空间 %s 中未找到 Deployment %s\n", resource.Namespace, resource.ResourceName)
+				} else {
+					resourceResult = fmt.Sprintf("获取 Deployment %s 失败: %v\n", resource.ResourceName, err)
+				}
+			} else {
+				// 格式化单个deployment的详细信息
+				resourceResult = formatDeploymentDetail(deployments)
+			}
+		case "service":
+			services, err := conf.KubeClient.CoreV1().Services(resource.Namespace).Get(ctx, resource.ResourceName, metav1.GetOptions{})
+			if err != nil {
+				if k8serrors.IsNotFound(err) {
+					resourceResult = fmt.Sprintf("在命名空间 %s 中未找到 Service %s\n", resource.Namespace, resource.ResourceName)
+				} else {
+					resourceResult = fmt.Sprintf("获取 Service %s 失败: %v\n", resource.ResourceName, err)
+				}
+			} else {
+				// 格式化单个service的详细信息
+				resourceResult = formatServiceDetail(services)
+			}
+		case "pod":
+			pods, err := conf.KubeClient.CoreV1().Pods(resource.Namespace).Get(ctx, resource.ResourceName, metav1.GetOptions{})
+			if err != nil {
+				if k8serrors.IsNotFound(err) {
+					resourceResult = fmt.Sprintf("在命名空间 %s 中未找到 Pod %s\n", resource.Namespace, resource.ResourceName)
+				} else {
+					resourceResult = fmt.Sprintf("获取 Pod %s 失败: %v\n", resource.ResourceName, err)
+				}
+			} else {
+				// 格式化单个pod的详细信息
+				resourceResult = formatPodDetail(pods)
+			}
+		default:
+			resourceResult = fmt.Sprintf("不支持的资源类型: %s\n", resource.ResourceType)
+		}
+
+		result += resourceResult
+	}
+
+	// 发送结果
+	SendSuccess(conn, "command execute success", K8sCommandResponse{
+		Command: fullCommand,
+		Result:  result,
+	})
+}
+
+// 格式化单个Deployment
+func formatSingleDeployment(deployment *appsv1.Deployment) string {
+	now := time.Now()
+	age := now.Sub(deployment.CreationTimestamp.Time)
+	ageStr := formatDuration(age)
+
+	// 获取容器信息
+	containers := ""
+	images := ""
+	if len(deployment.Spec.Template.Spec.Containers) > 0 {
+		containers = deployment.Spec.Template.Spec.Containers[0].Name
+		images = deployment.Spec.Template.Spec.Containers[0].Image
+	}
+
+	// 获取选择器
+	selector := ""
+	for k, v := range deployment.Spec.Selector.MatchLabels {
+		if selector != "" {
+			selector += ","
+		}
+		selector += fmt.Sprintf("%s=%s", k, v)
+	}
+
+	// 格式化输出
+	return fmt.Sprintf("%-20s %d/%d %-10d %-10d %-10s %-15s %-20s %-30s %-20s\n",
+		deployment.Name,
+		deployment.Status.AvailableReplicas,
+		*deployment.Spec.Replicas,
+		deployment.Status.UpdatedReplicas,
+		deployment.Status.AvailableReplicas,
+		ageStr,
+		containers,
+		images,
+		selector,
+		deployment.Namespace)
+}
+
+// 格式化单个Service
+func formatSingleService(service *v1.Service) string {
+	now := time.Now()
+	age := now.Sub(service.CreationTimestamp.Time)
+	ageStr := formatDuration(age)
+
+	// 获取选择器
+	selector := ""
+	for k, v := range service.Spec.Selector {
+		if selector != "" {
+			selector += ","
+		}
+		selector += fmt.Sprintf("%s=%s", k, v)
+	}
+
+	// 获取端口信息
+	ports := ""
+	for i, port := range service.Spec.Ports {
+		if i > 0 {
+			ports += ","
+		}
+		ports += fmt.Sprintf("%d/%s", port.Port, port.Protocol)
+	}
+
+	// 格式化输出
+	return fmt.Sprintf("%-20s %-10s %-20s %-10s %-15s %-20s %-10s\n",
+		service.Name,
+		service.Spec.Type,
+		service.Spec.ClusterIP,
+		ports,
+		selector,
+		service.Namespace,
+		ageStr)
+}
+
+// 格式化单个Pod
+func formatSinglePod(pod *v1.Pod) string {
+	now := time.Now()
+	age := now.Sub(pod.CreationTimestamp.Time)
+	ageStr := formatDuration(age)
+
+	// 获取容器信息
+	//containers := ""
+	//images := ""
+	//if len(pod.Spec.Containers) > 0 {
+	//	containers := pod.Spec.Containers[0].Name
+	//	images := pod.Spec.Containers[0].Image
+	//}
+
+	// 获取就绪状态
+	ready := "0/0"
+	if len(pod.Status.ContainerStatuses) > 0 {
+		readyCount := 0
+		for _, status := range pod.Status.ContainerStatuses {
+			if status.Ready {
+				readyCount++
+			}
+		}
+		ready = fmt.Sprintf("%d/%d", readyCount, len(pod.Status.ContainerStatuses))
+	}
+
+	// 获取重启次数
+	restarts := 0
+	if len(pod.Status.ContainerStatuses) > 0 {
+		restarts = int(pod.Status.ContainerStatuses[0].RestartCount)
+	}
+
+	// 格式化输出
+	return fmt.Sprintf("%-20s %-10s %-10s %-10d %-10s %-15s %-20s %-20s %-20s\n",
+		pod.Name,
+		ready,
+		pod.Status.Phase,
+		restarts,
+		ageStr,
+		pod.Status.PodIP,
+		pod.Spec.NodeName,
+		"<none>",
+		pod.Namespace)
+}
+
+// 格式化Deployment详细信息
+func formatDeploymentDetail(deployment *appsv1.Deployment) string {
+	var result string
+
+	result = fmt.Sprintf("Name: %s\n", deployment.Name)
+	result += fmt.Sprintf("Namespace: %s\n", deployment.Namespace)
+	result += fmt.Sprintf("CreationTimestamp: %s\n", deployment.CreationTimestamp.Format("2006-01-02 15:04:05"))
+	result += fmt.Sprintf("Labels: %v\n", deployment.Labels)
+	result += fmt.Sprintf("Annotations: %v\n", deployment.Annotations)
+	result += fmt.Sprintf("Selector: %v\n", deployment.Spec.Selector.MatchLabels)
+	result += fmt.Sprintf("Replicas: %d desired | %d updated | %d total | %d available | %d unavailable\n",
+		*deployment.Spec.Replicas,
+		deployment.Status.UpdatedReplicas,
+		deployment.Status.Replicas,
+		deployment.Status.AvailableReplicas,
+		deployment.Status.UnavailableReplicas)
+
+	// 添加容器信息
+	result += "Containers:\n"
+	for i, container := range deployment.Spec.Template.Spec.Containers {
+		result += fmt.Sprintf("  %d. %s\n", i+1, container.Name)
+		result += fmt.Sprintf("     Image: %s\n", container.Image)
+		result += fmt.Sprintf("     Port: %v\n", container.Ports)
+		result += fmt.Sprintf("     Command: %v\n", container.Command)
+		result += fmt.Sprintf("     Args: %v\n", container.Args)
+		result += fmt.Sprintf("     WorkingDir: %s\n", container.WorkingDir)
+		result += fmt.Sprintf("     Env: %v\n", container.Env)
+		result += fmt.Sprintf("     Resources: %v\n", container.Resources)
+		result += fmt.Sprintf("     VolumeMounts: %v\n", container.VolumeMounts)
+	}
+
+	// 添加卷信息
+	result += "Volumes:\n"
+	for i, volume := range deployment.Spec.Template.Spec.Volumes {
+		result += fmt.Sprintf("  %d. %s\n", i+1, volume.Name)
+		result += fmt.Sprintf("     Type: %v\n", volume)
+	}
+
+	// 添加状态信息
+	result += "Conditions:\n"
+	for _, condition := range deployment.Status.Conditions {
+		result += fmt.Sprintf("  Type: %s, Status: %s, Reason: %s, Message: %s\n",
+			condition.Type, condition.Status, condition.Reason, condition.Message)
+	}
+
+	return result
+}
+
+// 格式化Service详细信息
+func formatServiceDetail(service *v1.Service) string {
+	var result string
+
+	// 基本信息
+	result += fmt.Sprintf("Name:                     %s\n", service.Name)
+	result += fmt.Sprintf("Namespace:                %s\n", service.Namespace)
+
+	// 标签和注解
+	if len(service.Labels) == 0 {
+		result += "Labels:                   <none>\n"
+	} else {
+		labels := ""
+		for k, v := range service.Labels {
+			if labels != "" {
+				labels += ", "
+			}
+			labels += fmt.Sprintf("%s=%s", k, v)
+		}
+		result += fmt.Sprintf("Labels:                   %s\n", labels)
+	}
+
+	if len(service.Annotations) == 0 {
+		result += "Annotations:              <none>\n"
+	} else {
+		annotations := ""
+		for k, v := range service.Annotations {
+			if annotations != "" {
+				annotations += ", "
+			}
+			annotations += fmt.Sprintf("%s=%s", k, v)
+		}
+		result += fmt.Sprintf("Annotations:              %s\n", annotations)
+	}
+
+	// 选择器
+	if len(service.Spec.Selector) == 0 {
+		result += "Selector:                 <none>\n"
+	} else {
+		selector := ""
+		for k, v := range service.Spec.Selector {
+			if selector != "" {
+				selector += ", "
+			}
+			selector += fmt.Sprintf("%s=%s", k, v)
+		}
+		result += fmt.Sprintf("Selector:                 %s\n", selector)
+	}
+
+	// 服务类型
+	result += fmt.Sprintf("Type:                     %s\n", service.Spec.Type)
+
+	// IP 策略
+	if service.Spec.IPFamilyPolicy != nil {
+		result += fmt.Sprintf("IP Family Policy:         %s\n", *service.Spec.IPFamilyPolicy)
+	} else {
+		result += "IP Family Policy:         <none>\n"
+	}
+
+	// IP 族
+	if len(service.Spec.IPFamilies) > 0 {
+		ipFamilies := ""
+		for i, family := range service.Spec.IPFamilies {
+			if i > 0 {
+				ipFamilies += ", "
+			}
+			ipFamilies += string(family)
+		}
+		result += fmt.Sprintf("IP Families:              %s\n", ipFamilies)
+	} else {
+		result += "IP Families:              <none>\n"
+	}
+
+	// IP 地址
+	result += fmt.Sprintf("IP:                       %s\n", service.Spec.ClusterIP)
+
+	// IPs
+	if len(service.Spec.ClusterIPs) > 0 {
+		ips := ""
+		for i, ip := range service.Spec.ClusterIPs {
+			if i > 0 {
+				ips += ", "
+			}
+			ips += ip
+		}
+		result += fmt.Sprintf("IPs:                      %s\n", ips)
+	} else {
+		result += "IPs:                      <none>\n"
+	}
+
+	// 端口信息
+	for i, port := range service.Spec.Ports {
+		if i > 0 {
+			result += "\n"
+		}
+		result += fmt.Sprintf("Port:                     %s  %d/%s\n",
+			port.Name, port.Port, port.Protocol)
+		result += fmt.Sprintf("TargetPort:               %v\n", port.TargetPort)
+		if service.Spec.Type == v1.ServiceTypeNodePort {
+			result += fmt.Sprintf("NodePort:                 %s  %d/%s\n",
+				port.Name, port.NodePort, port.Protocol)
+		}
+	}
+
+	// 端点信息
+	endpoints, err := conf.KubeClient.CoreV1().Endpoints(service.Namespace).Get(context.TODO(), service.Name, metav1.GetOptions{})
+	if err == nil && len(endpoints.Subsets) > 0 {
+		endpointAddresses := ""
+		for _, subset := range endpoints.Subsets {
+			for _, address := range subset.Addresses {
+				if endpointAddresses != "" {
+					endpointAddresses += ","
+				}
+				endpointAddresses += fmt.Sprintf("%s:%d", address.IP, subset.Ports[0].Port)
+			}
+		}
+		result += fmt.Sprintf("Endpoints:                %s\n", endpointAddresses)
+	} else {
+		result += "Endpoints:                <none>\n"
+	}
+
+	// 会话亲和性
+	result += fmt.Sprintf("Session Affinity:         %s\n", service.Spec.SessionAffinity)
+
+	// 外部流量策略
+	if service.Spec.ExternalTrafficPolicy != "" {
+		result += fmt.Sprintf("External Traffic Policy:  %s\n", service.Spec.ExternalTrafficPolicy)
+	} else {
+		result += "External Traffic Policy:  <none>\n"
+	}
+
+	// 内部流量策略
+	if service.Spec.InternalTrafficPolicy != nil {
+		result += fmt.Sprintf("Internal Traffic Policy:  %s\n", *service.Spec.InternalTrafficPolicy)
+	} else {
+		result += "Internal Traffic Policy:  <none>\n"
+	}
+
+	// 事件信息
+	events, err := conf.KubeClient.CoreV1().Events(service.Namespace).List(context.TODO(), metav1.ListOptions{
+		FieldSelector: fmt.Sprintf("involvedObject.name=%s,involvedObject.kind=Service", service.Name),
+	})
+	if err == nil && len(events.Items) > 0 {
+		result += "Events:\n"
+		for _, event := range events.Items {
+			result += fmt.Sprintf("  %s  %s  %s  %s\n",
+				event.FirstTimestamp.Format("2006-01-02 15:04:05"),
+				event.Type,
+				event.Reason,
+				event.Message)
+		}
+	} else {
+		result += "Events:                   <none>\n"
+	}
+
+	return result
+}
+
+// 格式化Pod详细信息
+func formatPodDetail(pod *v1.Pod) string {
+	var result string
+
+	result = fmt.Sprintf("Name: %s\n", pod.Name)
+	result += fmt.Sprintf("Namespace: %s\n", pod.Namespace)
+	result += fmt.Sprintf("CreationTimestamp: %s\n", pod.CreationTimestamp.Format("2006-01-02 15:04:05"))
+	result += fmt.Sprintf("Labels: %v\n", pod.Labels)
+	result += fmt.Sprintf("Annotations: %v\n", pod.Annotations)
+	result += fmt.Sprintf("Status: %s\n", pod.Status.Phase)
+	result += fmt.Sprintf("IP: %s\n", pod.Status.PodIP)
+	result += fmt.Sprintf("Node: %s\n", pod.Spec.NodeName)
+	result += fmt.Sprintf("Start Time: %s\n", pod.Status.StartTime.Format("2006-01-02 15:04:05"))
+
+	// 添加容器信息
+	result += "Containers:\n"
+	for i, container := range pod.Spec.Containers {
+		result += fmt.Sprintf("  %d. %s\n", i+1, container.Name)
+		result += fmt.Sprintf("     Image: %s\n", container.Image)
+		result += fmt.Sprintf("     Port: %v\n", container.Ports)
+		result += fmt.Sprintf("     Command: %v\n", container.Command)
+		result += fmt.Sprintf("     Args: %v\n", container.Args)
+		result += fmt.Sprintf("     WorkingDir: %s\n", container.WorkingDir)
+		result += fmt.Sprintf("     Env: %v\n", container.Env)
+		result += fmt.Sprintf("     Resources: %v\n", container.Resources)
+		result += fmt.Sprintf("     VolumeMounts: %v\n", container.VolumeMounts)
+	}
+
+	// 添加容器状态
+	result += "Container Statuses:\n"
+	for i, status := range pod.Status.ContainerStatuses {
+		result += fmt.Sprintf("  %d. %s\n", i+1, status.Name)
+		result += fmt.Sprintf("     State: %v\n", status.State)
+		result += fmt.Sprintf("     Ready: %v\n", status.Ready)
+		result += fmt.Sprintf("     Restart Count: %d\n", status.RestartCount)
+		result += fmt.Sprintf("     Image: %s\n", status.Image)
+		result += fmt.Sprintf("     Image ID: %s\n", status.ImageID)
+		result += fmt.Sprintf("     Container ID: %s\n", status.ContainerID)
+	}
+
+	// 添加卷信息
+	result += "Volumes:\n"
+	for i, volume := range pod.Spec.Volumes {
+		result += fmt.Sprintf("  %d. %s\n", i+1, volume.Name)
+		result += fmt.Sprintf("     Type: %v\n", volume)
+	}
+
+	// 添加事件信息
+	events, err := conf.KubeClient.CoreV1().Events(pod.Namespace).List(context.TODO(), metav1.ListOptions{
+		FieldSelector: fmt.Sprintf("involvedObject.name=%s,involvedObject.kind=Pod", pod.Name),
+	})
+	if err == nil {
+		result += "Events:\n"
+		for i, event := range events.Items {
+			result += fmt.Sprintf("  %d. %s %s %s\n",
+				i+1, event.FirstTimestamp.Format("2006-01-02 15:04:05"), event.Type, event.Reason)
+			result += fmt.Sprintf("     Message: %s\n", event.Message)
+		}
+	}
+
+	return result
 }

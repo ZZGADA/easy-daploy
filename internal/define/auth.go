@@ -17,3 +17,7 @@ const (
 	K8sResourceStatusStop    = 2 // 2 运行停止
 	K8sResourceStatusRestart = 3 // 3 容器重启
 )
+
+const (
+	K8sRunningResources = "k8s:running_resources:%d"
+)

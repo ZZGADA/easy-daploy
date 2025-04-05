@@ -379,6 +379,13 @@
             </set>
           </value>
         </entry>
+        <entry key="K8sResourceInfo">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="K8sResourceOperationLogHandler">
           <value>
             <set>
@@ -1822,7 +1829,7 @@
         <entry key="file://$PROJECT_DIR$/internal/define/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743819701927" />
+              <option name="lastModified" value="1743837740997" />
             </ScannedPath>
           </value>
         </entry>
@@ -1994,10 +2001,11 @@
         <entry key="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743836178812" />
+              <option name="lastModified" value="1743839448401" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceStatusChecker" />
+                  <option value="K8sResourceInfo" />
                 </list>
               </option>
             </ScannedPath>
@@ -2084,10 +2092,24 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/websocket/docker_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743841475837" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/websocket/k8s_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743841475972" />
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/websocket/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743737184931" />
+              <option name="lastModified" value="1743841476034" />
               <option name="schema">
                 <list>
                   <option value="WSMessage" />
@@ -2217,7 +2239,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743819806886" />
+              <option name="lastModified" value="1743842803668" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
@@ -2305,6 +2327,7 @@
         <entry key="io_abstraction_base" value="IOAbstractionBase" />
         <entry key="k8s_command_response" value="K8sCommandResponse" />
         <entry key="k8s_resource_handler" value="K8sResourceHandler" />
+        <entry key="k8s_resource_info" value="K8sResourceInfo" />
         <entry key="k8s_resource_operation_log_handler" value="K8sResourceOperationLogHandler" />
         <entry key="k8s_resource_operation_log_service" value="K8sResourceOperationLogService" />
         <entry key="k8s_resource_service" value="K8sResourceService" />
