@@ -11,3 +11,9 @@ const (
 	UserInfo        = "user_info:%s"
 	UserDockerLogin = "user_docker_login:%d" // user id
 )
+
+const (
+	K8sResourceStatusRun     = 1 // 1 运行正常
+	K8sResourceStatusStop    = 2 // 2 运行停止
+	K8sResourceStatusRestart = 3 // 3 容器重启
+)

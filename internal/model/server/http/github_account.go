@@ -2,12 +2,12 @@ package http
 
 import (
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/define"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
-	"github.com/ZZGADA/easy-deploy/internal/model/define"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"

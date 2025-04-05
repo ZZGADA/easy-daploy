@@ -386,10 +386,24 @@
             </set>
           </value>
         </entry>
+        <entry key="K8sResourceOperationLogService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_resource_operation_log.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="K8sResourceService">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_manage.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="K8sResourceStatusChecker">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go" />
             </set>
           </value>
         </entry>
@@ -938,7 +952,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743667410876" />
+              <option name="lastModified" value="1743820884398" />
             </ScannedPath>
           </value>
         </entry>
@@ -1805,17 +1819,24 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/define/auth.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743819701927" />
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/middleware/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743431717267" />
+              <option name="lastModified" value="1743819644916" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/conf/k8s.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743670498138" />
+              <option name="lastModified" value="1743820886670" />
             </ScannedPath>
           </value>
         </entry>
@@ -1836,7 +1857,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/websocket.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743737768150" />
+              <option name="lastModified" value="1743820576808" />
               <option name="schema">
                 <list>
                   <option value="WebSocketServer" />
@@ -1914,7 +1935,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource_operation_log.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743753929516" />
+              <option name="lastModified" value="1743823621149" />
               <option name="schema">
                 <list>
                   <option value="UserK8sResourceOperationLog" />
@@ -1970,6 +1991,18 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743823311643" />
+              <option name="schema">
+                <list>
+                  <option value="K8sResourceStatusChecker" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/auth.go">
           <value>
             <ScannedPath>
@@ -2007,7 +2040,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/github_account.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743385951350" />
+              <option name="lastModified" value="1743819644949" />
               <option name="schema">
                 <list>
                   <option value="BindHandler" />
@@ -2103,6 +2136,18 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_resource_operation_log.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743823621100" />
+              <option name="schema">
+                <list>
+                  <option value="K8sResourceOperationLogService" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/oss_manage/oss_manage.go">
           <value>
             <ScannedPath>
@@ -2118,14 +2163,14 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743172061527" />
+              <option name="lastModified" value="1743819644968" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/docker_account.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743435512420" />
+              <option name="lastModified" value="1743819644956" />
               <option name="schema">
                 <list>
                   <option value="DockerAccountService" />
@@ -2172,7 +2217,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743752285964" />
+              <option name="lastModified" value="1743819806886" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
@@ -2261,7 +2306,9 @@
         <entry key="k8s_command_response" value="K8sCommandResponse" />
         <entry key="k8s_resource_handler" value="K8sResourceHandler" />
         <entry key="k8s_resource_operation_log_handler" value="K8sResourceOperationLogHandler" />
+        <entry key="k8s_resource_operation_log_service" value="K8sResourceOperationLogService" />
         <entry key="k8s_resource_service" value="K8sResourceService" />
+        <entry key="k8s_resource_status_checker" value="K8sResourceStatusChecker" />
         <entry key="label_tree" value="LabelTree" />
         <entry key="label_tree_mapper" value="LabelTreeMapper" />
         <entry key="label_tree_service" value="LabelTreeService" />

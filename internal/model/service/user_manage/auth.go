@@ -2,11 +2,11 @@ package user_manage
 
 import (
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/define"
 	"github.com/go-redis/redis/v8"
 	"strings"
 	"time"
 
-	"github.com/ZZGADA/easy-deploy/internal/model/define"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 

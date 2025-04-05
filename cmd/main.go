@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/ZZGADA/easy-deploy/internal/model/scheduled_tasks"
 
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
@@ -27,6 +28,8 @@ func init() {
 	conf.InitRedis()
 	conf.InitWebSocketServer()
 	conf.InitK8s()
+	// 初始化并启动 K8s 资源状态检查器
+	scheduled_tasks.Init()
 }
 
 func main() {

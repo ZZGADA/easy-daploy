@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/define"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -253,6 +254,32 @@ func (s *SocketService) resourceApply(conn *websocket.Conn, command string, data
 	// 构建完整的 kubectl 命令
 	fullCommand := fmt.Sprintf("kubectl apply -f %s -n %s", localFilePath, namespace)
 
+	// 检查资源状态
+	var status int
+	if resource.ResourceType == "deployment" {
+		// 等待一段时间，让部署有时间启动
+		time.Sleep(5 * time.Second)
+
+		// 检查部署状态
+		deployment, err := conf.KubeClient.AppsV1().Deployments(namespace).Get(context.TODO(), resourceName, metav1.GetOptions{})
+		if err != nil {
+			// 部署失败
+			status = define.K8sResourceStatusStop // 运行停止
+		} else {
+			// 检查部署状态
+			if deployment.Status.AvailableReplicas == *deployment.Spec.Replicas {
+				status = define.K8sResourceStatusRun // 运行正常
+			} else if deployment.Status.UpdatedReplicas < *deployment.Spec.Replicas {
+				status = define.K8sResourceStatusRestart // 容器重启
+			} else {
+				status = define.K8sResourceStatusStop // 运行停止
+			}
+		}
+	} else if resource.ResourceType == "service" {
+		// 服务创建后默认为运行正常
+		status = define.K8sResourceStatusRun
+	}
+
 	// 创建操作日志
 	operationLog := &dao.UserK8sResourceOperationLog{
 		K8sResourceID:  uint(k8sResourceID),
@@ -261,6 +288,7 @@ func (s *SocketService) resourceApply(conn *websocket.Conn, command string, data
 		MetadataName:   resourceName,
 		MetadataLabels: string(labelsJSON),
 		OperationType:  "create",
+		Status:         status,
 		Command:        fullCommand,
 	}
 
@@ -352,6 +380,7 @@ func (s *SocketService) resourceDelete(conn *websocket.Conn, command string, dat
 		MetadataName:   metadataName,
 		MetadataLabels: latestLog.MetadataLabels,
 		OperationType:  "delete",
+		Status:         define.K8sResourceStatusStop, // 运行停止
 		Command:        deleteCommand,
 	}
 

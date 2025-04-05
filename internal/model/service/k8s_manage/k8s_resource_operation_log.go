@@ -17,6 +17,6 @@ func NewK8sResourceOperationLogService(userK8sResourceOperationLogDao *dao.UserK
 }
 
 // QueryByK8sResourceID 根据 K8s 资源 ID 查询操作日志
-func (s *K8sResourceOperationLogService) QueryByK8sResourceID(k8sResourceID uint) ([]*dao.UserK8sResourceOperationLog, error) {
-	return s.userK8sResourceOperationLogDao.QueryByK8sResourceID(k8sResourceID)
+func (s *K8sResourceOperationLogService) QueryByK8sResourceID(k8sResourceID uint, page, pageSize int) ([]*dao.UserK8sResourceOperationLog, int64, error) {
+	return s.userK8sResourceOperationLogDao.QueryByK8sResourceIDPage(k8sResourceID, page, pageSize)
 }

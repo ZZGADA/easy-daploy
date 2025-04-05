@@ -15,6 +15,7 @@ type UserK8sResourceOperationLog struct {
 	MetadataName   string         `gorm:"size:255;not null;column:metadata_name" json:"metadata_name"`
 	MetadataLabels string         `gorm:"type:text;column:metadata_labels" json:"metadata_labels"`
 	OperationType  string         `gorm:"size:50;not null;column:operation_type" json:"operation_type"`
+	Status         int            `gorm:"not null;column:status" json:"status"`
 	Command        string         `gorm:"size:500;not null;column:command" json:"command"`
 	CreatedAt      *time.Time     `gorm:"column:created_at" json:"created_at"`
 	UpdatedAt      *time.Time     `gorm:"column:updated_at" json:"updated_at"`
@@ -40,10 +41,36 @@ func (d *UserK8sResourceOperationLogDao) Create(log *UserK8sResourceOperationLog
 	return d.db.Create(log).Error
 }
 
+// QueryByK8sResourceIDPage 根据 K8s 资源 ID 查询操作日志 分页查询
+func (d *UserK8sResourceOperationLogDao) QueryByK8sResourceIDPage(k8sResourceID uint, page, pageSize int) ([]*UserK8sResourceOperationLog, int64, error) {
+	var logs []*UserK8sResourceOperationLog
+	var total int64
+
+	// 计算偏移量
+	offset := (page - 1) * pageSize
+
+	// 查询总数
+	err := d.db.Model(&UserK8sResourceOperationLog{}).Where("k8s_resource_id = ?", k8sResourceID).Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// 分页查询
+	err = d.db.Where("k8s_resource_id = ?", k8sResourceID).Order("id DESC").Offset(offset).Limit(pageSize).Find(&logs).Error
+	return logs, total, err
+}
+
 // QueryByK8sResourceID 根据 K8s 资源 ID 查询操作日志
 func (d *UserK8sResourceOperationLogDao) QueryByK8sResourceID(k8sResourceID uint) ([]*UserK8sResourceOperationLog, error) {
 	var logs []*UserK8sResourceOperationLog
 	err := d.db.Where("k8s_resource_id = ?", k8sResourceID).Order("id desc").Find(&logs).Error
+	return logs, err
+}
+
+// QueryByK8sResourceIDFirst 根据 K8s 资源 ID 查询操作日志
+func (d *UserK8sResourceOperationLogDao) QueryByK8sResourceIDFirst(k8sResourceID uint) ([]*UserK8sResourceOperationLog, error) {
+	var logs []*UserK8sResourceOperationLog
+	err := d.db.Where("k8s_resource_id = ?", k8sResourceID).Order("id desc").Limit(1).Find(&logs).Error
 	return logs, err
 }
 

@@ -9,8 +9,10 @@ import (
 	"path/filepath"
 )
 
-var KubeClient *kubernetes.Clientset
-var KubeConfig *rest.Config
+var (
+	KubeClient *kubernetes.Clientset
+	KubeConfig *rest.Config
+)
 
 func InitK8s() {
 	// 定义 kubeconfig 文件的路径

@@ -70,3 +70,10 @@ func (d *UserK8sResourceDao) QueryByRepositoryALL(repositoryID string) ([]UserK8
 	err := d.db.Where("repository_id = ? and is_update = false and deleted_at IS NULL", repositoryID).Find(&resources).Error
 	return resources, err
 }
+
+// QueryAll 查询所有 K8s 资源
+func (d *UserK8sResourceDao) QueryAll() ([]*UserK8sResource, error) {
+	var resources []*UserK8sResource
+	err := d.db.Find(&resources).Error
+	return resources, err
+}

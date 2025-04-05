@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/define"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
-	"github.com/ZZGADA/easy-deploy/internal/model/define"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"net/http"

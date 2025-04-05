@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/define"
 	"os/exec"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
-	"github.com/ZZGADA/easy-deploy/internal/model/define"
 	"github.com/ZZGADA/easy-deploy/internal/utils"
 	"github.com/go-redis/redis/v8"
 

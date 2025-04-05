@@ -2,8 +2,9 @@ package conf
 
 import (
 	"fmt"
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"net/http"
+
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/gorilla/websocket"
