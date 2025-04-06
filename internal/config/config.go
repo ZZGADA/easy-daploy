@@ -42,6 +42,13 @@ type Config struct {
 		ReadBufferSize  int    `mapstructure:"read_buffer_size"`
 		WriteBufferSize int    `mapstructure:"write_buffer_size"`
 	}
+
+	Elastic struct {
+		Host     string `mapstructure:"host"`
+		Port     int    `mapstructure:"port"`
+		Username string `mapstructure:"username"`
+		Password string `mapstructure:"password"`
+	}
 }
 
 var GlobalConfig Config

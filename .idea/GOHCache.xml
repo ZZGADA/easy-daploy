@@ -315,6 +315,13 @@
             </set>
           </value>
         </entry>
+        <entry key="FluentdConfig">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/conf/fluentd.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="FlyWeightFactory">
           <value>
             <set>
@@ -959,7 +966,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743820884398" />
+              <option name="lastModified" value="1743926878645" />
             </ScannedPath>
           </value>
         </entry>
@@ -1817,7 +1824,7 @@
         <entry key="file://$PROJECT_DIR$/internal/config/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743661180813" />
+              <option name="lastModified" value="1743926226088" />
               <option name="schema">
                 <list>
                   <option value="Config" />
@@ -1837,6 +1844,25 @@
           <value>
             <ScannedPath>
               <option name="lastModified" value="1743819644916" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/conf/es.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743926304036" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/conf/fluentd.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743928926258" />
+              <option name="schema">
+                <list>
+                  <option value="FluentdConfig" />
+                </list>
+              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -2239,7 +2265,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743842803668" />
+              <option name="lastModified" value="1743902976497" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
@@ -2318,6 +2344,7 @@
         <entry key="double_delete_strategy" value="DoubleDeleteStrategy" />
         <entry key="facade" value="Facade" />
         <entry key="factory_producer" value="FactoryProducer" />
+        <entry key="fluentd_config" value="FluentdConfig" />
         <entry key="fly_weight_factory" value="FlyWeightFactory" />
         <entry key="fridge" value="Fridge" />
         <entry key="furniture_factory" value="FurnitureFactory" />

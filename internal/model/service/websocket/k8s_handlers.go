@@ -778,7 +778,7 @@ func (s *SocketService) handleResourceGet(conn *websocket.Conn, command string, 
 				"NAME", "READY", "STATUS", "RESTARTS", "AGE", "IP", "NODE", "NOMINATED NODE", "NAMESPACE")
 			fullCommand = fmt.Sprintf("kubectl get pod %s -n %s -o wide", resource.ResourceName, resource.Namespace)
 		default:
-			result = fmt.Sprintf("不支持的资源类型: %s\n", resources[0].ResourceType)
+			result = fmt.Sprintf("不支持的资源类型: %s\n", resource.ResourceType)
 			fullCommand = command
 		}
 
