@@ -28,3 +28,9 @@ websocket:
   path_k8s: "/ws/k8s"
   read_buffer_size: 1024
   write_buffer_size: 1024
+
+elastic:
+  username: elastic
+  password: zZ-szshyjbz16D
+  host: 8.130.14.29
+  port: 57920

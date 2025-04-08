@@ -61,6 +61,14 @@ func (s *SocketDockerHandler) HandleWebSocketDockerBuild(c *gin.Context) {
 		switch dockerBuildStep {
 		case "init":
 			websocket2.SendSuccess(conn, "connect success", "connect success")
+			err := s.socketDockerAccountService.DockerLogin(userID)
+			if err != nil {
+				logrus.Error("docker login error: %v\n", err)
+				websocket2.SendError(conn, err.Error())
+				break
+			}
+
+			websocket2.SendSuccess(conn, "docker logins  success", "docker login  success")
 		case "generate_dockerfile":
 			s.socketService.HandleGenerateDockerfile(conn, wsMsg.Data, userID)
 		case "clone_repository":

@@ -1857,7 +1857,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/fluentd.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743928926258" />
+              <option name="lastModified" value="1744078321060" />
               <option name="schema">
                 <list>
                   <option value="FluentdConfig" />

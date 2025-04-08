@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 )
 
@@ -27,14 +28,16 @@ type WSResponse struct {
 
 // SocketDockerHandler docker镜像构建
 type SocketDockerHandler struct {
-	socketService             *websocket2.SocketService
-	socketDockerImagesService *docker_manage.DockerImageService
+	socketService              *websocket2.SocketService
+	socketDockerImagesService  *docker_manage.DockerImageService
+	socketDockerAccountService *user_manage.DockerAccountService
 }
 
 // NewSocketDockerHandler 创建 SocketDockerHandler 实例
-func NewSocketDockerHandler(socketService *websocket2.SocketService, socketDockerImagesService *docker_manage.DockerImageService) *SocketDockerHandler {
+func NewSocketDockerHandler(socketService *websocket2.SocketService, socketDockerImagesService *docker_manage.DockerImageService, socketDockerAccount *user_manage.DockerAccountService) *SocketDockerHandler {
 	return &SocketDockerHandler{
-		socketService:             socketService,
-		socketDockerImagesService: socketDockerImagesService,
+		socketService:              socketService,
+		socketDockerImagesService:  socketDockerImagesService,
+		socketDockerAccountService: socketDockerAccount,
 	}
 }

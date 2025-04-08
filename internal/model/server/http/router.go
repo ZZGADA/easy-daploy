@@ -35,7 +35,9 @@ func SetupRouter(r *gin.Engine) {
 			dao.NewUserOssDao(conf.DB),
 			dao.NewUserK8sResourceOperationLogDao(conf.DB)),
 		docker_manage.NewDockerImageService(
-			dao.NewUserDockerImageDao(conf.DB)))
+			dao.NewUserDockerImageDao(conf.DB)),
+		user_manage.NewDockerAccountService(
+			dao.NewUserDockerDao(conf.DB)))
 
 	r.GET(conf.WSServer.Path, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocketDockerBuild)
 	r.GET(conf.WSServer.PathK8s, middleware.WsAuthMiddleware(), websocketHandler.HandleWebSocketK8s)

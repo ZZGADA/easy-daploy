@@ -22,43 +22,35 @@ import (
 // 配置模板
 const fluentdConfigTemplate = `
 <source>
-  @type kubernetes_metadata
-  @id kubernetes_metadata
-  bearer_token_file /var/run/secrets/kubernetes.io/serviceaccount/token
-  ca_file /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-  verify_ssl true
-</source>
-
-<source>
-  @type kubernetes_logs
-  @id kubernetes_logs
-  bearer_token_file /var/run/secrets/kubernetes.io/serviceaccount/token
-  ca_file /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-  verify_ssl true
+  @type tail
+  @id in_tail_container_logs
+  path /var/log/containers/*.log
+  pos_file /var/log/fluentd-containers.log.pos
+  tag kubernetes.*
+  read_from_head true
   <parse>
     @type json
+    time_format %Y-%m-%dT%H:%M:%S.%NZ
   </parse>
 </source>
 
-<filter **>
+<filter kubernetes.**>
   @type record_transformer
   <record>
-    node_name "${node_name}"
-    cluster_name "${cluster_name}"
+    hostname ${hostname}
     timestamp ${time}
   </record>
 </filter>
 
-<match **>
+<match kubernetes.**>
   @type elasticsearch
   host {{.ElasticsearchHost}}
   port {{.ElasticsearchPort}}
   user {{.ElasticsearchUser}}
   password {{.ElasticsearchPassword}}
   logstash_format true
-  logstash_prefix kubernetes_logs
+  logstash_prefix k8s_logs
   include_tag_key true
-  type_name fluentd
   tag_key @log_name
   flush_interval 5s
   retry_wait 1s
@@ -251,7 +243,7 @@ func InitFluent() {
 					Containers: []v1.Container{
 						{
 							Name:            "fluentd",
-							Image:           "cr.fluentd.io/fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch7-arm64",
+							Image:           "fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch",
 							ImagePullPolicy: v1.PullIfNotPresent,
 							Env: []v1.EnvVar{
 								{
@@ -269,6 +261,14 @@ func InitFluent() {
 								{
 									Name:  "FLUENT_ELASTICSEARCH_PASSWORD",
 									Value: config.GlobalConfig.Elastic.Password,
+								},
+								{
+									Name: "HOSTNAME",
+									ValueFrom: &v1.EnvVarSource{
+										FieldRef: &v1.ObjectFieldSelector{
+											FieldPath: "spec.nodeName",
+										},
+									},
 								},
 							},
 							Resources: v1.ResourceRequirements{
@@ -351,7 +351,8 @@ func InitFluent() {
 
 	// 等待 DaemonSet 就绪
 	log.Info("等待 Fluentd DaemonSet 就绪...")
-	for i := 0; i < 30; i++ {
+	checkEnd := 30
+	for i := 0; i < checkEnd; i++ {
 		ds, err := KubeClient.AppsV1().DaemonSets("kube-system").Get(context.TODO(), "fluentd", metav1.GetOptions{})
 		if err != nil {
 			log.Fatalf("获取 Fluentd DaemonSet 状态失败: %v", err)
@@ -360,6 +361,10 @@ func InitFluent() {
 		if ds.Status.NumberReady == ds.Status.DesiredNumberScheduled {
 			log.Info("Fluentd DaemonSet 已就绪")
 			break
+		} else {
+			if i == checkEnd-1 {
+				panic("Fluentd DaemonSet 启动失败，请查看DaemonSet集群情况")
+			}
 		}
 
 		log.Infof("Fluentd DaemonSet 就绪状态: %d/%d", ds.Status.NumberReady, ds.Status.DesiredNumberScheduled)

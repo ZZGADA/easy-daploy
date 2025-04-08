@@ -157,7 +157,6 @@ func (s *SocketService) HandleBuildImage(conn *websocket.Conn, data map[string]i
 		SendError(conn, "缺少镜像名称")
 		return ""
 	}
-	log.Infof("处理参数 - DockerfileID: %v, ImageName: %s", dockerfileID, imageName)
 
 	// 获取 Dockerfile 信息
 	dockerfile, err := s.userDockerfileDao.GetByID(ctx, uint32(dockerfileID))

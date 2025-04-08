@@ -211,7 +211,7 @@ func (s *DockerAccountService) LoginDockerAccount(dockerID uint, userId uint) (b
 	}
 
 	// 执行 Docker 登录
-	if err := dockerLogin(docker.Server, docker.Username, docker.Password); err != nil {
+	if err := s.dockerLogin(docker.Server, docker.Username, docker.Password); err != nil {
 		tx.Rollback()
 		return false, err
 	}
@@ -240,11 +240,23 @@ func checkDockerEnvironment() error {
 }
 
 // dockerLogin 执行 Docker 登录
-func dockerLogin(server, username, password string) error {
+func (s *DockerAccountService) dockerLogin(server, username, password string) error {
 	cmd := exec.Command("docker", "login", server, "-u", username, "--password-stdin")
 	cmd.Stdin = strings.NewReader(password)
 	if err := cmd.Run(); err != nil {
 		return errors.New("Docker 登录失败")
+	}
+	return nil
+}
+
+func (s *DockerAccountService) DockerLogin(userId uint) error {
+	currentLoginAccount, err := s.dockerDao.GetLoginAccount(userId)
+	if err != nil {
+		return err
+	}
+	err = s.dockerLogin(currentLoginAccount.Server, currentLoginAccount.Username, currentLoginAccount.Password)
+	if err != nil {
+		return err
 	}
 	return nil
 }
