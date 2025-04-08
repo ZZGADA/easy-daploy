@@ -35,25 +35,26 @@ const fluentdConfigTemplate = `
 </source>
 
 <filter kubernetes.**>
+  @type kubernetes_metadata
+</filter>
+
+<filter kubernetes.**>
   @type record_transformer
   <record>
-    hostname ${hostname}
     timestamp ${time}
   </record>
 </filter>
 
 <match kubernetes.**>
-  @type elasticsearch
+  @type elasticsearch_dynamic
   host {{.ElasticsearchHost}}
   port {{.ElasticsearchPort}}
   user {{.ElasticsearchUser}}
   password {{.ElasticsearchPassword}}
   logstash_format true
-  logstash_prefix k8s_logs
+  logstash_prefix k8s_${record['kubernetes']['container_name']}
   include_tag_key true
   tag_key @log_name
-  flush_interval 5s
-  retry_wait 1s
   retry_max_times 5
   max_retry_wait 30s
   disable_retry_limit false
@@ -264,6 +265,14 @@ func InitFluent() {
 								},
 								{
 									Name: "HOSTNAME",
+									ValueFrom: &v1.EnvVarSource{
+										FieldRef: &v1.ObjectFieldSelector{
+											FieldPath: "spec.nodeName",
+										},
+									},
+								},
+								{
+									Name: "K8S_NODE_NAME",
 									ValueFrom: &v1.EnvVarSource{
 										FieldRef: &v1.ObjectFieldSelector{
 											FieldPath: "spec.nodeName",
