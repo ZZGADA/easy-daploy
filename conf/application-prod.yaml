@@ -34,3 +34,8 @@ elastic:
   password: zZ-szshyjbz16D
   host: 8.130.14.29
   port: 57920
+
+kafka:
+  brokers:
+    - "8.130.14.29:57331"
+  topic: k8s_resource_logs

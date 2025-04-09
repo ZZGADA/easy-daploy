@@ -33,3 +33,12 @@ func GetUserByEmail(email string) (*Users, error) {
 	}
 	return &user, nil
 }
+
+func GetUserByID(id uint) (Users, error) {
+	var user Users
+	err := conf.DB.Where("id=? and deleted_at IS NULL", id).First(&user).Error
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}

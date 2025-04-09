@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装 fluent-plugin-kubernetes_metadata_filter 插件
-RUN gem install fluent-plugin-kubernetes_metadata_filter
+RUN gem install fluent-plugin-kafka

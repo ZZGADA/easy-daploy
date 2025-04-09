@@ -80,3 +80,9 @@ func (d *UserK8sResourceOperationLogDao) QueryByUserID(userID uint) ([]*UserK8sR
 	err := d.db.Where("user_id = ?", userID).Find(&logs).Error
 	return logs, err
 }
+
+func (d *UserK8sResourceOperationLogDao) QueryByNamespaceAndMetadataName(namespace string, metaName string) ([]*UserK8sResourceOperationLog, error) {
+	var logs []*UserK8sResourceOperationLog
+	err := d.db.Where("namespace = ? and metadata_name = ?", namespace, metaName).Order("id desc").Limit(1).Find(&logs).Error
+	return logs, err
+}

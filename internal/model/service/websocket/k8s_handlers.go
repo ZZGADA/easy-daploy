@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/model/scheduled_tasks"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -404,6 +405,9 @@ func (s *SocketService) resourceDelete(conn *websocket.Conn, command string, dat
 		Command: command,
 		Result:  fmt.Sprintf("资源 %s 已成功停止运行", metadataName),
 	})
+
+	// 重建渲染 运行资源
+	scheduled_tasks.PushRunningResource()
 }
 
 // 从 YAML 内容中提取 namespace

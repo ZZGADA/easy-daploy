@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"strings"
 	"text/template"
 	"time"
 
@@ -46,22 +47,38 @@ const fluentdConfigTemplate = `
 </filter>
 
 <match kubernetes.**>
-  @type elasticsearch_dynamic
-  host {{.ElasticsearchHost}}
-  port {{.ElasticsearchPort}}
-  user {{.ElasticsearchUser}}
-  password {{.ElasticsearchPassword}}
-  logstash_format true
-  logstash_prefix k8s_${record['kubernetes']['container_name']}
-  include_tag_key true
-  tag_key @log_name
-  retry_max_times 5
-  max_retry_wait 30s
-  disable_retry_limit false
-  reconnect_on_error true
-  reload_on_failure true
-  reload_connections false
-  reload_after -1
+  @type copy
+  <store>
+	@type elasticsearch_dynamic
+  	host {{.ElasticsearchHost}}
+  	port {{.ElasticsearchPort}}
+  	user {{.ElasticsearchUser}}
+  	password {{.ElasticsearchPassword}}
+  	logstash_format true
+  	logstash_prefix k8s_${record['kubernetes']['container_name']}
+  	include_tag_key true
+  	tag_key @log_name
+  	retry_max_times 5
+  	max_retry_wait 30s
+  	disable_retry_limit false
+  	reconnect_on_error true
+  	reload_on_failure true
+  	reload_connections false
+  	reload_after -1
+  </store>
+
+  <store>
+    @type kafka2
+    brokers {{.KafkaBrokers}}
+	default_topic {{.KafkaTopic}}
+    output_data_type json
+    <format>
+      @type json
+    </format>
+	<buffer>
+	  flush_interval 5s
+	</buffer>
+  </store>
 </match>
 `
 
@@ -72,6 +89,8 @@ type FluentdConfig struct {
 	ElasticsearchUser     string
 	ElasticsearchPassword string
 	OS                    string
+	KafkaBrokers          string
+	KafkaTopic            string
 }
 
 // InitFluent 初始化Fluentd
@@ -88,6 +107,8 @@ func InitFluent() {
 		ElasticsearchPort:     config.GlobalConfig.Elastic.Port,
 		ElasticsearchUser:     config.GlobalConfig.Elastic.Username,
 		ElasticsearchPassword: config.GlobalConfig.Elastic.Password,
+		KafkaBrokers:          strings.Join(config.GlobalConfig.Kafka.Brokers, ","),
+		KafkaTopic:            config.GlobalConfig.Kafka.Topic,
 	}
 
 	// 生成 Fluentd 配置文件
@@ -244,7 +265,7 @@ func InitFluent() {
 					Containers: []v1.Container{
 						{
 							Name:            "fluentd",
-							Image:           "fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch",
+							Image:           "zzgeda-fluentd:1.0.0",
 							ImagePullPolicy: v1.PullIfNotPresent,
 							Env: []v1.EnvVar{
 								{

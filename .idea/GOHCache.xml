@@ -1824,7 +1824,7 @@
         <entry key="file://$PROJECT_DIR$/internal/config/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743926226088" />
+              <option name="lastModified" value="1744167782633" />
               <option name="schema">
                 <list>
                   <option value="Config" />
@@ -1857,7 +1857,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/fluentd.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744107223181" />
+              <option name="lastModified" value="1744172685967" />
               <option name="schema">
                 <list>
                   <option value="FluentdConfig" />
@@ -2027,7 +2027,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743839448401" />
+              <option name="lastModified" value="1744163569910" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceStatusChecker" />
@@ -2265,7 +2265,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743902976497" />
+              <option name="lastModified" value="1744162310878" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />

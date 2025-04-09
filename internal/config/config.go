@@ -49,6 +49,19 @@ type Config struct {
 		Username string `mapstructure:"username"`
 		Password string `mapstructure:"password"`
 	}
+
+	Kafka struct {
+		Brokers []string `mapstructure:"brokers"`
+		Topic   string   `mapstructure:"topic"`
+	}
+
+	Smtp struct {
+		From     string `mapstructure:"from"`
+		Host     string `mapstructure:"host"`
+		Port     int    `mapstructure:"port"`
+		User     string `mapstructure:"user"`
+		Password string `mapstructure:"password"`
+	}
 }
 
 var GlobalConfig Config
