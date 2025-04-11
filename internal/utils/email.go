@@ -2,6 +2,8 @@ package utils
 
 import (
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/define"
+	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -79,4 +81,49 @@ func sendAlertEmail(alertMsg AlertMessage) error {
 	logrus.Infof("totototototot", d.Host)
 	//return d.DialAndSend(m)
 	return nil
+}
+
+// SendJoinTeamEmail 发送加入团队申请邮件
+func SendJoinTeamEmail(applicant *dao.UserWithGithubInfo, teamCreatorEmail string, requestId uint32, requestType int) error {
+	subject := "新的加入团队申请"
+	// 假设后端接口的 URL
+	//field := fmt.Sprintf("http://%s:%s/api/team/request/check", config.GlobalConfig.Server.Host, config.GlobalConfig.Server.Port)
+	//acceptURL := fmt.Sprintf("%s?request_id=%d&status=1", field, requestId)
+	//rejectURL := fmt.Sprintf("%s?request_id=%d&status=1", field, requestId)
+	//
+	/*
+	   <p>
+	       <a href="%s" style="display: inline-block; background-color: #4CAF50; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 4px;">接受</a>
+	       <a href="%s" style="display: inline-block; background-color: #f44336; color: white; padding: 10px 20px; text-align: center; text-decoration: none; border-radius: 4px;">拒绝</a>
+	   </p>*/
+
+	mention := ""
+	if requestType == define.TeamRequestTypeIn {
+		mention = "<h2>您好，有新的用户申请 加入 您的团队</h2>"
+	} else {
+		mention = "<h2>您好，团队成员申请 离开 您的团队</h2>"
+	}
+	body := fmt.Sprintf(`
+    %s
+    <p>申请者信息如下：</p>
+    <p><strong>用户 ID:</strong> %d</p>
+    <p><strong>用户邮箱:</strong> %s</p>
+    <p><strong>GitHub ID:</strong> %d</p>
+    <p><strong>GitHub 名称:</strong> %s</p>
+	<p><strong>请前往团队管理页面审批</strong></p>`, mention, applicant.ID, applicant.Email, applicant.GithubID, applicant.Name)
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", config.GlobalConfig.Smtp.From)
+	m.SetHeader("To", teamCreatorEmail)
+	m.SetHeader("Subject", subject)
+	m.SetBody("text/html", body)
+
+	d := gomail.NewDialer(
+		config.GlobalConfig.Smtp.Host,
+		config.GlobalConfig.Smtp.Port,
+		config.GlobalConfig.Smtp.User,
+		config.GlobalConfig.Smtp.Password,
+	)
+
+	return d.DialAndSend(m)
 }

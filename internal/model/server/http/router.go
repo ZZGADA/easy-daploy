@@ -141,7 +141,8 @@ func SetupRouter(r *gin.Engine) {
 	teamRequest := r.Group("/api/team/request", middleware.CustomAuthMiddleware())
 	{
 		teamRequest.POST("/create", teamRequestHandler.CreateTeamRequest)
-		teamRequest.GET("/check", teamRequestHandler.CheckTeamRequest)
+		teamRequest.POST("/check", teamRequestHandler.CheckTeamRequest)
+		teamRequest.GET("/list", teamRequestHandler.GetTeamRequestsByTeamID)
 	}
 
 	// check health

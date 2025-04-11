@@ -2,6 +2,7 @@ package user_manage
 
 import (
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/define"
 	"github.com/go-redis/redis/v8"
 	"strings"
@@ -14,7 +15,6 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 	"github.com/ZZGADA/easy-deploy/internal/model/dto"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"gopkg.in/gomail.v2"
 )
 
@@ -180,12 +180,16 @@ func generateToken() string {
 // sendVerificationEmail 发送验证码邮件
 func sendVerificationEmail(email, code string) error {
 	m := gomail.NewMessage()
-	m.SetHeader("From", viper.GetString("smtp.from"))
+	m.SetHeader("From", config.GlobalConfig.Smtp.From)
 	m.SetHeader("To", email)
 	m.SetHeader("Subject", "Verification Code for ZZGEDA Registration")
 	m.SetBody("text/plain", fmt.Sprintf("Your verification code is: %s", code))
 
-	d := gomail.NewDialer(viper.GetString("smtp.host"), 587, viper.GetString("smtp.user"), viper.GetString("smtp.password"))
+	d := gomail.NewDialer(
+		config.GlobalConfig.Smtp.Host,
+		config.GlobalConfig.Smtp.Port,
+		config.GlobalConfig.Smtp.User,
+		config.GlobalConfig.Smtp.Password)
 
 	return d.DialAndSend(m)
 }

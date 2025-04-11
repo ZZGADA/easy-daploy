@@ -837,6 +837,13 @@
             </set>
           </value>
         </entry>
+        <entry key="TeamRequestDelete">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/team_handler.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="TeamRequestHandleRequest">
           <value>
             <set>
@@ -925,6 +932,13 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/dao/user_github.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UserGithubFull">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/users.go" />
             </set>
           </value>
         </entry>
@@ -1920,7 +1934,7 @@
         <entry key="file://$PROJECT_DIR$/internal/config/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744278849337" />
+              <option name="lastModified" value="1744376652619" />
               <option name="schema">
                 <list>
                   <option value="Config" />
@@ -2005,7 +2019,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/team_request.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744275046407" />
+              <option name="lastModified" value="1744378681404" />
               <option name="schema">
                 <list>
                   <option value="TeamRequest" />
@@ -2071,7 +2085,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744355107658" />
+              <option name="lastModified" value="1744358617597" />
               <option name="schema">
                 <list>
                   <option value="UserK8sResource" />
@@ -2110,11 +2124,12 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/users.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744341147492" />
+              <option name="lastModified" value="1744378854809" />
               <option name="schema">
                 <list>
                   <option value="Users" />
                   <option value="UsersGithub" />
+                  <option value="UserGithubFull" />
                   <option value="UsersDao" />
                 </list>
               </option>
@@ -2250,17 +2265,18 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744337271112" />
+              <option name="lastModified" value="1744380108673" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/team_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744340336359" />
+              <option name="lastModified" value="1744385532024" />
               <option name="schema">
                 <list>
                   <option value="TeamRequest" />
+                  <option value="TeamRequestDelete" />
                   <option value="TeamHandler" />
                 </list>
               </option>
@@ -2270,7 +2286,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/team_request_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744275699887" />
+              <option name="lastModified" value="1744386346448" />
               <option name="schema">
                 <list>
                   <option value="TeamRequestCreateRequest" />
@@ -2351,7 +2367,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_manage.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744273392635" />
+              <option name="lastModified" value="1744383299202" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceService" />
@@ -2387,7 +2403,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/team_manage/team.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744340336365" />
+              <option name="lastModified" value="1744383299198" />
               <option name="schema">
                 <list>
                   <option value="TeamService" />
@@ -2399,7 +2415,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/team_manage/team_request.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744296098631" />
+              <option name="lastModified" value="1744386566210" />
               <option name="schema">
                 <list>
                   <option value="TeamRequestService" />
@@ -2411,7 +2427,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/auth.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743819644968" />
+              <option name="lastModified" value="1744373087913" />
             </ScannedPath>
           </value>
         </entry>
@@ -2484,7 +2500,7 @@
         <entry key="file://$PROJECT_DIR$/internal/utils/email.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744186925472" />
+              <option name="lastModified" value="1744384772210" />
               <option name="schema">
                 <list>
                   <option value="AlertMessage" />
@@ -2616,6 +2632,7 @@
         <entry key="team_request" value="TeamRequest" />
         <entry key="team_request_create_request" value="TeamRequestCreateRequest" />
         <entry key="team_request_dao" value="TeamRequestDao" />
+        <entry key="team_request_delete" value="TeamRequestDelete" />
         <entry key="team_request_handle_request" value="TeamRequestHandleRequest" />
         <entry key="team_request_handler" value="TeamRequestHandler" />
         <entry key="team_request_service" value="TeamRequestService" />
@@ -2629,6 +2646,7 @@
         <entry key="user_dockerfile_dao" value="UserDockerfileDao" />
         <entry key="user_github" value="UserGithub" />
         <entry key="user_github_dao" value="UserGithubDao" />
+        <entry key="user_github_full" value="UserGithubFull" />
         <entry key="user_k8s_resource" value="UserK8sResource" />
         <entry key="user_k8s_resource_dao" value="UserK8sResourceDao" />
         <entry key="user_k8s_resource_operation_log" value="UserK8sResourceOperationLog" />

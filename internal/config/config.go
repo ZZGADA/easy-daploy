@@ -10,6 +10,7 @@ type Config struct {
 	// 服务器配置
 	Server struct {
 		Port string
+		Host string
 	}
 
 	// 数据库配置

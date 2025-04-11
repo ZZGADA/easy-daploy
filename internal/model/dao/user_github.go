@@ -93,3 +93,26 @@ func (d *UserGithubDao) UpdateDeveloperToken(ctx context.Context, userID uint, u
 		Where("user_id = ?", userID).
 		Updates(updates).Error
 }
+
+// GetUserWithGithubInfo 根据用户 ID 获取用户及其 GitHub 信息
+func (d *UserGithubDao) GetUserWithGithubInfo(ctx context.Context, userID uint) (*UserWithGithubInfo, error) {
+	var userWithGithubInfo UserWithGithubInfo
+	err := d.db.WithContext(ctx).
+		Table("users").
+		Select("users.id, users.email, user_github.github_id, user_github.name").
+		Joins("JOIN user_github ON users.id = user_github.user_id").
+		Where("users.id = ? AND users.deleted_at IS NULL AND user_github.deleted_at IS NULL", userID).
+		First(&userWithGithubInfo).Error
+	if err != nil {
+		return nil, err
+	}
+	return &userWithGithubInfo, nil
+}
+
+// UserWithGithubInfo 用户及其 GitHub 信息结构体
+type UserWithGithubInfo struct {
+	ID       uint   `json:"id"`
+	Email    string `json:"email"`
+	GithubID uint32 `json:"github_id"`
+	Name     string `json:"name"`
+}

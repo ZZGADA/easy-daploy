@@ -108,7 +108,10 @@ func (s *TeamService) DeleteTeam(ctx context.Context, teamID uint32) error {
 		tx.Rollback()
 		return err
 	}
-	tx.Commit()
+	// 提交事务
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
 	return nil
 }
 

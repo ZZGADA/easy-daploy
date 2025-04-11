@@ -60,7 +60,10 @@ func (s *K8sResourceService) UpdateResource(userID uint, id uint32, repositoryID
 		tx.Rollback()
 		return err
 	}
-	tx.Commit()
+	// 提交事务
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
 
 	return nil
 }

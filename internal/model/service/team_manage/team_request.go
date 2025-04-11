@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ZZGADA/easy-deploy/internal/utils"
+	"github.com/sirupsen/logrus"
+	"time"
+
 	"github.com/ZZGADA/easy-deploy/internal/define"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
-	"time"
 
 	"github.com/ZZGADA/easy-deploy/internal/model/dao"
 )
@@ -30,7 +33,7 @@ func NewTeamRequestService(teamRequestDao *dao.TeamRequestDao, teamDao *dao.Team
 // CreateTeamRequest 创建团队申请
 func (s *TeamRequestService) CreateTeamRequest(ctx context.Context, teamID uint32, userID uint, requestType int) (*dao.TeamRequest, error) {
 	// 检查团队是否存在
-	_, err := s.teamDao.GetByID(ctx, teamID)
+	team, err := s.teamDao.GetByID(ctx, teamID)
 	if err != nil {
 		return nil, errors.New("团队不存在")
 	}
@@ -48,14 +51,17 @@ func (s *TeamRequestService) CreateTeamRequest(ctx context.Context, teamID uint3
 	}
 
 	if len(requests) != 0 {
-		request := requests[0]
-		msg := "等待中"
-		if request.RequestType == define.TeamRequestTypeIn {
-			msg = "申请加入"
-		} else {
-			msg = "申请退出"
+		for _, request := range requests {
+			if request.UserID == uint32(userID) {
+				msg := "等待中"
+				if request.RequestType == define.TeamRequestTypeIn {
+					msg = "申请加入"
+				} else {
+					msg = "申请退出"
+				}
+				return nil, errors.New(fmt.Sprintf("您已经有申请的请求，请勿重复提交。请求：%s", msg))
+			}
 		}
-		return nil, errors.New(fmt.Sprintf("您已经有申请的请求，请勿重复提交。请求：%s", msg))
 	}
 
 	// 创建申请
@@ -64,8 +70,6 @@ func (s *TeamRequestService) CreateTeamRequest(ctx context.Context, teamID uint3
 		UserID:      user.Id,
 		RequestType: requestType,
 		Status:      define.TeamRequestStatusWait,
-		CreatedAt:   &time.Time{},
-		UpdatedAt:   &time.Time{},
 	}
 
 	err = s.teamRequestDao.Create(ctx, request)
@@ -73,7 +77,25 @@ func (s *TeamRequestService) CreateTeamRequest(ctx context.Context, teamID uint3
 		return nil, err
 	}
 
-	//TODO: 发送邮件
+	userRequest, err := s.teamRequestDao.GetByUserIDWaitingJoin(ctx, uint32(userID), requestType)
+	if err != nil {
+		return nil, err
+	}
+	if len(userRequest) != 1 {
+		return nil, errors.New("已经审批通过无需重复申请")
+	}
+
+	// 获取申请者的完整信息
+	applicant, err := s.userDao.GetUserWithGithubInfo(ctx, userID)
+	creatorInfo, err := s.userDao.GetUserWithGithubInfo(ctx, uint(team.CreatorID))
+	if err != nil {
+		logrus.Errorf("获取申请者信息失败: %v", err)
+	} else {
+		// 发送邮件
+		if err := utils.SendJoinTeamEmail(applicant, creatorInfo.Email, userRequest[0].ID, requestType); err != nil {
+			logrus.Errorf("发送加入团队申请邮件失败: %v", err)
+		}
+	}
 
 	return request, nil
 }
@@ -95,25 +117,32 @@ func (s *TeamRequestService) CheckTeamRequest(ctx context.Context, requestID uin
 		}
 	}()
 
+	user, err := s.userDao.GetUserByID(request.UserID)
+	if err != nil {
+		return err
+	}
+
 	// 如果申请被批准，更新用户的team_id
+	// 如果拒绝就保持原样
 	if status == define.TeamRequestStatusApproval {
-		user, err := s.userDao.GetUserByID(request.UserID)
-		if err != nil {
-			return err
+		if request.RequestType == define.TeamRequestTypeOut {
+			user.TeamID = 0
+		} else {
+			user.TeamID = request.TeamID
 		}
-		user.TeamID = request.TeamID
-		err = s.userDao.UpdateUserTx(tx, user)
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
+	}
+
+	err = s.userDao.UpdateUserTx(tx, user)
+	if err != nil {
+		tx.Rollback()
+		return err
 	}
 
 	err = s.teamRequestDao.UpdateTx(tx, ctx, request)
 	if err != nil {
 		tx.Rollback()
 	}
-
+	tx.Commit()
 	return nil
 }
 
@@ -128,8 +157,39 @@ func (s *TeamRequestService) GetTeamRequestByID(ctx context.Context, requestID u
 }
 
 // GetTeamRequestsByTeamID 获取团队的申请列表
-func (s *TeamRequestService) GetTeamRequestsByTeamID(ctx context.Context, teamID uint32) ([]*dao.TeamRequest, error) {
-	return s.teamRequestDao.GetByTeamID(ctx, teamID)
+func (s *TeamRequestService) GetTeamRequestsByTeamID(ctx context.Context, teamID uint32) ([]map[string]interface{}, error) {
+	teamRequest, err := s.teamRequestDao.GetByTeamID(ctx, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	var usersIds []uint32
+	userIdMapTeam := make(map[uint32]int)
+	userIdMapRequest := make(map[uint32]uint32)
+	for _, request := range teamRequest {
+		usersIds = append(usersIds, request.UserID)
+		userIdMapTeam[request.UserID] = request.RequestType
+		userIdMapRequest[request.UserID] = request.ID
+	}
+
+	infos, err := s.userDao.GetUserListWithGithubInfo(ctx, usersIds)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []map[string]interface{}
+	for _, info := range infos {
+		result = append(result, map[string]interface{}{
+			"user_id":      info.ID,
+			"request_type": userIdMapTeam[uint32(info.ID)],
+			"github_name":  info.Name,
+			"github_id":    info.GithubID,
+			"email":        info.Email,
+			"request_id":   userIdMapRequest[uint32(info.ID)],
+		})
+	}
+
+	return result, nil
 }
 
 // GetTeamRequestsByUserID 获取用户的申请列表

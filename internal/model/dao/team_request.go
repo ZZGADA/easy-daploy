@@ -68,7 +68,7 @@ func (d *TeamRequestDao) GetByID(ctx context.Context, requestID uint32) (*TeamRe
 // GetByTeamID 根据团队ID获取申请列表
 func (d *TeamRequestDao) GetByTeamID(ctx context.Context, teamID uint32) ([]*TeamRequest, error) {
 	var requests []*TeamRequest
-	err := d.db.WithContext(ctx).Where("team_id = ? AND status = ? AND deleted_at IS NULL", teamID, define.TeamRequestStatusWait).Order("id desc").Limit(1).Find(&requests).Error
+	err := d.db.WithContext(ctx).Where("team_id = ? AND status = ? AND deleted_at IS NULL", teamID, define.TeamRequestStatusWait).Order("id desc").Find(&requests).Error
 	if err != nil {
 		return nil, err
 	}
@@ -79,6 +79,16 @@ func (d *TeamRequestDao) GetByTeamID(ctx context.Context, teamID uint32) ([]*Tea
 func (d *TeamRequestDao) GetByUserID(ctx context.Context, userID uint32) ([]*TeamRequest, error) {
 	var requests []*TeamRequest
 	err := d.db.WithContext(ctx).Where("user_id = ? AND deleted_at IS NULL", userID).Find(&requests).Error
+	if err != nil {
+		return nil, err
+	}
+	return requests, nil
+}
+
+// GetByUserIDWaitingJoin 根据用户ID获取申请列表
+func (d *TeamRequestDao) GetByUserIDWaitingJoin(ctx context.Context, userID uint32, requestType int) ([]*TeamRequest, error) {
+	var requests []*TeamRequest
+	err := d.db.WithContext(ctx).Where("user_id = ? AND status = 0 AND request_type = ? AND deleted_at IS NULL", userID, requestType).Find(&requests).Error
 	if err != nil {
 		return nil, err
 	}

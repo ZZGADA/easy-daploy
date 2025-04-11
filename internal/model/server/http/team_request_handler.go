@@ -10,14 +10,14 @@ import (
 
 // TeamRequestCreateRequest 创建团队申请请求结构体
 type TeamRequestCreateRequest struct {
-	TeamID      uint32 `json:"team_id" binding:"required"`
-	RequestType int    `json:"request_type" binding:"required"`
+	TeamID      int `json:"team_id" binding:"required"`
+	RequestType int `json:"request_type" `
 }
 
 // TeamRequestHandleRequest 处理团队申请请求结构体
 type TeamRequestHandleRequest struct {
-	RequestID uint32 `json:"request_id" binding:"required"`
-	Status    int    `json:"status" binding:"required"` // 1: 同意, 2: 拒绝
+	RequestID uint `json:"request_id" binding:"required"`
+	Status    int  `json:"status" binding:"required"` // 1: 同意, 2: 拒绝
 }
 
 // TeamRequestHandler 团队申请处理器
@@ -47,7 +47,7 @@ func (h *TeamRequestHandler) CreateTeamRequest(c *gin.Context) {
 	}
 
 	// 检查团队是否存在
-	team, err := h.teamService.GetTeamByID(c, req.TeamID)
+	team, err := h.teamService.GetTeamByID(c, uint32(req.TeamID))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -65,7 +65,7 @@ func (h *TeamRequestHandler) CreateTeamRequest(c *gin.Context) {
 		return
 	}
 
-	_, err = h.teamRequestService.CreateTeamRequest(c, req.TeamID, userID, req.RequestType)
+	_, err = h.teamRequestService.CreateTeamRequest(c, uint32(req.TeamID), userID, req.RequestType)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -82,36 +82,16 @@ func (h *TeamRequestHandler) CreateTeamRequest(c *gin.Context) {
 
 // CheckTeamRequest 请求校验接口
 func (h *TeamRequestHandler) CheckTeamRequest(c *gin.Context) {
-	requestId := c.Query("request_id")
-	status := c.Query("status")
-	if status == "" || requestId == "" {
+	var req TeamRequestHandleRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "参数信息不完善",
+			"code":    http.StatusBadRequest,
+			"message": "参数信息不对",
 		})
 		return
 	}
 
-	requestIdI, err2 := strconv.ParseUint(requestId, 10, 32)
-	if err2 != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "系统错误",
-		})
-		return
-	}
-	statusI, err2 := strconv.ParseInt(status, 10, 32)
-	if err2 != nil {
-
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "系统错误",
-		})
-		return
-
-	}
-
-	err := h.teamRequestService.CheckTeamRequest(c, uint32(requestIdI), int(statusI))
+	err := h.teamRequestService.CheckTeamRequest(c, uint32(req.RequestID), req.Status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusBadRequest,
@@ -147,44 +127,53 @@ func (h *TeamRequestHandler) CheckTeamRequest(c *gin.Context) {
 //	})
 //}
 
-//// GetTeamRequestsByTeamID 获取团队的申请列表
-//func (h *TeamRequestHandler) GetTeamRequestsByTeamID(c *gin.Context) {
-//	userID := c.GetUint32("user_id")
-//	teamID := c.GetUint32("team_id")
-//
-//	// 检查用户是否有权限查看申请
-//	team, err := h.teamService.GetTeamByID(c, teamID)
-//	if err != nil {
-//		c.JSON(http.StatusInternalServerError, gin.H{
-//			"code":    http.StatusInternalServerError,
-//			"message": "团队不存在",
-//		})
-//		return
-//	}
-//
-//	if team.CreatorID != userID {
-//		c.JSON(http.StatusForbidden, gin.H{
-//			"code":    http.StatusForbidden,
-//			"message": "没有权限查看申请",
-//		})
-//		return
-//	}
-//
-//	requests, err := h.teamRequestService.GetTeamRequestsByTeamID(c, teamID)
-//	if err != nil {
-//		c.JSON(http.StatusInternalServerError, gin.H{
-//			"code":    http.StatusInternalServerError,
-//			"message": err.Error(),
-//		})
-//		return
-//	}
-//
-//	c.JSON(http.StatusOK, gin.H{
-//		"code":    http.StatusOK,
-//		"message": "查询成功",
-//		"data":    requests,
-//	})
-//}
+// GetTeamRequestsByTeamID 获取团队的申请列表
+func (h *TeamRequestHandler) GetTeamRequestsByTeamID(c *gin.Context) {
+	userID := c.GetUint("user_id")
+	teamIDS := c.Query("team_id")
+
+	teamId, err2 := strconv.ParseUint(teamIDS, 10, 32)
+	if err2 != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": http.StatusBadRequest,
+			"msg":  "参数错误",
+		})
+		return
+	}
+
+	// 检查用户是否有权限查看申请
+	team, err := h.teamService.GetTeamByID(c, uint32(teamId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": "团队不存在",
+		})
+		return
+	}
+
+	if team.CreatorID != uint32(userID) {
+		c.JSON(http.StatusForbidden, gin.H{
+			"code":    http.StatusForbidden,
+			"message": "没有权限查看申请",
+		})
+		return
+	}
+
+	requests, err := h.teamRequestService.GetTeamRequestsByTeamID(c, uint32(teamId))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "查询成功",
+		"data":    requests,
+	})
+}
 
 //// GetTeamRequestsByUserID 获取用户的申请列表
 //func (h *TeamRequestHandler) GetTeamRequestsByUserID(c *gin.Context) {

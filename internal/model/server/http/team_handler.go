@@ -17,6 +17,10 @@ type TeamRequest struct {
 	TeamDescription string `json:"team_description"`
 }
 
+type TeamRequestDelete struct {
+	TeamId uint `json:"team_id" binding:"required"`
+}
+
 // TeamHandler 团队管理处理器
 type TeamHandler struct {
 	teamService *team_manage.TeamService
@@ -113,24 +117,17 @@ func (h *TeamHandler) UpdateTeam(c *gin.Context) {
 // DeleteTeam 删除团队
 func (h *TeamHandler) DeleteTeam(c *gin.Context) {
 	userID := c.GetUint("user_id")
-	teamID := c.Query("team_id")
-	if teamID == "" || userID == 0 {
+	var req TeamRequestDelete
+	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "参数错误",
+			"code":    http.StatusBadRequest,
+			"message": "无效的请求参数",
 		})
 		return
 	}
-	parseUint, err2 := strconv.ParseUint(teamID, 10, 32)
-	if err2 != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code": http.StatusBadRequest,
-			"msg":  "参数错误",
-		})
-	}
 
 	// 检查用户是否有权限删除团队
-	team, err := h.teamService.GetTeamByID(c, uint32(parseUint))
+	team, err := h.teamService.GetTeamByID(c, uint32(req.TeamId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -147,7 +144,7 @@ func (h *TeamHandler) DeleteTeam(c *gin.Context) {
 		return
 	}
 
-	err = h.teamService.DeleteTeam(c, uint32(parseUint))
+	err = h.teamService.DeleteTeam(c, uint32(req.TeamId))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"code":    http.StatusInternalServerError,
@@ -200,10 +197,11 @@ func (h *TeamHandler) GetTeamMemberByID(c *gin.Context) {
 		}
 
 		res = append(res, map[string]interface{}{
+			"id":         team.ID,
 			"user_id":    user.Id,
 			"user_email": user.Email,
 			"if_creator": ifCreator,
-			"user_name":  user.Name,
+			"user_name":  user.GithubName,
 		})
 	}
 

@@ -20,11 +20,14 @@ type Users struct {
 }
 
 type UsersGithub struct {
-	Id       uint32 `gorm:"column:id;type:bigint;primaryKey;" json:"id"`
-	Email    string `gorm:"column:email;type:varchar(255);not null;" json:"email"`
-	Password string `gorm:"column:password;type:varchar(255);not null;" json:"password"`
-	TeamID   uint32 `gorm:"column:team_id;type:bigint;" json:"team_id"`
-	Name     string `gorm:"column:name;type:varchar(255);not null;" json:"name"`
+	Id         uint32 `gorm:"column:id;type:bigint;primaryKey;" json:"id"`
+	Email      string `gorm:"column:email;type:varchar(255);not null;" json:"email"`
+	Password   string `gorm:"column:password;type:varchar(255);not null;" json:"password"`
+	TeamID     uint32 `gorm:"column:team_id;type:bigint;" json:"team_id"`
+	GithubName string `gorm:"column:name;type:varchar(255);not null;" json:"name"`
+}
+
+type UserGithubFull struct {
 }
 
 func (Users) TableName() string {
@@ -165,4 +168,34 @@ func (d *UsersDao) BatchUpdateTeamID(ctx context.Context, teamID uint32, newTeam
 // BatchUpdateTeamIDTx 批量更新用户团队ID
 func (d *UsersDao) BatchUpdateTeamIDTx(tx *gorm.DB, ctx context.Context, teamID uint32, newTeamID *uint32) error {
 	return tx.WithContext(ctx).Model(&Users{}).Where("team_id = ?", teamID).Update("team_id", newTeamID).Error
+}
+
+// GetUserWithGithubInfo 根据用户 ID 获取用户及其 GitHub 信息
+func (d *UsersDao) GetUserWithGithubInfo(ctx context.Context, userID uint) (*UserWithGithubInfo, error) {
+	var userWithGithubInfo UserWithGithubInfo
+	err := d.db.WithContext(ctx).
+		Table("users").
+		Select("users.id, users.email, user_github.github_id, user_github.name").
+		Joins("JOIN user_github ON users.id = user_github.user_id").
+		Where("users.id = ? AND users.deleted_at IS NULL AND user_github.deleted_at IS NULL", userID).
+		First(&userWithGithubInfo).Error
+	if err != nil {
+		return nil, err
+	}
+	return &userWithGithubInfo, nil
+}
+
+// GetUserListWithGithubInfo 根据用户 ID 获取用户及其 GitHub 信息
+func (d *UsersDao) GetUserListWithGithubInfo(ctx context.Context, userIDs []uint32) ([]*UserWithGithubInfo, error) {
+	var userWithGithubInfoList []*UserWithGithubInfo
+	err := d.db.WithContext(ctx).
+		Table("users").
+		Select("users.id, users.email, user_github.github_id, user_github.name").
+		Joins("JOIN user_github ON users.id = user_github.user_id").
+		Where("users.id in ? AND users.deleted_at IS NULL AND user_github.deleted_at IS NULL", userIDs).
+		Find(&userWithGithubInfoList).Error
+	if err != nil {
+		return nil, err
+	}
+	return userWithGithubInfoList, nil
 }

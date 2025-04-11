@@ -1,5 +1,6 @@
 server:
   port: "53801"
+  host: "0.0.0.0"
 
 # MySQL配置
 mysql:
