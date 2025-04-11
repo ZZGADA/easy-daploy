@@ -17,6 +17,14 @@
             </set>
           </value>
         </entry>
+        <entry key="AlertMessage">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/kafka/consumer.go" />
+              <option value="file://$PROJECT_DIR$/internal/utils/email.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="AmdCPU">
           <value>
             <set>
@@ -252,6 +260,13 @@
             </set>
           </value>
         </entry>
+        <entry key="DockerImageHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_image.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="DockerImageService">
           <value>
             <set>
@@ -269,7 +284,7 @@
         <entry key="DockerfileHandler">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/server/http/dockerfile.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/docker_file.go" />
             </set>
           </value>
         </entry>
@@ -283,14 +298,14 @@
         <entry key="DockerfileRequest">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/service/docker_manage/dockerfile.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_file.go" />
             </set>
           </value>
         </entry>
         <entry key="DockerfileService">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/service/docker_manage/dockerfile.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_file.go" />
             </set>
           </value>
         </entry>
@@ -374,7 +389,6 @@
         <entry key="K8sCommandResponse">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/server/websocket/main.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go" />
             </set>
           </value>
@@ -463,6 +477,13 @@
             </set>
           </value>
         </entry>
+        <entry key="LogMessage">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/kafka/consumer.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="LoginDTO">
           <value>
             <set>
@@ -505,10 +526,17 @@
             </set>
           </value>
         </entry>
-        <entry key="OssConfig">
+        <entry key="OssAccessRequest">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/oss_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="OssHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/oss_handler.go" />
             </set>
           </value>
         </entry>
@@ -537,13 +565,6 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/state/state.go" />
-            </set>
-          </value>
-        </entry>
-        <entry key="Pod">
-          <value>
-            <set>
-              <option value="file://$USER_HOME$/GolandProjects/Multiplexing /kubernetes/module/pod.go" />
             </set>
           </value>
         </entry>
@@ -710,17 +731,9 @@
             </set>
           </value>
         </entry>
-        <entry key="SocketDockerService">
-          <value>
-            <set>
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
-            </set>
-          </value>
-        </entry>
         <entry key="SocketService">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/main.go" />
             </set>
           </value>
@@ -778,6 +791,77 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/workerpool/main/main.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="Team">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/team.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/team.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/team_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/team_request.go" />
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/team_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamRequestCreateRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/team_request_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamRequestDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/team_request.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamRequestHandleRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/team_request_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamRequestHandler">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/server/http/team_request_handler.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamRequestService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/team_manage/team_request.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="TeamService">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/team_manage/team.go" />
             </set>
           </value>
         </entry>
@@ -886,7 +970,28 @@
             </set>
           </value>
         </entry>
+        <entry key="UserTeamDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/team.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="Users">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/users.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UsersDao">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/dao/users.go" />
+            </set>
+          </value>
+        </entry>
+        <entry key="UsersGithub">
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/dao/users.go" />
@@ -917,8 +1022,6 @@
         <entry key="WSRequest">
           <value>
             <set>
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/main.go" />
             </set>
           </value>
@@ -927,8 +1030,6 @@
           <value>
             <set>
               <option value="file://$PROJECT_DIR$/internal/model/server/websocket/main.go" />
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go" />
-              <option value="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go" />
               <option value="file://$PROJECT_DIR$/internal/model/service/websocket/main.go" />
             </set>
           </value>
@@ -951,29 +1052,17 @@
     </option>
     <option name="scannedPathMapping">
       <map>
-        <entry key="file://$USER_HOME$/GolandProjects/Multiplexing /kubernetes/module/pod.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1743737602501" />
-              <option name="schema">
-                <list>
-                  <option value="Pod" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743926878645" />
+              <option name="lastModified" value="1744355107879" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/chain/handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511350" />
+              <option name="lastModified" value="1744096457793" />
               <option name="schema">
                 <list>
                   <option value="ConcreteHandlerA" />
@@ -986,7 +1075,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/chain/handlerContext.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511350" />
+              <option name="lastModified" value="1744096457793" />
               <option name="schema">
                 <list>
                   <option value="HandlerContext" />
@@ -998,14 +1087,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/chain/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511350" />
+              <option name="lastModified" value="1744096457793" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/command/command.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511350" />
+              <option name="lastModified" value="1744096457793" />
               <option name="schema">
                 <list>
                   <option value="LightOnCommandConcrete" />
@@ -1018,7 +1107,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/command/invoker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511351" />
+              <option name="lastModified" value="1744096457793" />
               <option name="schema">
                 <list>
                   <option value="RemoteInvoker" />
@@ -1030,14 +1119,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/command/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511351" />
+              <option name="lastModified" value="1744096457793" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/command/receiver.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511351" />
+              <option name="lastModified" value="1744096457794" />
               <option name="schema">
                 <list>
                   <option value="LightReceiver" />
@@ -1049,7 +1138,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/mediator/colleague.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511351" />
+              <option name="lastModified" value="1744096457794" />
               <option name="schema">
                 <list>
                   <option value="Colleague" />
@@ -1061,14 +1150,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/mediator/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511351" />
+              <option name="lastModified" value="1744096457794" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/mediator/mediator.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511351" />
+              <option name="lastModified" value="1744096457794" />
               <option name="schema">
                 <list>
                   <option value="ConcreteMediator" />
@@ -1080,14 +1169,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/observer/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457794" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/observer/observe.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457794" />
               <option name="schema">
                 <list>
                   <option value="ConcreteObserver" />
@@ -1099,7 +1188,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/observer/subject.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457795" />
               <option name="schema">
                 <list>
                   <option value="ConcreteSubject" />
@@ -1111,7 +1200,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/state/context.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457795" />
               <option name="schema">
                 <list>
                   <option value="Context" />
@@ -1123,14 +1212,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/state/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457795" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/state/state.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457795" />
               <option name="schema">
                 <list>
                   <option value="StateBase" />
@@ -1145,7 +1234,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/strategy/context.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457795" />
               <option name="schema">
                 <list>
                   <option value="Context" />
@@ -1157,14 +1246,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/strategy/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457796" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/strategy/strategy.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511352" />
+              <option name="lastModified" value="1744096457796" />
               <option name="schema">
                 <list>
                   <option value="CashPayStrategy" />
@@ -1177,7 +1266,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/behaviourtype/workerpool/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457796" />
               <option name="schema">
                 <list>
                   <option value="Task" />
@@ -1191,7 +1280,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/abstractfactory/factory.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457796" />
               <option name="schema">
                 <list>
                   <option value="FurnitureFactory" />
@@ -1205,14 +1294,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/abstractfactory/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457796" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/abstractfactory/product.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457796" />
               <option name="schema">
                 <list>
                   <option value="Chair" />
@@ -1227,7 +1316,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/builder/builder.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457797" />
               <option name="schema">
                 <list>
                   <option value="ConcreteBuilderA" />
@@ -1240,7 +1329,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/builder/director.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457797" />
               <option name="schema">
                 <list>
                   <option value="Director" />
@@ -1252,14 +1341,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/builder/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457797" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/builder/product.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511353" />
+              <option name="lastModified" value="1744096457797" />
               <option name="schema">
                 <list>
                   <option value="ProductA" />
@@ -1272,7 +1361,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/factorymethod/factory_method.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511354" />
+              <option name="lastModified" value="1744096457797" />
               <option name="schema">
                 <list>
                   <option value="ProductFactoryA" />
@@ -1286,14 +1375,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/factorymethod/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511354" />
+              <option name="lastModified" value="1744096457798" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/factorymethod/product.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511354" />
+              <option name="lastModified" value="1744096457798" />
               <option name="schema">
                 <list>
                   <option value="ProductA" />
@@ -1307,14 +1396,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/simplefactory/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511354" />
+              <option name="lastModified" value="1744096457798" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/simplefactory/simple_factory.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511355" />
+              <option name="lastModified" value="1744096457798" />
               <option name="schema">
                 <list>
                   <option value="SimpleFactory" />
@@ -1330,14 +1419,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/singleton/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511355" />
+              <option name="lastModified" value="1744096457798" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/creationaltype/singleton/singleton.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511355" />
+              <option name="lastModified" value="1744096457798" />
               <option name="schema">
                 <list>
                   <option value="Singleton" />
@@ -1349,14 +1438,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/scriptToGenerateFunc.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511375" />
+              <option name="lastModified" value="1744096457805" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/adapter/adaptee.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511380" />
+              <option name="lastModified" value="1744096457808" />
               <option name="schema">
                 <list>
                   <option value="AdapteeImpl" />
@@ -1368,7 +1457,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/adapter/adapter.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511380" />
+              <option name="lastModified" value="1744096457808" />
               <option name="schema">
                 <list>
                   <option value="AdapterImpl" />
@@ -1380,14 +1469,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/adapter/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511380" />
+              <option name="lastModified" value="1744096457808" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/AmdCPU.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511381" />
+              <option name="lastModified" value="1744096457808" />
               <option name="schema">
                 <list>
                   <option value="AmdCPU" />
@@ -1399,7 +1488,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/IOAbstraction.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511381" />
+              <option name="lastModified" value="1744096457808" />
               <option name="schema">
                 <list>
                   <option value="IOAbstractionBase" />
@@ -1411,14 +1500,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/ImplementorCPU.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511381" />
+              <option name="lastModified" value="1744096457808" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/IntelCPU.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511381" />
+              <option name="lastModified" value="1744096457808" />
               <option name="schema">
                 <list>
                   <option value="IntelCPU" />
@@ -1430,7 +1519,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/RandomIORefined.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511381" />
+              <option name="lastModified" value="1744096457809" />
               <option name="schema">
                 <list>
                   <option value="RandomIORefined" />
@@ -1442,7 +1531,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/SequentialIORefined.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511381" />
+              <option name="lastModified" value="1744096457809" />
               <option name="schema">
                 <list>
                   <option value="SequentialIORefined" />
@@ -1454,21 +1543,21 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/bridge/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511382" />
+              <option name="lastModified" value="1744096457809" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/decorator/component.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511382" />
+              <option name="lastModified" value="1744096457809" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/decorator/concreteComponent.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457809" />
               <option name="schema">
                 <list>
                   <option value="CoffeeConcreteComponent" />
@@ -1480,7 +1569,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/decorator/concreteDecorator.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457809" />
               <option name="schema">
                 <list>
                   <option value="CoffeeDecoratorAddMilk" />
@@ -1493,7 +1582,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/decorator/decorator.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457809" />
               <option name="schema">
                 <list>
                   <option value="CoffeeDecorator" />
@@ -1505,14 +1594,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/decorator/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457809" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/facade/facade.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457809" />
               <option name="schema">
                 <list>
                   <option value="ModuleA" />
@@ -1526,14 +1615,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/facade/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457810" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/flyWeight/ConcreteFlyWeight.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511383" />
+              <option name="lastModified" value="1744096457810" />
               <option name="schema">
                 <list>
                   <option value="ConcreteFlyWeightFirst" />
@@ -1546,7 +1635,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/flyWeight/ConcreteFlyWeightSimpleFactory.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511384" />
+              <option name="lastModified" value="1744096457810" />
               <option name="schema">
                 <list>
                   <option value="ConcreteFlyWeightSimpleFactory" />
@@ -1558,7 +1647,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/flyWeight/FlyWeightFactory.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511384" />
+              <option name="lastModified" value="1744096457810" />
               <option name="schema">
                 <list>
                   <option value="FlyWeightFactory" />
@@ -1570,21 +1659,21 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/flyWeight/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511384" />
+              <option name="lastModified" value="1744096457810" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/proxy/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511384" />
+              <option name="lastModified" value="1744096457810" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/proxy/proxy.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511384" />
+              <option name="lastModified" value="1744096457810" />
               <option name="schema">
                 <list>
                   <option value="Proxy" />
@@ -1596,7 +1685,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/structuretype/proxy/subject.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511384" />
+              <option name="lastModified" value="1744096457811" />
               <option name="schema">
                 <list>
                   <option value="RealSubject" />
@@ -1608,7 +1697,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/conf/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457811" />
               <option name="schema">
                 <list>
                   <option value="MysqlConfig" />
@@ -1623,21 +1712,21 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/define/double_deleted_key.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457811" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/define/redis_key.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457811" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/client/mysql.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457811" />
               <option name="schema">
                 <list>
                   <option value="Mysql" />
@@ -1649,7 +1738,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/client/redis.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457811" />
               <option name="schema">
                 <list>
                   <option value="Redis" />
@@ -1661,7 +1750,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/models/label_tree.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="LabelTreeMapper" />
@@ -1674,14 +1763,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/service/enum.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457812" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/service/impl/label_tree.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511385" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="LabelTreeService" />
@@ -1693,7 +1782,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/service/impl/strategy_service.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="StrategyService" />
@@ -1705,14 +1794,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/service/service.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/context.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="Context" />
@@ -1724,14 +1813,14 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/strategy.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/strategy_base.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="BaseStrategy" />
@@ -1743,7 +1832,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/strategy_delay_double_delete.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="DelayDoubleDeleteStrategy" />
@@ -1755,7 +1844,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/strategy_double_delete.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="DoubleDeleteStrategy" />
@@ -1767,7 +1856,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/strategy_mq_asy.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511386" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="MqAsyUpdateStrategy" />
@@ -1779,7 +1868,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/strategy/strategy_rwlock.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511387" />
+              <option name="lastModified" value="1744096457812" />
               <option name="schema">
                 <list>
                   <option value="ReadWriteLockStrategy" />
@@ -1791,7 +1880,7 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/template/redis.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511387" />
+              <option name="lastModified" value="1744096457813" />
               <option name="schema">
                 <list>
                   <option value="RedisLabelTreeDataTemp" />
@@ -1803,28 +1892,35 @@
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/internel/utils/go_routine.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511387" />
+              <option name="lastModified" value="1744096457813" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/syncache/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511388" />
+              <option name="lastModified" value="1744096457813" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/docker/design-pattern/go/webrtc/demo/stun/main/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743438511388" />
+              <option name="lastModified" value="1744096457813" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/docker/easy-deploy-log-test/main/main.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744184014662" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/config/config.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744167782633" />
+              <option name="lastModified" value="1744278849337" />
               <option name="schema">
                 <list>
                   <option value="Config" />
@@ -1833,10 +1929,10 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/define/auth.go">
+        <entry key="file://$PROJECT_DIR$/internal/define/const.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743837740997" />
+              <option name="lastModified" value="1744274532474" />
             </ScannedPath>
           </value>
         </entry>
@@ -1847,17 +1943,10 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/model/conf/es.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1743926304036" />
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/conf/fluentd.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744172685967" />
+              <option name="lastModified" value="1744276888535" />
               <option name="schema">
                 <list>
                   <option value="FluentdConfig" />
@@ -1869,7 +1958,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/conf/k8s.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743820886670" />
+              <option name="lastModified" value="1744276165582" />
             </ScannedPath>
           </value>
         </entry>
@@ -1894,6 +1983,33 @@
               <option name="schema">
                 <list>
                   <option value="WebSocketServer" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/team.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744335986225" />
+              <option name="schema">
+                <list>
+                  <option value="Team" />
+                  <option value="TeamDao" />
+                  <option value="UserTeamDao" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/dao/team_request.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744275046407" />
+              <option name="schema">
+                <list>
+                  <option value="TeamRequest" />
+                  <option value="TeamRequestDao" />
                 </list>
               </option>
             </ScannedPath>
@@ -1955,7 +2071,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743691327329" />
+              <option name="lastModified" value="1744355107658" />
               <option name="schema">
                 <list>
                   <option value="UserK8sResource" />
@@ -1968,7 +2084,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_k8s_resource_operation_log.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743823621149" />
+              <option name="lastModified" value="1744184743287" />
               <option name="schema">
                 <list>
                   <option value="UserK8sResourceOperationLog" />
@@ -1994,19 +2110,14 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/users.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743215621298" />
+              <option name="lastModified" value="1744341147492" />
               <option name="schema">
                 <list>
                   <option value="Users" />
+                  <option value="UsersGithub" />
+                  <option value="UsersDao" />
                 </list>
               </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/model/define/auth.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1743405733682" />
             </ScannedPath>
           </value>
         </entry>
@@ -2059,13 +2170,25 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/model/server/http/dockerfile.go">
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/docker_file.go">
           <value>
             <ScannedPath>
               <option name="lastModified" value="1743325691180" />
               <option name="schema">
                 <list>
                   <option value="DockerfileHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/docker_image.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743574978937" />
+              <option name="schema">
+                <list>
+                  <option value="DockerImageHandler" />
                 </list>
               </option>
             </ScannedPath>
@@ -2102,7 +2225,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/k8s_resource_operation_log_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743753751237" />
+              <option name="lastModified" value="1743823447627" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceOperationLogHandler" />
@@ -2111,10 +2234,63 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/oss_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743645486475" />
+              <option name="schema">
+                <list>
+                  <option value="OssHandler" />
+                  <option value="OssAccessRequest" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744095037594" />
+              <option name="lastModified" value="1744337271112" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/team_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744340336359" />
+              <option name="schema">
+                <list>
+                  <option value="TeamRequest" />
+                  <option value="TeamHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/http/team_request_handler.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744275699887" />
+              <option name="schema">
+                <list>
+                  <option value="TeamRequestCreateRequest" />
+                  <option value="TeamRequestHandleRequest" />
+                  <option value="TeamRequestHandler" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/server/kafka/consumer.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744278849333" />
+              <option name="schema">
+                <list>
+                  <option value="LogMessage" />
+                  <option value="AlertMessage" />
+                </list>
+              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -2147,19 +2323,7 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_image.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1743563270506" />
-              <option name="schema">
-                <list>
-                  <option value="DockerImageService" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
-        <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/dockerfile.go">
+        <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_file.go">
           <value>
             <ScannedPath>
               <option name="lastModified" value="1743325691193" />
@@ -2172,10 +2336,22 @@
             </ScannedPath>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_image.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1743574969463" />
+              <option name="schema">
+                <list>
+                  <option value="DockerImageService" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/k8s_manage/k8s_manage.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743690566717" />
+              <option name="lastModified" value="1744273392635" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceService" />
@@ -2203,6 +2379,30 @@
               <option name="schema">
                 <list>
                   <option value="OssService" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/team_manage/team.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744340336365" />
+              <option name="schema">
+                <list>
+                  <option value="TeamService" />
+                </list>
+              </option>
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/model/service/team_manage/team_request.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744296098631" />
+              <option name="schema">
+                <list>
+                  <option value="TeamRequestService" />
                 </list>
               </option>
             </ScannedPath>
@@ -2248,24 +2448,10 @@
             </ScannedPath>
           </value>
         </entry>
-        <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/handlers.go">
-          <value>
-            <ScannedPath>
-              <option name="lastModified" value="1743562793741" />
-              <option name="schema">
-                <list>
-                  <option value="SocketDockerService" />
-                  <option value="WSRequest" />
-                  <option value="WSResponse" />
-                </list>
-              </option>
-            </ScannedPath>
-          </value>
-        </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744162310878" />
+              <option name="lastModified" value="1744265065446" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
@@ -2291,7 +2477,19 @@
         <entry key="file://$PROJECT_DIR$/internal/utils/common.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743405080210" />
+              <option name="lastModified" value="1744271893873" />
+            </ScannedPath>
+          </value>
+        </entry>
+        <entry key="file://$PROJECT_DIR$/internal/utils/email.go">
+          <value>
+            <ScannedPath>
+              <option name="lastModified" value="1744186925472" />
+              <option name="schema">
+                <list>
+                  <option value="AlertMessage" />
+                </list>
+              </option>
             </ScannedPath>
           </value>
         </entry>
@@ -2301,6 +2499,7 @@
       <map>
         <entry key="adaptee_impl" value="AdapteeImpl" />
         <entry key="adapter_impl" value="AdapterImpl" />
+        <entry key="alert_message" value="AlertMessage" />
         <entry key="amd_cpu" value="AmdCPU" />
         <entry key="appliance_factory" value="ApplianceFactory" />
         <entry key="base_strategy" value="BaseStrategy" />
@@ -2335,6 +2534,7 @@
         <entry key="docker_account_request" value="DockerAccountRequest" />
         <entry key="docker_account_service" value="DockerAccountService" />
         <entry key="docker_handler" value="DockerHandler" />
+        <entry key="docker_image_handler" value="DockerImageHandler" />
         <entry key="docker_image_service" value="DockerImageService" />
         <entry key="docker_login_request" value="DockerLoginRequest" />
         <entry key="dockerfile_handler" value="DockerfileHandler" />
@@ -2365,18 +2565,19 @@
         <entry key="light_off_command_concrete" value="LightOffCommandConcrete" />
         <entry key="light_on_command_concrete" value="LightOnCommandConcrete" />
         <entry key="light_receiver" value="LightReceiver" />
+        <entry key="log_message" value="LogMessage" />
         <entry key="login_dto" value="LoginDTO" />
         <entry key="module_a" value="ModuleA" />
         <entry key="module_b" value="ModuleB" />
         <entry key="mq_asy_update_strategy" value="MqAsyUpdateStrategy" />
         <entry key="mysql" value="Mysql" />
         <entry key="mysql_config" value="MysqlConfig" />
-        <entry key="oss_config" value="OssConfig" />
+        <entry key="oss_access_request" value="OssAccessRequest" />
+        <entry key="oss_handler" value="OssHandler" />
         <entry key="oss_service" value="OssService" />
         <entry key="oven" value="Oven" />
         <entry key="pause_state" value="PauseState" />
         <entry key="play_state" value="PlayState" />
-        <entry key="pod" value="Pod" />
         <entry key="product_a" value="ProductA" />
         <entry key="product_b" value="ProductB" />
         <entry key="product_c" value="ProductC" />
@@ -2400,7 +2601,6 @@
         <entry key="simple_factory" value="SimpleFactory" />
         <entry key="singleton" value="Singleton" />
         <entry key="socket_docker_handler" value="SocketDockerHandler" />
-        <entry key="socket_docker_service" value="SocketDockerService" />
         <entry key="socket_service" value="SocketService" />
         <entry key="state_base" value="StateBase" />
         <entry key="stop_state" value="StopState" />
@@ -2410,6 +2610,16 @@
         <entry key="structure_c" value="StructureC" />
         <entry key="table" value="Table" />
         <entry key="task" value="Task" />
+        <entry key="team" value="Team" />
+        <entry key="team_dao" value="TeamDao" />
+        <entry key="team_handler" value="TeamHandler" />
+        <entry key="team_request" value="TeamRequest" />
+        <entry key="team_request_create_request" value="TeamRequestCreateRequest" />
+        <entry key="team_request_dao" value="TeamRequestDao" />
+        <entry key="team_request_handle_request" value="TeamRequestHandleRequest" />
+        <entry key="team_request_handler" value="TeamRequestHandler" />
+        <entry key="team_request_service" value="TeamRequestService" />
+        <entry key="team_service" value="TeamService" />
         <entry key="update_resource_request" value="UpdateResourceRequest" />
         <entry key="user_docker" value="UserDocker" />
         <entry key="user_docker_dao_impl" value="UserDockerDaoImpl" />
@@ -2425,7 +2635,10 @@
         <entry key="user_k8s_resource_operation_log_dao" value="UserK8sResourceOperationLogDao" />
         <entry key="user_oss" value="UserOss" />
         <entry key="user_oss_dao" value="UserOssDao" />
+        <entry key="user_team_dao" value="UserTeamDao" />
         <entry key="users" value="Users" />
+        <entry key="users_dao" value="UsersDao" />
+        <entry key="users_github" value="UsersGithub" />
         <entry key="verify_code_dto" value="VerifyCodeDTO" />
         <entry key="web_socket_server" value="WebSocketServer" />
         <entry key="ws_message" value="WSMessage" />
@@ -2434,6 +2647,6 @@
         <entry key="ws_response" value="WSResponse" />
       </map>
     </option>
-    <option name="lastTimeChecked" value="1743438816863" />
+    <option name="lastTimeChecked" value="1744281017714" />
   </component>
 </project>

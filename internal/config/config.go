@@ -53,6 +53,7 @@ type Config struct {
 	Kafka struct {
 		Brokers []string `mapstructure:"brokers"`
 		Topic   string   `mapstructure:"topic"`
+		GroupId string   `mapstructure:"group_id"`
 	}
 
 	Smtp struct {

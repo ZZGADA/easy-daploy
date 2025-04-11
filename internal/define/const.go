@@ -21,3 +21,14 @@ const (
 const (
 	K8sRunningResources = "k8s:running_resources:%d"
 )
+
+const (
+	TeamRequestStatusWait     = 0 // 0: 待处理,
+	TeamRequestStatusApproval = 1 // 1: 已同意,
+	TeamRequestStatusReject   = 2 // 2: 已拒绝
+)
+
+const (
+	TeamRequestTypeIn  = 0 // 0: 加入团队
+	TeamRequestTypeOut = 1 // 1: 退出团队
+)

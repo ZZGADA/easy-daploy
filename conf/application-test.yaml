@@ -40,3 +40,4 @@ kafka:
   brokers:
     - "8.130.14.29:57331"
   topic: k8s_resource_logs
+  group_id: "k8s-log-alert-group"

@@ -21,6 +21,7 @@ smtp:
   user: "1293177585@qq.com"     # 自己的邮箱
   password: "wlkgcoyhwrfcffjj"  # 邮箱第三方客户端授权码
   from: "1293177585@qq.com"     # 发邮件人
+  port: 587
 
 websocket:
   port: 53801
@@ -39,3 +40,4 @@ kafka:
   brokers:
     - "8.130.14.29:57331"
   topic: k8s_resource_logs
+  group_id: "k8s-log-alert-group"

@@ -364,12 +364,12 @@ func InitFluent() {
 	// 检查 DaemonSet 是否已存在
 	_, err = KubeClient.AppsV1().DaemonSets("kube-system").Get(context.TODO(), "fluentd", metav1.GetOptions{})
 	if err == nil {
-		// 更新 DaemonSet
-		_, err = KubeClient.AppsV1().DaemonSets("kube-system").Update(context.TODO(), daemonSet, metav1.UpdateOptions{})
-		if err != nil {
-			log.Fatalf("更新 Fluentd DaemonSet 失败: %v", err)
-		}
-		log.Info("已更新 Fluentd DaemonSet")
+		//// 更新 DaemonSet
+		//_, err = KubeClient.AppsV1().DaemonSets("kube-system").Update(context.TODO(), daemonSet, metav1.UpdateOptions{})
+		//if err != nil {
+		//	log.Fatalf("更新 Fluentd DaemonSet 失败: %v", err)
+		//}
+		//log.Info("已更新 Fluentd DaemonSet")
 	} else {
 		// 创建 DaemonSet
 		_, err = KubeClient.AppsV1().DaemonSets("kube-system").Create(context.TODO(), daemonSet, metav1.CreateOptions{})

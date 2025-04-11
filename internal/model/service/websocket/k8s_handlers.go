@@ -331,7 +331,7 @@ func (s *SocketService) resourceDelete(conn *websocket.Conn, command string, dat
 	}
 
 	// 查询最新的操作日志，获取资源信息
-	logs, err := s.userK8sResourceOperationLogDao.QueryByK8sResourceID(uint(k8sResourceID))
+	logs, err := s.userK8sResourceOperationLogDao.QueryByK8sResourceIDFirst(uint(k8sResourceID))
 	if err != nil || len(logs) == 0 {
 		SendError(conn, fmt.Sprintf("查询资源操作日志失败: %v", err))
 		return

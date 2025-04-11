@@ -8,6 +8,7 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/model/service/docker_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/k8s_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/oss_manage"
+	"github.com/ZZGADA/easy-deploy/internal/model/service/team_manage"
 	"github.com/ZZGADA/easy-deploy/internal/model/service/user_manage"
 	websocket2 "github.com/ZZGADA/easy-deploy/internal/model/service/websocket"
 	"github.com/gin-contrib/cors"
@@ -119,6 +120,28 @@ func SetupRouter(r *gin.Engine) {
 		oss.POST("/access/update", ossHandler.UpdateOssAccess)
 		oss.GET("/access/query", ossHandler.QueryOssAccess)
 		oss.POST("/access/delete", ossHandler.DeleteOssAccess)
+	}
+
+	// 团队管理
+	teamService := team_manage.NewTeamService(dao.NewTeamDao(conf.DB), dao.NewUsersDao(conf.DB))
+	teamHandler := NewTeamHandler(teamService)
+	team := r.Group("/api/team", middleware.CustomAuthMiddleware())
+	{
+		team.POST("/create", teamHandler.CreateTeam)
+		team.POST("/update", teamHandler.UpdateTeam)
+		team.POST("/delete", teamHandler.DeleteTeam)
+		team.GET("/info/member", teamHandler.GetTeamMemberByID)
+		team.GET("/list", teamHandler.QueryTeams)
+		team.GET("/info/self", teamHandler.GetUserTeam) // 用户自己所属团队信息
+	}
+
+	// 团队申请管理
+	teamRequestHandler := NewTeamRequestHandler(team_manage.NewTeamRequestService(
+		dao.NewTeamRequestDao(conf.DB), dao.NewTeamDao(conf.DB), dao.NewUsersDao(conf.DB)), teamService)
+	teamRequest := r.Group("/api/team/request", middleware.CustomAuthMiddleware())
+	{
+		teamRequest.POST("/create", teamRequestHandler.CreateTeamRequest)
+		teamRequest.GET("/check", teamRequestHandler.CheckTeamRequest)
 	}
 
 	// check health

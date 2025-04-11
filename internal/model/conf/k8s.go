@@ -28,7 +28,7 @@ func InitK8s() {
 	}
 
 	// 打印 API 服务器的 URL
-	logrus.Infof("API Server URL: %s\n", config.Host)
+	logrus.Infof("K8S API Server URL: %s\n", config.Host)
 
 	// 创建客户端集
 	clientSet, err := kubernetes.NewForConfig(config)

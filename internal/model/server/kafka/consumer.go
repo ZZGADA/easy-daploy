@@ -67,7 +67,7 @@ func StartConsumer() {
 	reader := kafka.NewReader(kafka.ReaderConfig{
 		Brokers:  config.GlobalConfig.Kafka.Brokers,
 		Topic:    config.GlobalConfig.Kafka.Topic,
-		GroupID:  "k8s-log-alert-group",
+		GroupID:  config.GlobalConfig.Kafka.GroupId,
 		MinBytes: 10e3, // 10KB
 		MaxBytes: 10e6, // 10MB
 		MaxWait:  time.Second * 3,

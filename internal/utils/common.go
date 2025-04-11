@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"math/big"
+	mr "math/rand"
 	"time"
 )
 
@@ -36,4 +37,12 @@ func GenerateUniqueValue() string {
 	timestamp := time.Now().UnixNano()
 	randomNum, _ := rand.Int(rand.Reader, big.NewInt(1000000))
 	return fmt.Sprintf("%d-%d", timestamp, randomNum)
+}
+
+// GenerateUUID 生成8位uuid
+func GenerateUUID() uint32 {
+	// 生成 10000000 到 99999999 之间的随机整数
+	randomNum := mr.Intn(90000000) + 10000000
+	// 将整数转换为字符串
+	return uint32(randomNum)
 }

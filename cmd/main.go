@@ -8,7 +8,6 @@ import (
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
 	"github.com/ZZGADA/easy-deploy/internal/model/server/http"
-	"github.com/ZZGADA/easy-deploy/internal/model/server/kafka"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
@@ -44,9 +43,6 @@ func main() {
 
 	// 设置路由
 	http.SetupRouter(r)
-
-	// 启动Kafka消费者
-	go kafka.StartConsumer()
 
 	port := config.GlobalConfig.Server.Port
 	if port == "" {

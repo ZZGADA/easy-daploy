@@ -41,6 +41,9 @@ func (d *UserK8sResourceDao) BeginTx() *gorm.DB {
 func (d *UserK8sResourceDao) Create(resource *UserK8sResource) error {
 	return d.db.Create(resource).Error
 }
+func (d *UserK8sResourceDao) CreateTx(tx *gorm.DB, resource *UserK8sResource) error {
+	return tx.Create(resource).Error
+}
 
 // Delete 删除 K8s 资源配置（软删除）
 func (d *UserK8sResourceDao) Delete(id uint) error {
@@ -49,6 +52,10 @@ func (d *UserK8sResourceDao) Delete(id uint) error {
 
 func (d *UserK8sResourceDao) UpdateIsUpdate(resource *UserK8sResource) error {
 	return d.db.Model(&UserK8sResource{}).Where("id = ?", resource.Id).Updates(resource).Error
+}
+
+func (d *UserK8sResourceDao) UpdateIsUpdateTx(tx *gorm.DB, resource *UserK8sResource) error {
+	return tx.Model(&UserK8sResource{}).Where("id = ?", resource.Id).Updates(resource).Error
 }
 
 func (d *UserK8sResourceDao) QueryById(id uint32) (UserK8sResource, error) {

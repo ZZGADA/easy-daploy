@@ -40,7 +40,7 @@ func (s *K8sResourceService) UpdateResource(userID uint, id uint32, repositoryID
 	}()
 
 	resourceById.IsUpdate = true
-	err = s.userK8sResourceDao.UpdateIsUpdate(&resourceById)
+	err = s.userK8sResourceDao.UpdateIsUpdateTx(tx, &resourceById)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -55,7 +55,7 @@ func (s *K8sResourceService) UpdateResource(userID uint, id uint32, repositoryID
 		FatherResourceId: resourceById.Id,
 	}
 
-	err = s.userK8sResourceDao.Create(resource)
+	err = s.userK8sResourceDao.CreateTx(tx, resource)
 	if err != nil {
 		tx.Rollback()
 		return err
