@@ -8,14 +8,14 @@ import (
 )
 
 type UserDockerImage struct {
-	Id            uint32    `gorm:"column:id;type:int(10) UNSIGNED;primaryKey;not null;" json:"id"`
-	UserId        uint32    `gorm:"column:user_id;type:int(10) UNSIGNED;not null;" json:"user_id"`
-	DockerfileId  uint32    `gorm:"column:dockerfile_id;type:int(10) UNSIGNED;not null;" json:"dockerfile_id"`
-	FullImageName string    `gorm:"column:full_image_name;type:varchar(255);not null;" json:"full_image_name"`
-	ImageName     string    `gorm:"column:image_name;type:varchar(255);not null;" json:"image_name"`
-	CreatedAt     time.Time `gorm:"column:created_at;type:timestamp;default:CURRENT_TIMESTAMP;" json:"created_at"`
-	UpdatedAt     time.Time `gorm:"column:updated_at;type:timestamp;default:CURRENT_TIMESTAMP;" json:"updated_at"`
-	DeletedAt     time.Time `gorm:"column:deleted_at;type:timestamp;default:NULL;" json:"deleted_at"`
+	Id            uint32     `gorm:"column:id;type:int(10) UNSIGNED;primaryKey;not null;" json:"id"`
+	UserId        uint32     `gorm:"column:user_id;type:int(10) UNSIGNED;not null;" json:"user_id"`
+	DockerfileId  uint32     `gorm:"column:dockerfile_id;type:int(10) UNSIGNED;not null;" json:"dockerfile_id"`
+	FullImageName string     `gorm:"column:full_image_name;type:varchar(255);not null;" json:"full_image_name"`
+	ImageName     string     `gorm:"column:image_name;type:varchar(255);not null;" json:"image_name"`
+	CreatedAt     *time.Time `gorm:"column:created_at;type:timestamp;default:CURRENT_TIMESTAMP;" json:"created_at"`
+	UpdatedAt     *time.Time `gorm:"column:updated_at;type:timestamp;default:CURRENT_TIMESTAMP;" json:"updated_at"`
+	DeletedAt     *time.Time `gorm:"column:deleted_at;type:timestamp;default:NULL;" json:"deleted_at"`
 }
 
 func (UserDockerImage) TableName() string {

@@ -11,10 +11,12 @@ import (
 
 type DockerImageService struct {
 	userDockerImageDao *dao.UserDockerImageDao
+	userDao            *dao.UsersDao
 }
 
-func NewDockerImageService(userDockerImageDao *dao.UserDockerImageDao) *DockerImageService {
+func NewDockerImageService(userDockerImageDao *dao.UserDockerImageDao, user *dao.UsersDao) *DockerImageService {
 	return &DockerImageService{
+		userDao:            user,
 		userDockerImageDao: userDockerImageDao,
 	}
 }
@@ -70,12 +72,63 @@ func (s *DockerImageService) GetDockerImagesByRepositoryID(ctx context.Context, 
 }
 
 // GetDockerImages 根据条件获取镜像列表
-func (s *DockerImageService) GetDockerImages(ctx context.Context, dockerfileID uint32, repositoryID string) ([]*dao.UserDockerImage, error) {
+func (s *DockerImageService) GetDockerImages(ctx context.Context, dockerfileID uint32, repositoryID string) ([]map[string]interface{}, error) {
 	if dockerfileID > 0 {
-		return s.GetDockerImagesByDockerfileID(ctx, dockerfileID)
+		dockerFileBuildLogs, err := s.GetDockerImagesByDockerfileID(ctx, dockerfileID)
+		if err != nil {
+			return nil, err
+		}
+		var userIds []uint32
+		for _, dockerFileBuildLog := range dockerFileBuildLogs {
+			userIds = append(userIds, dockerFileBuildLog.UserId)
+
+		}
+		userInfos, err := s.userDao.GetUserListWithGithubInfo(ctx, userIds)
+		if err != nil {
+			return nil, err
+		}
+
+		userMapInfo := make(map[uint32]*dao.UserWithGithubInfo)
+		for _, userInfo := range userInfos {
+			userMapInfo[uint32(userInfo.ID)] = userInfo
+		}
+
+		res := make([]map[string]interface{}, 0)
+		for _, dockerLog := range dockerFileBuildLogs {
+			res = append(res, map[string]interface{}{
+				"id":              dockerLog.Id,
+				"user_id":         dockerLog.UserId,
+				"dockerfile_id":   dockerLog.DockerfileId,
+				"full_image_name": dockerLog.FullImageName,
+				"image_name":      dockerLog.ImageName,
+				"created_at":      dockerLog.CreatedAt,
+				"updated_at":      dockerLog.UpdatedAt,
+				"user_name":       userMapInfo[dockerLog.UserId].Name,
+			})
+		}
+
+		return res, nil
 	}
+
 	if repositoryID != "" {
-		return s.GetDockerImagesByRepositoryID(ctx, repositoryID)
+		images, err := s.GetDockerImagesByRepositoryID(ctx, repositoryID)
+		if err != nil {
+			return nil, err
+		}
+		res := make([]map[string]interface{}, 0)
+		for _, dockerImage := range images {
+			res = append(res, map[string]interface{}{
+				"id":              dockerImage.Id,
+				"user_id":         dockerImage.UserId,
+				"dockerfile_id":   dockerImage.DockerfileId,
+				"full_image_name": dockerImage.FullImageName,
+				"image_name":      dockerImage.ImageName,
+				"created_at":      dockerImage.CreatedAt,
+				"updated_at":      dockerImage.UpdatedAt,
+			})
+		}
+
+		return res, nil
 	}
 	return nil, nil
 }

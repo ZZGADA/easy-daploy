@@ -36,7 +36,7 @@ func SetupRouter(r *gin.Engine) {
 			dao.NewUserOssDao(conf.DB),
 			dao.NewUserK8sResourceOperationLogDao(conf.DB)),
 		docker_manage.NewDockerImageService(
-			dao.NewUserDockerImageDao(conf.DB)),
+			dao.NewUserDockerImageDao(conf.DB), dao.NewUsersDao(conf.DB)),
 		user_manage.NewDockerAccountService(
 			dao.NewUserDockerDao(conf.DB)))
 
@@ -83,7 +83,7 @@ func SetupRouter(r *gin.Engine) {
 
 	// docker 账号管理  & docker 镜像管理
 	dockerHandler := NewDockerHandler(user_manage.NewDockerAccountService(dao.NewUserDockerDao(conf.DB)))
-	dockerImageHandler := NewDockerImageHandler(docker_manage.NewDockerImageService(dao.NewUserDockerImageDao(conf.DB)))
+	dockerImageHandler := NewDockerImageHandler(docker_manage.NewDockerImageService(dao.NewUserDockerImageDao(conf.DB), dao.NewUsersDao(conf.DB)))
 
 	// 查询 docker 镜像列表
 	docker := r.Group("/api/user/docker", middleware.CustomAuthMiddleware())

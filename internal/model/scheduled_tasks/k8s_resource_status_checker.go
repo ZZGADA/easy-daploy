@@ -17,6 +17,7 @@ import (
 type K8sResourceStatusChecker struct {
 	userK8sResourceDao             *dao.UserK8sResourceDao
 	userK8sResourceOperationLogDao *dao.UserK8sResourceOperationLogDao
+	userDao                        *dao.UsersDao
 }
 
 // K8sResourceInfo K8s资源信息结构
@@ -29,17 +30,18 @@ type K8sResourceInfo struct {
 }
 
 // NewK8sResourceStatusChecker 创建 K8s 资源状态检查器
-func NewK8sResourceStatusChecker(userK8sResourceDao *dao.UserK8sResourceDao, userK8sResourceOperationLogDao *dao.UserK8sResourceOperationLogDao) *K8sResourceStatusChecker {
+func NewK8sResourceStatusChecker(userK8sResourceDao *dao.UserK8sResourceDao, userK8sResourceOperationLogDao *dao.UserK8sResourceOperationLogDao, userDao *dao.UsersDao) *K8sResourceStatusChecker {
 	return &K8sResourceStatusChecker{
 		userK8sResourceDao:             userK8sResourceDao,
 		userK8sResourceOperationLogDao: userK8sResourceOperationLogDao,
+		userDao:                        userDao,
 	}
 }
 
 var k8sResourceStatusChecker *K8sResourceStatusChecker
 
 func Init() {
-	k8sResourceStatusChecker = NewK8sResourceStatusChecker(dao.NewUserK8sResourceDao(conf.DB), dao.NewUserK8sResourceOperationLogDao(conf.DB))
+	k8sResourceStatusChecker = NewK8sResourceStatusChecker(dao.NewUserK8sResourceDao(conf.DB), dao.NewUserK8sResourceOperationLogDao(conf.DB), dao.NewUsersDao(conf.DB))
 	k8sResourceStatusChecker.start()
 }
 
@@ -72,7 +74,7 @@ func (c *K8sResourceStatusChecker) checkResources() {
 		logs, err := c.userK8sResourceOperationLogDao.QueryByK8sResourceIDFirst(uint(resource.Id))
 		if err != nil {
 			logrus.Infof("查询资源 %d erros : %v", resource.Id, err)
-			return
+			continue
 		}
 
 		if len(logs) == 0 {
@@ -80,12 +82,12 @@ func (c *K8sResourceStatusChecker) checkResources() {
 			continue
 		}
 
-		logrus.Infof("查询资源 %d 的操作日志为: %v", resource.Id, logs)
+		logrus.Infof("查询资源 %d 的操作日志为: %v", resource.Id, logs[0])
 
 		// 获取最新的操作日志
 		latestLog := logs[0]
 		if latestLog.OperationType == "delete" {
-			return
+			continue
 		}
 
 		namespace := latestLog.Namespace
@@ -178,26 +180,51 @@ func (c *K8sResourceStatusChecker) checkResources() {
 				continue
 			}
 
-			// 使用Redis存储用户的资源信息，键名格式为 k8s:running_resources:{user_id}
-			redisKey := fmt.Sprintf(define.K8sRunningResources, userID)
-			err = conf.RedisClient.Set(context.Background(), redisKey, userResourcesJSON, time.Hour).Err()
-			if err != nil {
-				logrus.Errorf("将用户 %d 的运行中资源信息存入Redis失败: %v", userID, err)
-				continue
+			// 获取用户所在团队信息
+			userCreator, err2 := c.userDao.GetUserByID(uint32(userID))
+			if err2 != nil {
+				break
 			}
 
-			// 推送给该用户的WebSocket客户端
-			c.pushResourceInfoToUser(userID, userResources, redisKey)
+			users, err2 := c.userDao.GetUsersByTeamID(userCreator.TeamID)
+			if err2 != nil {
+				break
+			}
+
+			// 将消息推送出去
+			c.pushResourceInfoToRedisAndUser(users, userResourcesJSON, userResources)
 		}
 	}
 }
 
+// pushResourceInfoToRedisAndUser 将k8s资源推送给用户
+func (c *K8sResourceStatusChecker) pushResourceInfoToRedisAndUser(users []*dao.Users, userResourcesJSON []byte, userResources []K8sResourceInfo) {
+	// 使用Redis存储用户的资源信息，键名格式为 k8s:running_resources:{user_id}
+	for _, user := range users {
+		// 检测团队成员是否连接
+		_, exists := conf.WSServer.Connections[uint(user.Id)]
+		if !exists {
+			logrus.Infof("用户 %d 没有活动的WebSocket连接", user.Id)
+			continue
+		}
+
+		redisKey := fmt.Sprintf(define.K8sRunningResources, user.Id)
+		err := conf.RedisClient.Set(context.Background(), redisKey, userResourcesJSON, time.Hour).Err()
+		if err != nil {
+			logrus.Errorf("将用户 %d 的运行中资源信息存入Redis失败: %v", user.Id, err)
+			continue
+		}
+
+		c.pushResourceInfoToUser(user, userResources, redisKey)
+	}
+}
+
 // pushResourceInfoToUser 将资源信息推送给指定用户的WebSocket客户端
-func (c *K8sResourceStatusChecker) pushResourceInfoToUser(userID uint, resources []K8sResourceInfo, redisKey string) {
-	// 获取用户的WebSocket连接
-	conn, exists := conf.WSServer.Connections[userID]
+func (c *K8sResourceStatusChecker) pushResourceInfoToUser(user *dao.Users, resources []K8sResourceInfo, redisKey string) {
+
+	conn, exists := conf.WSServer.Connections[uint(user.Id)]
 	if !exists {
-		logrus.Infof("用户 %d 没有活动的WebSocket连接", userID)
+		logrus.Infof("用户 %d 没有活动的WebSocket连接", user.Id)
 		return
 	}
 
@@ -218,14 +245,14 @@ func (c *K8sResourceStatusChecker) pushResourceInfoToUser(userID uint, resources
 	// 发送消息
 	err := conn.WriteJSON(response)
 	if err != nil {
-		logrus.Errorf("向用户 %d 推送资源状态消息失败: %v", userID, err)
+		logrus.Errorf("向用户 %d 推送资源状态消息失败: %v", user.Id, err)
 	} else {
-		logrus.Infof("成功向用户 %d 推送资源状态消息", userID)
+		logrus.Infof("成功向用户 %d 推送资源状态消息", user.Id)
 	}
 }
 
 // PushRunningResource quick start one method
 func PushRunningResource() {
-	k8sResourceStatusChecker = NewK8sResourceStatusChecker(dao.NewUserK8sResourceDao(conf.DB), dao.NewUserK8sResourceOperationLogDao(conf.DB))
+	k8sResourceStatusChecker = NewK8sResourceStatusChecker(dao.NewUserK8sResourceDao(conf.DB), dao.NewUserK8sResourceOperationLogDao(conf.DB), dao.NewUsersDao(conf.DB))
 	k8sResourceStatusChecker.checkResources()
 }

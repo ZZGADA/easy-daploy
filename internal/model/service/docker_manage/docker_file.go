@@ -108,7 +108,7 @@ func (s *DockerfileService) QueryDockerfile(ctx context.Context, userId uint32, 
 // QueryDockerfilesByRepoAndBranch 查询指定仓库和分支下的所有 Dockerfile
 func (s *DockerfileService) QueryDockerfilesByRepoAndBranch(ctx context.Context, userId uint32, repositoryId string, branchName string) ([]*DockerfileRequest, error) {
 	// 获取所有匹配的 Dockerfile 记录
-	dockerfiles, err := s.dockerfileDao.GetByUserIDAndRepoIDAndBranch(ctx, userId, repositoryId, branchName)
+	dockerfiles, err := s.dockerfileDao.GetByRepoIDAndBranch(ctx, repositoryId, branchName)
 	if err != nil {
 		return nil, fmt.Errorf("获取 Dockerfile 列表失败: %v", err)
 	}

@@ -2045,7 +2045,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_docker_image.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743576721467" />
+              <option name="lastModified" value="1744421209536" />
               <option name="schema">
                 <list>
                   <option value="UserDockerImage" />
@@ -2058,7 +2058,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_dockerfile.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743325744446" />
+              <option name="lastModified" value="1744423086838" />
               <option name="schema">
                 <list>
                   <option value="DockerfileItem" />
@@ -2153,7 +2153,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744163569910" />
+              <option name="lastModified" value="1744424939678" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceStatusChecker" />
@@ -2265,7 +2265,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744380108673" />
+              <option name="lastModified" value="1744421227035" />
             </ScannedPath>
           </value>
         </entry>
@@ -2342,7 +2342,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_file.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743325691193" />
+              <option name="lastModified" value="1744423086783" />
               <option name="schema">
                 <list>
                   <option value="DockerfileService" />
@@ -2355,7 +2355,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_image.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743574969463" />
+              <option name="lastModified" value="1744426952996" />
               <option name="schema">
                 <list>
                   <option value="DockerImageService" />

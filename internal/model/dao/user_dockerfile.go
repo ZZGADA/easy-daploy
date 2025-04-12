@@ -86,11 +86,11 @@ func (d *UserDockerfileDao) GetByID(ctx context.Context, fileId uint32) (*UserDo
 	return &dockerfile, nil
 }
 
-func (d *UserDockerfileDao) GetByUserIDAndRepoIDAndBranch(ctx context.Context, userId uint32, repositoryId string, branchName string) ([]*UserDockerfile, error) {
+func (d *UserDockerfileDao) GetByRepoIDAndBranch(ctx context.Context, repositoryId string, branchName string) ([]*UserDockerfile, error) {
 	var dockerfiles []*UserDockerfile
 	result := d.db.WithContext(ctx).Where(
-		"user_id = ? AND repository_id = ? AND branch_name = ? and deleted_at IS NULL",
-		userId, repositoryId, branchName,
+		"repository_id = ? AND branch_name = ? and deleted_at IS NULL",
+		repositoryId, branchName,
 	).Find(&dockerfiles)
 
 	if result.Error != nil {
