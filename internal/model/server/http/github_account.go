@@ -288,7 +288,7 @@ func (h *BindHandler) QueryDeveloperToken(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,
 		"data": gin.H{
-			"developer_token":             tokenInfo.DeveloperToken,
+			"developer_token":             tokenInfo.AccessToken,
 			"developer_token_comment":     tokenInfo.DeveloperTokenComment,
 			"developer_token_expire_time": expireTimeStr,
 			"developer_repository_name":   tokenInfo.Login,
