@@ -181,3 +181,31 @@ func (h *DockerfileHandler) QueryDockerfile(c *gin.Context) {
 		"data": dockerfiles,
 	})
 }
+
+// SaveShellPath 保存shell
+func (h *DockerfileHandler) SaveShellPath(c *gin.Context) {
+	userID := c.GetUint("user_id")
+
+	var res docker_manage.ShellPathRequest
+	if err := c.ShouldBindJSON(&res); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "参数错误",
+		})
+		return
+	}
+
+	err := h.dockerfileService.SaveShellPath(c, uint32(userID), &res)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": "error",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "success",
+	})
+
+}

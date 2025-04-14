@@ -710,6 +710,13 @@
             </set>
           </value>
         </entry>
+        <entry key="ShellPathRequest">
+          <value>
+            <set>
+              <option value="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_file.go" />
+            </set>
+          </value>
+        </entry>
         <entry key="SimpleFactory">
           <value>
             <set>
@@ -1069,7 +1076,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744557723216" />
+              <option name="lastModified" value="1744601190212" />
             </ScannedPath>
           </value>
         </entry>
@@ -2058,7 +2065,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/dao/user_dockerfile.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744423086838" />
+              <option name="lastModified" value="1744643098194" />
               <option name="schema">
                 <list>
                   <option value="DockerfileItem" />
@@ -2173,7 +2180,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/docker_account.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743435579980" />
+              <option name="lastModified" value="1744642935431" />
               <option name="schema">
                 <list>
                   <option value="DockerAccountRequest" />
@@ -2188,7 +2195,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/docker_file.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743325691180" />
+              <option name="lastModified" value="1744644732240" />
               <option name="schema">
                 <list>
                   <option value="DockerfileHandler" />
@@ -2265,7 +2272,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/router.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744421227035" />
+              <option name="lastModified" value="1744644830363" />
             </ScannedPath>
           </value>
         </entry>
@@ -2342,11 +2349,12 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/docker_manage/docker_file.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744423086783" />
+              <option name="lastModified" value="1744644732357" />
               <option name="schema">
                 <list>
                   <option value="DockerfileService" />
                   <option value="DockerfileRequest" />
+                  <option value="ShellPathRequest" />
                 </list>
               </option>
             </ScannedPath>
@@ -2460,7 +2468,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744095037599" />
+              <option name="lastModified" value="1744646211599" />
             </ScannedPath>
           </value>
         </entry>
@@ -2500,7 +2508,7 @@
         <entry key="file://$PROJECT_DIR$/internal/utils/email.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744600981367" />
+              <option name="lastModified" value="1744601097714" />
               <option name="schema">
                 <list>
                   <option value="AlertMessage" />
@@ -2614,6 +2622,7 @@
         <entry key="save_resource_request" value="SaveResourceRequest" />
         <entry key="sequential_io_refined" value="SequentialIORefined" />
         <entry key="set_default_request" value="SetDefaultRequest" />
+        <entry key="shell_path_request" value="ShellPathRequest" />
         <entry key="simple_factory" value="SimpleFactory" />
         <entry key="singleton" value="Singleton" />
         <entry key="socket_docker_handler" value="SocketDockerHandler" />

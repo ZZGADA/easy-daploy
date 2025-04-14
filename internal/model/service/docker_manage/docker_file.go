@@ -26,6 +26,12 @@ type DockerfileRequest struct {
 	BranchName     string               `json:"branch_name"`
 	FileName       string               `json:"file_name"`
 	FileData       []dao.DockerfileItem `json:"file_data"`
+	ShellPath      string               `json:"shell_path"`
+}
+
+type ShellPathRequest struct {
+	ShellPath    string `json:"shell_path"`
+	DockerFileId uint32 `json:"dockerfile_id"`
 }
 
 // UploadDockerfile 上传 Dockerfile
@@ -53,6 +59,21 @@ func (s *DockerfileService) UploadDockerfile(ctx context.Context, userId uint32,
 	}
 
 	return s.dockerfileDao.Create(ctx, dockerfile)
+}
+
+// SaveShellPath 上传 Dockerfile
+func (s *DockerfileService) SaveShellPath(ctx context.Context, userId uint32, req *ShellPathRequest) error {
+	// 检查是否已存在
+	existing, err := s.dockerfileDao.GetByID(ctx, req.DockerFileId)
+	if err != nil {
+		return nil
+	}
+
+	if existing.ShellPath != req.ShellPath {
+		existing.ShellPath = req.ShellPath
+	}
+
+	return s.dockerfileDao.Update(ctx, existing)
 }
 
 // UpdateDockerfile 更新 Dockerfile
@@ -135,6 +156,7 @@ func (s *DockerfileService) QueryDockerfilesByRepoAndBranch(ctx context.Context,
 			BranchName:     dockerfile.BranchName,
 			FileName:       dockerfile.FileName,
 			FileData:       fileData,
+			ShellPath:      dockerfile.ShellPath,
 		})
 	}
 

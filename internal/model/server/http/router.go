@@ -73,12 +73,14 @@ func SetupRouter(r *gin.Engine) {
 	dockerfileHandler := NewDockerfileHandler(docker_manage.NewDockerfileService(dao.NewUserDockerfileDao(conf.DB)))
 
 	// 用户仓库 Dockerfile 制作
-	dockerfile := r.Group("api/user/dockerfile", middleware.CustomAuthMiddleware())
+	dockerfile := r.Group("/api/user/dockerfile", middleware.CustomAuthMiddleware())
 	{
 		dockerfile.POST("/repository/upload", dockerfileHandler.UploadDockerfile) // Dockerfile 首次上传
 		dockerfile.GET("/repository/query", dockerfileHandler.QueryDockerfile)    // Dockerfile 查询
 		dockerfile.POST("/repository/update", dockerfileHandler.UpdateDockerfile) // Dockerfile 更新
 		dockerfile.POST("/repository/delete", dockerfileHandler.DeleteDockerfile) // Dockerfile 删除
+
+		dockerfile.POST("/bind/shell/save", dockerfileHandler.SaveShellPath) // Mq-UtilityBillService/build&test.shell
 	}
 
 	// docker 账号管理  & docker 镜像管理

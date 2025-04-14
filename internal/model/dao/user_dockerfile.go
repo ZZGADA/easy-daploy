@@ -23,6 +23,7 @@ type UserDockerfile struct {
 	BranchName     string     `gorm:"column:branch_name;type:varchar(255);not null;" json:"branch_name"`
 	FileName       string     `gorm:"column:file_name;type:varchar(255);not null;" json:"file_name"`
 	FileData       string     `gorm:"column:file_data;type:text;not null;" json:"file_data"` // JSON 格式存储
+	ShellPath      string     `gorm:"column:shell_path;type:varchar(255);not null;" json:"shell_path"`
 	CreatedAt      *time.Time `gorm:"column:created_at;type:datetime;not null;" json:"created_at"`
 	UpdatedAt      *time.Time `gorm:"column:updated_at;type:datetime;not null;" json:"updated_at"`
 	DeletedAt      *time.Time `gorm:"column:deleted_at;type:datetime;" json:"deleted_at"`

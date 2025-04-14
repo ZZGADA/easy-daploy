@@ -206,27 +206,57 @@ func (s *SocketService) HandleBuildImage(conn *websocket.Conn, data map[string]i
 	parent := filepath.Dir(cur)
 	log.Info("当前项目地址：", parent)
 
+	cmdBuild := exec.Command("/bin/bash", filepath.Join(parent, "docker", dockerfile.ShellPath))
+	log.Infof("project build and test path :%s", cmdBuild.Path)
+
+	err = runMonitoring(cmdBuild, conn)
+	if err != nil {
+		return ""
+	}
+
 	// 构建镜像
 	cmd := exec.Command("docker", "build", "-f", filepath.Join(parent, latestDockerfile), "-t", fullImageName, ".")
 	cmd.Dir = repoDir
 
-	// 创建管道读取命令输出
+	err = runMonitoring(cmd, conn)
+	if err != nil {
+		return ""
+	}
+
+	// 推送镜像到仓库
+	pushCmd := exec.Command("docker", "push", fullImageName)
+	output, err := pushCmd.CombinedOutput()
+	if err != nil {
+		SendError(conn, fmt.Sprintf("推送镜像失败: %s", string(output)))
+		return ""
+	}
+
+	SendSuccess(conn, "docker build & push success", map[string]string{
+		"image_name": fullImageName,
+	})
+
+	log.Info("=== HandleBuildImage 结束 ===")
+
+	return fullImageName
+}
+
+func runMonitoring(cmd *exec.Cmd, conn *websocket.Conn) error {
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		SendError(conn, fmt.Sprintf("创建输出管道失败: %v", err))
-		return ""
+		return err
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		SendError(conn, fmt.Sprintf("创建错误管道失败: %v", err))
-		return ""
+		return err
 	}
 
 	// 启动命令
 	if err := cmd.Start(); err != nil {
 		SendError(conn, fmt.Sprintf("启动构建失败: %v", err))
-		return ""
+		return err
 	}
 
 	// 读取并发送 stdout 输出
@@ -265,22 +295,7 @@ func (s *SocketService) HandleBuildImage(conn *websocket.Conn, data map[string]i
 	// 等待命令完成
 	if err := cmd.Wait(); err != nil {
 		SendError(conn, "镜像构建失败")
-		return ""
+		return err
 	}
-
-	// 推送镜像到仓库
-	pushCmd := exec.Command("docker", "push", fullImageName)
-	output, err := pushCmd.CombinedOutput()
-	if err != nil {
-		SendError(conn, fmt.Sprintf("推送镜像失败: %s", string(output)))
-		return ""
-	}
-
-	SendSuccess(conn, "docker build & push success", map[string]string{
-		"image_name": fullImageName,
-	})
-
-	log.Info("=== HandleBuildImage 结束 ===")
-
-	return fullImageName
+	return nil
 }
