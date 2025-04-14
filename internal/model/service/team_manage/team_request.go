@@ -143,6 +143,13 @@ func (s *TeamRequestService) CheckTeamRequest(ctx context.Context, requestID uin
 		tx.Rollback()
 	}
 	tx.Commit()
+
+	team, err := s.teamDao.GetByID(ctx, request.TeamID)
+
+	if err = utils.SendTeamRequestEmail(team, user.Email, request.RequestType, status); err != nil {
+		return err
+	}
+
 	return nil
 }
 

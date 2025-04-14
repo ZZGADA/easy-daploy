@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-
 	"github.com/ZZGADA/easy-deploy/internal/model/scheduled_tasks"
 
 	"github.com/ZZGADA/easy-deploy/internal/config"

@@ -85,7 +85,7 @@ func sendAlertEmail(alertMsg AlertMessage) error {
 
 // SendJoinTeamEmail 发送加入团队申请邮件
 func SendJoinTeamEmail(applicant *dao.UserWithGithubInfo, teamCreatorEmail string, requestId uint32, requestType int) error {
-	subject := "新的加入团队申请"
+	subject := "新的团队申请"
 	// 假设后端接口的 URL
 	//field := fmt.Sprintf("http://%s:%s/api/team/request/check", config.GlobalConfig.Server.Host, config.GlobalConfig.Server.Port)
 	//acceptURL := fmt.Sprintf("%s?request_id=%d&status=1", field, requestId)
@@ -115,6 +115,55 @@ func SendJoinTeamEmail(applicant *dao.UserWithGithubInfo, teamCreatorEmail strin
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.GlobalConfig.Smtp.From)
 	m.SetHeader("To", teamCreatorEmail)
+	m.SetHeader("Subject", subject)
+	m.SetBody("text/html", body)
+
+	d := gomail.NewDialer(
+		config.GlobalConfig.Smtp.Host,
+		config.GlobalConfig.Smtp.Port,
+		config.GlobalConfig.Smtp.User,
+		config.GlobalConfig.Smtp.Password,
+	)
+
+	return d.DialAndSend(m)
+}
+
+// SendTeamRequestEmail 发送审批结果邮件
+func SendTeamRequestEmail(team *dao.Team, requesterEmail string, requestType int, status int) error {
+	subjectFormat := "团队%s申请已完成"
+	subject := ""
+
+	mentionFormat := "<h2>您好，您申请 %s 团队%s的审批已经%s</h2>"
+	mention := ""
+	if requestType == define.TeamRequestTypeIn {
+		subject = fmt.Sprintf(subjectFormat, "加入")
+		switch status {
+		case define.TeamRequestStatusApproval:
+			mention = fmt.Sprintf(mentionFormat, team.TeamName, "加入", "通过")
+		case define.TeamRequestStatusReject:
+			mention = fmt.Sprintf(mentionFormat, team.TeamName, "加入", "拒绝")
+		}
+	} else {
+		subject = fmt.Sprintf(subjectFormat, "离开")
+		switch status {
+		case define.TeamRequestStatusApproval:
+			mention = fmt.Sprintf(mentionFormat, team.TeamName, "离开", "通过")
+		case define.TeamRequestStatusReject:
+			mention = fmt.Sprintf(mentionFormat, team.TeamName, "离开", "拒绝")
+		}
+	}
+	body := fmt.Sprintf(`
+    %s
+    <p>申请者信息如下：</p>
+    <p><strong>团队 ID:</strong> %d</p>
+	<p><strong>团队 UUID:</strong> %d</p>
+	<p><strong>团队 名称:</strong> %s</p>
+    <p><strong>团队 简介:</strong> %s</p>
+	<p><strong>请前往团队管理页面查看</strong></p>`, mention, team.ID, team.TeamUUID, team.TeamName, team.TeamDescription)
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", config.GlobalConfig.Smtp.From)
+	m.SetHeader("To", requesterEmail)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", body)
 

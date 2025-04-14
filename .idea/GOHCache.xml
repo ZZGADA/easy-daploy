@@ -1069,7 +1069,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744355107879" />
+              <option name="lastModified" value="1744557723216" />
             </ScannedPath>
           </value>
         </entry>
@@ -2415,7 +2415,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/team_manage/team_request.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744386566210" />
+              <option name="lastModified" value="1744600858241" />
               <option name="schema">
                 <list>
                   <option value="TeamRequestService" />
@@ -2500,7 +2500,7 @@
         <entry key="file://$PROJECT_DIR$/internal/utils/email.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744384772210" />
+              <option name="lastModified" value="1744600981367" />
               <option name="schema">
                 <list>
                   <option value="AlertMessage" />
