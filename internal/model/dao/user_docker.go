@@ -70,7 +70,7 @@ func (d *UserDockerDaoImpl) Update(docker *UserDocker) error {
 // Delete 删除 Docker 账号
 func (d *UserDockerDaoImpl) Delete(id uint) error {
 
-	return d.db.Model(&UserGithub{}).Where("id = ? and deleted_at IS NULL", id).Update("deleted_at", time.Now()).Error
+	return d.db.Model(&UserDocker{}).Where("id = ? and deleted_at IS NULL", id).Update("deleted_at", time.Now()).Error
 }
 
 // GetByID 根据ID获取Docker账号
