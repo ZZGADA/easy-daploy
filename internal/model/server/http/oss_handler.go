@@ -63,7 +63,7 @@ func (h *OssHandler) QueryOssAccess(c *gin.Context) {
 	userID := c.GetUint("user_id")
 	oss, err := h.ossService.QueryOssAccess(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"code": 500, "message": "查询失败", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"code": 400, "message": "查询失败", "error": err.Error()})
 		return
 	}
 

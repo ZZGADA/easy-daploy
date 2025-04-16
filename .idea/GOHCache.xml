@@ -2259,7 +2259,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/server/http/oss_handler.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743645486475" />
+              <option name="lastModified" value="1744789323125" />
               <option name="schema">
                 <list>
                   <option value="OssHandler" />
@@ -2454,7 +2454,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/user_manage/github_account.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1743250104179" />
+              <option name="lastModified" value="1744788507138" />
               <option name="schema">
                 <list>
                   <option value="BindService" />

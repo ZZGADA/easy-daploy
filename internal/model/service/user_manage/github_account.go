@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -158,6 +157,7 @@ func (s *BindService) UnbindGithub(ctx context.Context, userID uint) error {
 	if err := s.revokeGithubAccess(userGithub.AccessToken); err != nil {
 		// 记录错误但继续执行，因为即使 GitHub API 调用失败，我们仍然要解除本地绑定
 		log.Printf("撤销 GitHub 访问令牌失败: %v", err)
+		return err
 	}
 
 	// 3. 软删除用户的 GitHub 绑定记录
@@ -170,8 +170,8 @@ func (s *BindService) UnbindGithub(ctx context.Context, userID uint) error {
 
 // revokeGithubAccess 撤销 GitHub 应用的访问权限
 func (s *BindService) revokeGithubAccess(accessToken string) error {
-	clientID := os.Getenv("GITHUB_CLIENT_ID")
-	clientSecret := os.Getenv("GITHUB_CLIENT_SECRET")
+	clientID := config.GlobalConfig.Github.ClientID
+	clientSecret := config.GlobalConfig.Github.ClientSecret
 
 	// GitHub API 文档：https://docs.github.com/en/rest/apps/oauth-applications#delete-an-app-authorization
 	req, err := http.NewRequest("DELETE",
