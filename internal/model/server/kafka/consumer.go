@@ -61,6 +61,8 @@ var messageQueue = make(chan LogMessage, 1000)
 var alertChannel = make(chan utils.AlertMessage, 1000)
 var operationLogDao *dao.UserK8sResourceOperationLogDao
 
+var teamDao *dao.TeamDao
+
 // StartConsumer 启动Kafka消费者
 func StartConsumer() {
 	// 创建Kafka消费者
@@ -109,6 +111,7 @@ func StartConsumer() {
 func startWorkerPool(workerCount int) {
 	var wg sync.WaitGroup
 	wg.Add(workerCount)
+	teamDao = dao.NewTeamDao(conf.DB)
 
 	for i := 0; i < workerCount; i++ {
 		go func(workerID int) {
@@ -177,6 +180,32 @@ func processMessage(logMsg LogMessage) {
 
 	// 将告警消息发送到告警通道
 	alertChannel <- alertMsg
+
+	ctx := context.Background()
+	team, err := teamDao.GetByID(ctx, user.TeamID)
+	if err != nil {
+		logrus.Errorf("消费者中获取团队信息失败,%v", err)
+	}
+
+	teamCreator, err := dao.GetUserByID(uint(team.CreatorID))
+	if err != nil {
+		logrus.Errorf("获取团队管理员信息失败: %v", err)
+		return
+	}
+
+	// 创建告警消息
+	alertMsgCreator := utils.AlertMessage{
+		UserID:     uint(teamCreator.Id),
+		Email:      teamCreator.Email,
+		PodName:    logMsg.Kubernetes.PodName,
+		Namespace:  logMsg.Kubernetes.NamespaceName,
+		LogLevel:   logLevel,
+		LogMessage: logContent,
+		Timestamp:  logMsg.Timestamp,
+	}
+
+	// 将告警消息发送到告警通道
+	alertChannel <- alertMsgCreator
 }
 
 // getPodCreator 获取Pod创建者信息
