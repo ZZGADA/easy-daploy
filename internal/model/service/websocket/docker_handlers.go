@@ -206,12 +206,15 @@ func (s *SocketService) HandleBuildImage(conn *websocket.Conn, data map[string]i
 	parent := filepath.Dir(cur)
 	log.Info("当前项目地址：", parent)
 
-	cmdBuild := exec.Command("/bin/bash", filepath.Join(parent, "docker", dockerfile.ShellPath))
-	log.Infof("project build and test path :%s", cmdBuild.Path)
+	// shell 脚本执行
+	if dockerfile.ShellPath != "" {
+		cmdBuild := exec.Command("/bin/bash", filepath.Join(parent, "docker", dockerfile.ShellPath))
+		log.Infof("project build and test path :%s", cmdBuild.Path)
 
-	err = runMonitoring(cmdBuild, conn)
-	if err != nil {
-		return ""
+		err = runMonitoring(cmdBuild, conn)
+		if err != nil {
+			return ""
+		}
 	}
 
 	// 构建镜像

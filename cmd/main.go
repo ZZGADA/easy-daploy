@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/ZZGADA/easy-deploy/internal/config"
 	"github.com/ZZGADA/easy-deploy/internal/model/conf"
+	"github.com/ZZGADA/easy-deploy/internal/model/scheduled_tasks"
 	"github.com/ZZGADA/easy-deploy/internal/model/server/http"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
@@ -21,7 +22,7 @@ func init() {
 	}
 
 	// Node 节点配置Fluentd
-	//conf.InitK8s()
+	conf.InitK8s()
 	//conf.InitFluent()
 
 	// 初始化MySQL和Redis
@@ -31,7 +32,7 @@ func init() {
 	conf.InitWebSocketServer()
 
 	// 初始化并启动 K8s 资源状态检查器
-	//scheduled_tasks.Init()
+	scheduled_tasks.Init()
 
 }
 

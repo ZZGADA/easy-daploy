@@ -313,6 +313,7 @@ func (s *SocketService) resourceApply(conn *websocket.Conn, command string, data
 		Command: command,
 		Result:  fmt.Sprintf("资源 %s 已成功部署到 namespace %s", resource.FileName, namespace),
 	})
+	scheduled_tasks.PushRunningResource()
 }
 
 func (s *SocketService) resourceDelete(conn *websocket.Conn, command string, data map[string]interface{}, userID uint) {

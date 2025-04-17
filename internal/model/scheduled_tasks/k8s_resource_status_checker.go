@@ -209,7 +209,7 @@ func (c *K8sResourceStatusChecker) pushResourceInfoToRedisAndUser(users []*dao.U
 		}
 
 		redisKey := fmt.Sprintf(define.K8sRunningResources, user.Id)
-		err := conf.RedisClient.Set(context.Background(), redisKey, userResourcesJSON, time.Hour).Err()
+		err := conf.RedisClient.Set(context.Background(), redisKey, userResourcesJSON, 2*time.Minute).Err()
 		if err != nil {
 			logrus.Errorf("将用户 %d 的运行中资源信息存入Redis失败: %v", user.Id, err)
 			continue

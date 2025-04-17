@@ -1076,7 +1076,7 @@
         <entry key="file://$PROJECT_DIR$/cmd/main.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744601190212" />
+              <option name="lastModified" value="1744893899526" />
             </ScannedPath>
           </value>
         </entry>
@@ -2160,7 +2160,7 @@
         <entry key="file://$PROJECT_DIR$/internal/model/scheduled_tasks/k8s_resource_status_checker.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744424939678" />
+              <option name="lastModified" value="1744891991630" />
               <option name="schema">
                 <list>
                   <option value="K8sResourceStatusChecker" />
@@ -2468,14 +2468,14 @@
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/docker_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744646211599" />
+              <option name="lastModified" value="1744873715908" />
             </ScannedPath>
           </value>
         </entry>
         <entry key="file://$PROJECT_DIR$/internal/model/service/websocket/k8s_handlers.go">
           <value>
             <ScannedPath>
-              <option name="lastModified" value="1744265065446" />
+              <option name="lastModified" value="1744893957360" />
               <option name="schema">
                 <list>
                   <option value="K8sCommandResponse" />
